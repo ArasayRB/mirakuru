@@ -25,6 +25,8 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "@ckeditor/ckeditor5-build-classic": "^23.1.0",
+        "ckeditor5-code-block": "^1.0.11",
         "vue-cookies": "^1.7.4"
     }
 }
