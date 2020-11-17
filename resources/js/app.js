@@ -8,6 +8,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+import swal from 'sweetalert';
 import VueCookies from 'vue-cookies';
 var Vue = require('vue');
 Vue.use(require('vue-cookies'));
