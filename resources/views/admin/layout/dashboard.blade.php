@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Dashboard</title>
+    <title>{{ config('app.name') }} - {{__('Dashboard')}}</title>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
 
@@ -41,7 +41,7 @@
         <div class="sidebar-brand-icon">
           <img src="/images/img/favicon_white.ico" alt="">
         </div>
-        <div class="sidebar-brand-text mx-3">Mirakuru Admin </div>
+        <div class="sidebar-brand-text mx-3">{{__('Admin Mirakuru')}} </div>
       </a>
 
       <!-- Divider -->
@@ -51,7 +51,7 @@
       <li class="nav-item active">
         <a class="nav-link" href="/admin">
           <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Barra de Administración</span></a>
+          <span>{{__('Administration Bar')}}</span></a>
       </li>
 
       <!-- Divider -->
@@ -59,21 +59,21 @@
 
       <!-- Heading -->
       <div class="sidebar-heading">
-        Interface
+        {{__('Interface')}}
       </div>
 
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
           <i class="fas fa-fw fa-cog"></i>
-          <span>Manejo de Usuarios</span>
+          <span>{{__('Manage User')}}</span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Tablas:</h6>
-            <a class="collapse-item" href="buttons.html">Usuarios</a>
-            <a class="collapse-item" href="cards.html">Roles</a>
-            <a class="collapse-item" href="cards.html">Permisos</a>
+            <h6 class="collapse-header">{{__('Tabs')}}:</h6>
+            <a class="collapse-item" href="buttons.html">{{__('Users')}}</a>
+            <a class="collapse-item" href="cards.html">{{__('Role')}}</a>
+            <a class="collapse-item" href="cards.html">{{__('Permissions')}}</a>
           </div>
         </div>
       </li>
@@ -83,22 +83,22 @@
       <li class="nav-item">
         <a class="nav-link" href="charts.html">
           <i class="fas fa-fw fa-luggage-cart"></i>
-          <span>Servicios</span></a>
+          <span>{{__('Services')}}</span></a>
       </li>
 
       <!-- Nav Item - Utilities Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHostal" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-home"></i>
-          <span>Hostales</span>
+          <span>{{__('Hostals')}}</span>
         </a>
         <div id="collapseHostal" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Tablas Utiles:</h6>
-            <a class="collapse-item" href="utilities-border.html">Hostales</a>
-            <a class="collapse-item" href="utilities-border.html">Suscripción</a>
-            <a class="collapse-item" href="utilities-color.html">Comentarios</a>
-            <a class="collapse-item" href="utilities-border.html">Calificación Comentarios</a>
+            <h6 class="collapse-header">{{__('Tabs')}}:</h6>
+            <a class="collapse-item" href="utilities-border.html">{{__('Hostals')}}</a>
+            <a class="collapse-item" href="utilities-border.html">{{__('Suscription')}}</a>
+            <a class="collapse-item" href="utilities-color.html">{{__('Testimonials')}}</a>
+            <a class="collapse-item" href="utilities-border.html">{{__('Testimonials Calification')}}</a>
           </div>
         </div>
       </li>
@@ -107,14 +107,14 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseHabitacion" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-bed"></i>
-          <span>Habitaciones</span>
+          <span>{{__('Rooms')}}</span>
         </a>
         <div id="collapseHabitacion" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Tablas Utiles:</h6>
-            <a class="collapse-item" href="utilities-border.html">Habitaciones</a>
-            <a class="collapse-item" href="utilities-color.html">Categoría de Habitación</a>
-            <a class="collapse-item" href="utilities-border.html">Camas</a>
+            <h6 class="collapse-header">{{__('Tabs')}}:</h6>
+            <a class="collapse-item" href="utilities-border.html">{{__('Rooms')}}</a>
+            <a class="collapse-item" href="utilities-color.html">{{__('Rooms Category')}}</a>
+            <a class="collapse-item" href="utilities-border.html">{{__('Beds')}}</a>
           </div>
         </div>
       </li>
@@ -122,16 +122,16 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePago" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-dollar-sign"></i>
-          <span>Pagos</span>
+          <span>{{__('Payments')}}</span>
         </a>
         <div id="collapsePago" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Tablas Utiles:</h6>
-            <a class="collapse-item" href="utilities-color.html">Cash</a>
-            <a class="collapse-item" href="utilities-border.html">Pagos</a>
-            <a class="collapse-item" href="utilities-border.html">Comisiones</a>
-            <a class="collapse-item" href="utilities-border.html">Cuentas</a>
-            <a class="collapse-item" href="utilities-border.html">Tipo de Cuenta</a>
+            <h6 class="collapse-header">{{__('Tabs')}}:</h6>
+            <a class="collapse-item" href="utilities-color.html">{{__('Cash')}}</a>
+            <a class="collapse-item" href="utilities-border.html">{{__('Payments')}}</a>
+            <a class="collapse-item" href="utilities-border.html">{{__('Taxes')}}</a>
+            <a class="collapse-item" href="utilities-border.html">{{__('Accounts')}}</a>
+            <a class="collapse-item" href="utilities-border.html">{{__('Type Account')}}</a>
           </div>
         </div>
       </li>
@@ -141,19 +141,19 @@
 
       <!-- Heading -->
       <div class="sidebar-heading">
-        Addons
+        {{__('Addons')}}
       </div>
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseReserva" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-clipboard-check"></i>
-          <span>Reservas</span>
+          <span>{{__('Bookers')}}</span>
         </a>
         <div id="collapseReserva" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Tablas Utiles:</h6>
-            <a class="collapse-item" href="utilities-color.html">Reservas</a>
-            <a class="collapse-item" href="utilities-border.html">Pagos</a>
-            <a class="collapse-item" href="utilities-border.html">Comisiones</a>
+            <h6 class="collapse-header">{{__('Tabs')}}:</h6>
+            <a class="collapse-item" href="utilities-color.html">{{__('Bookers')}}</a>
+            <a class="collapse-item" href="utilities-border.html">{{__('Payments')}}</a>
+            <a class="collapse-item" href="utilities-border.html">{{__('Taxes')}}</a>
           </div>
         </div>
       </li>
@@ -161,15 +161,15 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePost" aria-expanded="true" aria-controls="collapseUtilities">
           <i class="fas fa-fw fa-clipboard-list"></i>
-          <span>Posts</span>
+          <span>{{__('Posts')}}</span>
         </a>
         <div id="collapsePost" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Tablas Utiles:</h6>
-            <a class="collapse-item" href="/posts">Posts</a>
-            <a class="collapse-item" href="utilities-color.html">Categoría de Posts</a>
-            <a class="collapse-item" href="utilities-border.html">Comentarios</a>
-            <a class="collapse-item" href="utilities-border.html">Calificacion Comentarios</a>
+            <h6 class="collapse-header">{{__('Tabs')}}:</h6>
+            <a class="collapse-item" href="/posts">{{__('Posts')}}</a>
+            <a class="collapse-item" href="utilities-color.html">{{__('Posts Category')}}</a>
+            <a class="collapse-item" href="utilities-border.html">{{__('Testimonials')}}</a>
+            <a class="collapse-item" href="utilities-border.html">{{__('Testimonials Calification')}}</a>
           </div>
         </div>
       </li>
@@ -177,16 +177,14 @@
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
           <i class="fas fa-fw fa-user"></i>
-          <span>Usuario</span>
+          <span>{{__('User')}}</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">Login Screens:</h6>
-            <a class="collapse-item" href="#" data-toggle="modal" data-target="#loginModal">Login</a>
-            <a class="collapse-item" href="#" data-toggle="modal" data-target="#registerModal">Register</a>
-            <a class="collapse-item" href="#" data-toggle="modal" data-target="#resetpaswModal">Forgot Password</a>
+            <h6 class="collapse-header">{{__('Utilities User')}}:</h6>
+            <a class="collapse-item" href="#" data-toggle="modal" data-target="#loginModal">{{__('Account User')}}</a>
             <a class="collapse-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                          document.getElementById('logout-form').submit();">Logout</a>
+                          document.getElementById('logout-form').submit();">{{__('Logout')}}</a>
                           <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                               @csrf
                           </form>
@@ -234,7 +232,7 @@
                                 <ul class="navbar-nav ml-auto">
                                    <li class="nav-item dropdown">
                                      <a class="nav-link dropdown-toggle text-active"  id="dropdownMenuLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
-                                       {{__('Language')}}
+                                       {{__('Languages')}}
                                      </a>
                                      <div class="dropdown-menu">
                                        @foreach (array_keys(config('locale.languages')) as $lang)
@@ -427,7 +425,7 @@
                   <footer class="sticky-footer bg-white">
                     <div class="container my-auto">
                       <div class="copyright text-center my-auto">
-                        <span>{{ config('app.name') }}. Copyright &copy; {{ date('Y') }}</span>
+                        <span>{{ config('app.name') }}. &copy; {{ date('Y') }} @lang('All rights reserved.') </span>
                       </div>
                     </div>
                   </footer>

@@ -37,12 +37,12 @@
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#uno"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="uno">
        <ul class="navbar-nav">
-        <li class="nav-item"><a href="#home" class="nav-link text-light">Home</a></li>
-        <li class="nav-item"><a href="#nosotros" class="nav-link text-light">Nosotros</a></li>
-        <li class="nav-item"><a href="#servicios" class="nav-link text-light">Servicios</a></li>
-        <li class="nav-item"><a href="#blog" class="nav-link text-light">Blog</a></li>
-        <li class="nav-item"><a href="#galeria" class="nav-link text-light">Galeria</a></li>
-        <li class="nav-item"><a href="#contacto" class="nav-link text-light">Contacto</a></li>
+        <li class="nav-item"><a href="#home" class="nav-link text-light">{{__('Home')}}</a></li>
+        <li class="nav-item"><a href="#nosotros" class="nav-link text-light">{{__('About us')}}</a></li>
+        <li class="nav-item"><a href="#servicios" class="nav-link text-light">{{__('Services')}}</a></li>
+        <li class="nav-item"><a href="#blog" class="nav-link text-light">{{__('Blog')}}</a></li>
+        <li class="nav-item"><a href="#galeria" class="nav-link text-light">{{__('Galery')}}</a></li>
+        <li class="nav-item"><a href="#contacto" class="nav-link text-light">{{__('Contact')}}</a></li>
 
         @guest
             <li class="nav-item">
@@ -57,15 +57,15 @@
 
             @endif
         @else
-        <li class="nav-item"><a href="#reserva" class="nav-link text-light">Reserva</a></li>
+        <li class="nav-item"><a href="#reserva" class="nav-link text-light">{{__('Book')}}</a></li>
 
           <li class="nav-item"><a href="{{ route('logout') }}" class="nav-link text-light" onclick="event.preventDefault();
-                        document.getElementById('logout-form').submit();">Logout {{ Auth::user()->name }}</a></li>
+                        document.getElementById('logout-form').submit();">{{__('Logout')}} {{ Auth::user()->name }}</a></li>
                         <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                             @csrf
                         </form>
                         @if ((Auth::user()->hasRole('admin')==true)||(Auth::user()->hasRole('review-content')==true)||(Auth::user()->hasRole('writer-content')==true)||(Auth::user()->hasRole('public-content')==true))
-                            <li class="nav-item"><a href="/admin" class="nav-link text-light">Dashboard</a></li>
+                            <li class="nav-item"><a href="/admin" class="nav-link text-light">{{__('Dashboard')}}</a></li>
 
                         @endif
 
@@ -77,7 +77,7 @@
                     <ul class="navbar-nav ml-auto">
                        <li class="nav-item dropdown">
                          <a class="nav-link dropdown-toggle text-light"  id="dropdownMenuLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
-                           {{__('Language')}}
+                           {{__('Languages')}}
                          </a>
                          <div class="dropdown-menu">
                            @foreach (array_keys(config('locale.languages')) as $lang)
@@ -120,8 +120,8 @@
                <img src="{{ asset('images/img/ico-twitter.png') }}" class="mx-2 my-2 img-foot">
              </div>
 
-        <h6 class="text-center text-primary font-weight-bold"> Hostal MIRAKURU Gran Familia.</h6>
-        <h6 class="text-center font-weight-bold">&copy; {{ date('Y') }} {{ config('app.name') }}. @lang('All rights reserved.')</h6>
+        <h6 class="text-center text-primary font-weight-bold"> {{ config('app.name') }}.</h6>
+        <h6 class="text-center font-weight-bold">&copy; {{ date('Y') }} . @lang('All rights reserved.')</h6>
            </footer>
           </div>
         </div>
