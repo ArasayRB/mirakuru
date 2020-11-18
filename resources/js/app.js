@@ -25,6 +25,14 @@ Vue.use(require('vue-cookies'));
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('reservar-hostal-component', require('./components/forms/ReservarHostalComponent.vue').default);
+Vue.component('newsletter-component', require('./components/forms/NewsletterComponent.vue').default);
+Vue.component('login-form-component', require('./components/forms/auth/LoginFormComponent.vue').default);
+Vue.component('register-form-component', require('./components/forms/auth/RegisterFormComponent.vue').default);
+Vue.component('reset-email-form-component', require('./components/forms/auth/ResetEmailFormComponent.vue').default);
+Vue.component('add-post-form-component', require('./components/admin/posts/forms/AddPostFormComponent.vue').default);
+Vue.component('edit-post-form-component', require('./components/admin/posts/forms/EditPostFormComponent.vue').default);
+Vue.component('index-post-component', require('./components/admin/posts/indexPostComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -34,4 +42,37 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 const app = new Vue({
     el: '#app',
+    data(){
+      return {
+        email    : '',
+        password:'',
+        ventanaLogin:'',
+        ventanaRegister:'',
+        ventanaResetEmail:'',
+        ventanaCreatPost:'',
+        ventanaEditPost:'',
+        categories:'',
+        post:'',
+        token   : window.CSRF_TOKEN,
+      }
+    },
+    methods:{
+      resetEmailModal:function(){
+        this.ventanaResetEmail=true;
+          this.ventanaLogin=false;
+      },
+      openLoginModal:function(){
+        this.ventanaLogin=true;
+      },
+    },
+    mounted(){
+      if($cookies.isKey('mostrarModalLogin')===false){
+        this.openLoginModal();
+        $cookies.set('mostrarModalLogin', 'no', '6h');
+      }
+     /*Vue.localStorage.set('openLogin', 'no');
+     if(Vue.localStorage.get('openLogin')==='no'){
+     console.log(Vue.localStorage.get('openLogin'));
+   }*/
+    },
 });
