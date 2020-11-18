@@ -83,7 +83,7 @@
                            @foreach (array_keys(config('locale.languages')) as $lang)
                                @if ($lang != App::getLocale())
                                    <a class="dropdown-item" href="{!! route('language.select', $lang) !!}">
-                                           {!! $lang !!} <small>{!! $lang !!}</small>
+                                        <img src="{{ asset('images/lang/'.$lang.'.ico') }}"/>   {!! $lang !!}
                                    </a>
                                @endif
                            @endforeach

@@ -228,6 +228,27 @@
                       <i class="fas fa-search fa-sm"></i>
                     </button>
                   </div>
+                  <div class="input-group-append">
+                    <!--Comprobamos si el status esta a true y existe más de un lenguaje-->
+                  @if (config('locale.status') && count(config('locale.languages')) > 1)
+                                <ul class="navbar-nav ml-auto">
+                                   <li class="nav-item dropdown">
+                                     <a class="nav-link dropdown-toggle text-active"  id="dropdownMenuLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
+                                       {{__('Language')}}
+                                     </a>
+                                     <div class="dropdown-menu">
+                                       @foreach (array_keys(config('locale.languages')) as $lang)
+                                           @if ($lang != App::getLocale())
+                                               <a class="dropdown-item" href="{!! route('language.select', $lang) !!}">
+                                                    <img src="{{ asset('images/lang/'.$lang.'.ico') }}"/>   {!! $lang !!}
+                                               </a>
+                                           @endif
+                                       @endforeach
+                                     </div>
+                                   </li>
+                                 </ul>
+                            @endif
+                  </div>
                 </div>
               </form>
 
