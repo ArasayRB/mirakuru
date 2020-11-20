@@ -49,7 +49,7 @@ class RegisterController extends Controller
       return '/admin';
       }
     }
-    return '/home';
+    return '/register-user';
     }
 
     /**

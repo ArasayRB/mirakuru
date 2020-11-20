@@ -279,12 +279,14 @@ return [
   "You have successfully registered"=>"Usted se ha registrado satisfactoriamente",
   "You cannot leave empty fields, please check"=>"No puede dejar campos vacíos, revise por favor",
   "You are receiving this email because we received a password reset request for your account."=> "Ha recibido este mensaje porque se solicitó un restablecimiento de contraseña para su cuenta.",
+  "Your register is almost ready"=>"Su cuenta está casi lista",
   "You have enabled two factor authentication."=> "Has habilitado la autenticación de dos factores.",
   "You have not enabled two factor authentication."=> "No has habilitado la autenticación de dos factores.",
   "You may delete any of your existing tokens if they are no longer needed."=> "Puede eliminar cualquiera de sus tokens existentes si ya no los necesita.",
   "You may not delete your personal team."=> "No se puede borrar su equipo personal.",
   "You may not leave a team that you created."=> "No se puede abandonar un equipo que usted creó.",
   "You must receive in your email a link that you must access to continue with the password change"=>"Usted ha de recibir en su email un link al que debe acceder para continuar con el cambio de contraseña",
+  "You must receive in your email a link that you must access to continue with the user register"=>"Usted ha de recibir en su email un link al que debe acceder para continuar con el registro de usuario",
   "Your email address is not verified."=> "Su dirección de correo electrónico no está verificada.",
   "Your message"=>"Su mensaje"
 ];

@@ -279,6 +279,7 @@ return [
   "You have successfully registered"=>"You have successfully registered",
   "You cannot leave empty fields, please check"=>"You cannot leave empty fields, please check",
   "You are receiving this email because we received a password reset request for your account."=> "You are receiving this email because we received a password reset request for your account.",
+  "Your register is almost ready"=>"Your register is almost ready",
   "You have enabled two factor authentication."=> "You have enabled two factor authentication.",
   "You have not enabled two factor authentication."=> "You have not enabled two factor authentication.",
   "You may delete any of your existing tokens if they are no longer needed."=> "You may delete any of your existing tokens if they are no longer needed.",
@@ -286,5 +287,6 @@ return [
   "You may not leave a team that you created."=> "You may not leave a team that you created.",
   "Your email address is not verified."=> "Your email address is not verified.",
   "You must receive in your email a link that you must access to continue with the password change"=>"You must receive in your email a link that you must access to continue with the password change",
+  "You must receive in your email a link that you must access to continue with the user register"=>"You must receive in your email a link that you must access to continue with the user register",
   "Your message"=>"Your message"
 ];

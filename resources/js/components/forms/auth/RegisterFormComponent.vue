@@ -117,7 +117,7 @@
                        closeOnEsc:false
                      }).then(select=>{
                        if (select){
-                         location.reload();
+                         location.href='/register-user';
                        }
                      });
                  //console.log(response);

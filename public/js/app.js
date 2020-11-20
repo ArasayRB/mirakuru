@@ -3201,7 +3201,7 @@ __webpack_require__.r(__webpack_exports__);
           closeOnEsc: false
         }).then(function (select) {
           if (select) {
-            location.reload();
+            location.href = '/register-user';
           }
         }); //console.log(response);
       })["catch"](function (error) {
@@ -55505,8 +55505,10 @@ module.exports = {
     "You may not delete your personal team.": "You may not delete your personal team.",
     "You may not leave a team that you created.": "You may not leave a team that you created.",
     "You must receive in your email a link that you must access to continue with the password change": "You must receive in your email a link that you must access to continue with the password change",
+    "You must receive in your email a link that you must access to continue with the user register": "You must receive in your email a link that you must access to continue with the user register",
     "Your email address is not verified.": "Your email address is not verified.",
     "Your message": "Your message",
+    "Your register is almost ready": "Your register is almost ready",
     "click here to request another": "click here to request another",
     "hi": "hi",
     "of": "of",
@@ -55922,8 +55924,10 @@ module.exports = {
     "You may not delete your personal team.": "No se puede borrar su equipo personal.",
     "You may not leave a team that you created.": "No se puede abandonar un equipo que usted cre\xF3.",
     "You must receive in your email a link that you must access to continue with the password change": "Usted ha de recibir en su email un link al que debe acceder para continuar con el cambio de contrase\xF1a",
+    "You must receive in your email a link that you must access to continue with the user register": "Usted ha de recibir en su email un link al que debe acceder para continuar con el registro de usuario",
     "Your email address is not verified.": "Su direcci\xF3n de correo electr\xF3nico no est\xE1 verificada.",
     "Your message": "Su mensaje",
+    "Your register is almost ready": "Su cuenta est\xE1 casi lista",
     "click here to request another": "haga clic aqu\xED para solicitar otro",
     "hi": "hey",
     "of": "de",
@@ -56193,8 +56197,10 @@ module.exports = {
     "You may not delete your personal team.": "No se puede borrar su equipo personal.",
     "You may not leave a team that you created.": "No se puede abandonar un equipo que usted cre\xF3.",
     "You must receive in your email a link that you must access to continue with the password change": "Usted ha de recibir en su email un link al que debe acceder para continuar con el cambio de contrase\xF1a",
+    "You must receive in your email a link that you must access to continue with the user register": "Usted ha de recibir en su email un link al que debe acceder para continuar con el registro de usuario",
     "Your email address is not verified.": "Su direcci\xF3n de correo electr\xF3nico no est\xE1 verificada.",
     "Your message": "Su mensaje",
+    "Your register is almost ready": "Su cuenta est\xE1 casi lista",
     "click here to request another": "haga clic aqu\xED para solicitar otro",
     "for more information and \/ or keep visiting our website periodically where we will put the current offers according to the special dates of our house, although you can also": "para m\xE1s informaci\xF3n y/o se mantenga visitando peri\xF3dicamente nuestra web donde pondremos las ofertas vigentes seg\xFAn las fechas especiales de nuestra casa, aunque tambi\xE9n puede",
     "hi": "hey",

@@ -60,6 +60,10 @@ Route::get('/reset-password/{token}', function ($token) {
     return view('auth.passwords.reset', ['token' => $token]);
 })->middleware(['guest'])->name('password.reset');
 
+Route::get('/register-user', function () {
+    return view('subview.registerUser');
+});
+
 Route::post('/reset-password', function (Request $request) {
     $request->validate([
         'token' => 'required',
