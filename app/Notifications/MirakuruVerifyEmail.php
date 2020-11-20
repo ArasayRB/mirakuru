@@ -48,7 +48,7 @@ class MirakuruVerifyEmail extends VerifyEmail
       }
 
       return (new MailMessage)
-          ->subject(Lang::get('Hostal Mirakuru Gran Familia: Verify Email Address'))
+          ->subject(Lang::get('Verify Email Address- '.config('app.name')))
           ->greeting(Lang::get('Welcome to our hostal web'))
           ->line(Lang::get('Please click the button below to verify your email address.'))
           ->action(Lang::get('Verify Email Address'), $verificationUrl)

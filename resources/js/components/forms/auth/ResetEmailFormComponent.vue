@@ -78,7 +78,7 @@
           };
           axios.post(url,data)
                .then(response=>{
-                 swal({title:this.$trans('messages.Check your email: Link password reset sent'),
+                 swal({title:this.$trans('messages.Check your email. Link password reset sent'),
                        text:this.$trans('messages.You must receive in your email a link that you must access to continue with the password change'),
                        icon:'success',
                        closeOnClickOutside:false,
