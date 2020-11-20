@@ -7,7 +7,7 @@
     <div class="modal-container">
       <div class="modal-header">
         <slot>
-        <h1 class="text-center text-dark">Crear un post</h1>
+        <h1 class="text-center text-dark">{{ $trans('messages.New Post') }}</h1>
         <button type="button" class="modal-default-button btn btn-lg" @click="$emit('close')"><span aria-hidden="true">&times;</span></button>
 
         </slot>
@@ -19,28 +19,28 @@
           <div class="row justify-content-center">
             <div class="col-12">
               <div class="form-group">
-                <label for="title">Título/Title</label>
-                <input type="text" name="title" v-model="title" class="form-control font-italic mb-2" placeholder="Título/Title...">
+                <label for="title">{{ $trans('messages.Title') }}</label>
+                <input type="text" name="title" v-model="title" class="form-control font-italic mb-2">
               </div>
 
               <div class="form-group">
 
-                <label for="image">Imagen/Image</label>
-              <input type="file" name="image" v-on:change="image" class="form-control-file font-italic mb-2" placeholder="Imagen/Image...">
+                <label for="image">{{ $trans('messages.Image') }}</label>
+              <input type="file" name="image" v-on:change="image" class="form-control-file font-italic mb-2">
               </div>
               <div class="form-group">
-                <label for="category">Categoría/Category</label>
-                <select class="form-control" v-model="categoria" name="category" placeholder="Categoría/Category..." required>
+                <label for="category">{{ $trans('messages.Category') }}</label>
+                <select class="form-control" v-model="categoria" name="category" required>
                  <option value=''>Seleccionar Actividad</option>
                    <option v-for="categori in categories" :value="categori.id">{{categori.category_post}}</option>
                 </select>
               </div>
               <div class="form-group">
-                <label for="check-edit-summary">Resumen/Summary</label>
-                <textarea name="check-edit-summary" v-model="checkEditSummary" id="check-edit-summary" cols="10" rows="8" class="form-control font-italic mb-2" placeholder="Resumen/Summary..."></textarea>
+                <label for="check-edit-summary">{{ $trans('messages.Summary') }}</label>
+                <textarea name="check-edit-summary" v-model="checkEditSummary" id="check-edit-summary" cols="10" rows="8" class="form-control font-italic mb-2"></textarea>
               </div>
               <div class="form-group">
-                <label for="check-edit-content">Contenido/Content</label>
+                <label for="check-edit-content">{{ $trans('messages.Content') }}</label>
                 <vue-ckeditor
                  v-model="checkEditContent"
                  :config="config"
@@ -64,9 +64,9 @@
         <div class="col justify-content-center">
       <div class="form-group row mb-0">
           <div class="col-md-5 offset-md-4">
-            <button type="button" class="btn rounded btn-primary reserva" @click=createPost()>Crear/ Create</button>
+            <button type="button" class="btn rounded btn-primary reserva" @click=createPost()>{{ $trans('messages.Create') }}</button>
 
-              <button type="button" class="modal-default-button btn btn-danger" @click="$emit('close')">Cerrar</button>
+              <button type="button" class="modal-default-button btn btn-danger" @click="$emit('close')">{{ $trans('messages.Close') }}</button>
 
           </div>
       </div>
@@ -85,6 +85,8 @@
   import VueCkeditor from '@ckeditor/ckeditor5-build-classic';
     export default {
       components: { VueCkeditor },
+      props:['post',
+              'locale'],
       data(){
         return {
           config: {
@@ -147,9 +149,9 @@
         createPost:function(){
 
             let url="/posts";
-            let mensaje='Error no identificado';
+            let mensaje=this.$trans('messages.Unidentified error');
             if (this.title==''||this.imagenPost==''||this.categoria==''||this.checkEditSummary==''||this.checkEditContent=='') {
-              mensaje='No puede dejar campos vacíos, revise por favor';
+              mensaje=this.$trans('messages.You cannot leave empty fields, please check');
             }
             let data = new FormData();
               data.append("title", this.title);
@@ -159,8 +161,8 @@
               data.append("checkEditContent", this.checkEditContent);
             axios.post(url,data)
                  .then(response=>{
-                   swal({title:'Post creado satisfactoriamente',
-                         text:'Datos correctos',
+                   swal({title:this.$trans('messages.Correct data'),
+                         text:this.$trans('messages.Post created successfully'),
                          icon:'success',
                          closeOnClickOutside:false,
                          closeOnEsc:false
@@ -204,7 +206,12 @@
               .catch(error => this.errors.push(error));
          },
         mounted() {
-            console.log('Component mounted.')
+          if (this.$attrs.locale) {
+               this.$lang.setLocale(this.$attrs.locale);
+               }
+          else {
+            this.$lang.setLocale('en');
+          }
         }
     }
 </script>

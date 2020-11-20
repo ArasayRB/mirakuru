@@ -2,62 +2,62 @@
   <div>
   <div class="row py-lg-2">
     <div class="col-md-6">
-      <h1 class="h3 mb-2 text-gray-800">Posts</h1>
+      <h1 class="h3 mb-2 text-gray-800">{{ $trans('messages.Posts') }}</h1>
     </div>
     <div class="col-md-6">
-      <a href="#" @click="ventanaCreatPost = true" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">Nuevo/New</a>
+      <a href="#" @click="ventanaCreatPost = true" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">{{ $trans('messages.Add') }}</a>
     </div>
 
   </div>
   <div class="card shadow mb-4">
     <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">Lista/ List</h6>
+      <h6 class="m-0 font-weight-bold text-primary">{{ $trans('messages.List') }}</h6>
     </div>
     <div class="card-body">
-      <add-post-form-component @postnew="addPostIndex" v-if="ventanaCreatPost" @close="ventanaCreatPost = false">
+      <add-post-form-component @postnew="addPostIndex" :locale="locale" v-if="ventanaCreatPost" @close="ventanaCreatPost = false">
 
       </add-post-form-component>
-      <edit-post-form-component @postupd="updPostIndex" :post="post" v-if="ventanaEditPost" @close="ventanaEditPost = false">
+      <edit-post-form-component @postupd="updPostIndex" :locale="locale" :post="post" v-if="ventanaEditPost" @close="ventanaEditPost = false">
 
       </edit-post-form-component>
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
-              <th>Herramientas</th>
-              <th>ID</th>
-              <th>Título</th>
-              <th>Contenido</th>
-              <th>Tags</th>
-              <th>Resúmen</th>
-              <th>Estado de Publicación</th>
-              <th>Imagen</th>
-              <th>Video</th>
-              <th>QR</th>
-              <th>Usuario</th>
-              <th>Categoría</th>
-              <th>Accesos a lectura</th>
-              <th>Me gusta</th>
-              <th>Veces Compartido</th>
+              <th>{{ $trans('messages.Tools') }}</th>
+              <th>{{ $trans('messages.ID') }}</th>
+              <th>{{ $trans('messages.Title') }}</th>
+              <th>{{ $trans('messages.Content') }}</th>
+              <th>{{ $trans('messages.Tags') }}</th>
+              <th>{{ $trans('messages.Summary') }}</th>
+              <th>{{ $trans('messages.Publication State') }}</th>
+              <th>{{ $trans('messages.Image') }}</th>
+              <th>{{ $trans('messages.Video') }}</th>
+              <th>{{ $trans('messages.QR') }}</th>
+              <th>{{ $trans('messages.User') }}</th>
+              <th>{{ $trans('messages.Category') }}</th>
+              <th>{{ $trans('messages.Read Access') }}</th>
+              <th>{{ $trans('messages.Likes') }}</th>
+              <th>{{ $trans('messages.Shared') }}</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
-              <th>Herramientas</th>
-              <th>ID</th>
-              <th>Título</th>
-              <th>Contenido</th>
-              <th>Tags</th>
-              <th>Resúmen</th>
-              <th>Estado de Publicación</th>
-              <th>Imagen</th>
-              <th>Video</th>
-              <th>QR</th>
-              <th>Usuario</th>
-              <th>Categoría</th>
-              <th>Accesos a lectura</th>
-              <th>Me gusta</th>
-              <th>Veces Compartido</th>
+              <th>{{ $trans('messages.Tools') }}</th>
+              <th>{{ $trans('messages.ID') }}</th>
+              <th>{{ $trans('messages.Title') }}</th>
+              <th>{{ $trans('messages.Content') }}</th>
+              <th>{{ $trans('messages.Tags') }}</th>
+              <th>{{ $trans('messages.Summary') }}</th>
+              <th>{{ $trans('messages.Publication State') }}</th>
+              <th>{{ $trans('messages.Image') }}</th>
+              <th>{{ $trans('messages.Video') }}</th>
+              <th>{{ $trans('messages.QR') }}</th>
+              <th>{{ $trans('messages.User') }}</th>
+              <th>{{ $trans('messages.Category') }}</th>
+              <th>{{ $trans('messages.Read Access') }}</th>
+              <th>{{ $trans('messages.Likes') }}</th>
+              <th>{{ $trans('messages.Shared') }}</th>
             </tr>
           </tfoot>
           <tbody>
@@ -123,6 +123,7 @@
           id:'',
           valueImg:'',
           title:'',
+          locale:'',
           user:this.$attrs.user,
           imagenPost:'',
           src:'storage/img_web/posts_img/',
@@ -171,16 +172,16 @@
         },
         deletePost:function(index,post,post_name){
           let post_id=post;
-            swal({title:'Eliminar Post',
-                  text:'Está completamente seguro que desea borrar el post- Are you shure delete the post: "'+post_name+'"?',
+            swal({title:this.$trans('messages.Delete Post'),
+                  text:this.$trans('messages.Are you completely sure you want to delete the post')+': '+post_name+'?',
                   icon:'warning',
                   closeOnClickOutside:false,
                   closeOnEsc:false,
                   buttons:true,
                   dangerMode:true,
                   showCancelButton: true,
-                  confirmButtonText: "Sí, eliminar",
-                  cancelButtonText: "Cancelar",
+                  confirmButtonText: this.$trans('messages.Yes, delete'),
+                  cancelButtonText: this.$trans('messages.Cancel'),
                 }).then(select=>{
                   if (select){
                     let  url='/posts/'+post_id;
@@ -243,7 +244,12 @@
               .catch(error => this.errors.push(error));
          },
         mounted() {
-            console.log('Component mounted.')
+          if (this.$attrs.locale) {
+               this.$lang.setLocale(this.$attrs.locale);
+               }
+          else {
+            this.$lang.setLocale('en');
+          }
         }
     }
 </script>

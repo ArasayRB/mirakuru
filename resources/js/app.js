@@ -9,9 +9,21 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 import swal from 'sweetalert';
+import VueLocalStorage from 'vue-localstorage';
 import VueCookies from 'vue-cookies';
+import VueLang from '@eli5/vue-lang-js'
+// get the data source
+import translations from './vue-translations.js';
 var Vue = require('vue');
+require('lang.js');
+
+Vue.use(VueLang, {
+  messages: translations, // Provide locale file
+  //locale: 'es', // Set locale
+  fallback: 'en' // Set fallback lacale
+});
 Vue.use(require('vue-cookies'));
+Vue.use(VueLocalStorage);
 
 /**
  * The following block of code may be used to automatically register your
@@ -50,6 +62,7 @@ const app = new Vue({
         ventanaRegister:'',
         ventanaResetEmail:'',
         ventanaCreatPost:'',
+        locale:'en',
         ventanaEditPost:'',
         categories:'',
         post:'',

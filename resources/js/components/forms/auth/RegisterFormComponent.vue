@@ -9,7 +9,7 @@
       <slot>
         <div class="col justify-content-center">
       <img :src="imgPpal" class="bg-primary mx-auto d-block py-2 px-2 ">
-      <div class=" bg-primary"><h1 class="text-center text-light">{{ titleRegister }}</h1>
+      <div class=" bg-primary"><h1 class="text-center text-light">{{ $trans('messages.Register') }}</h1>
         </div>
         </div>
       </slot>
@@ -20,7 +20,7 @@
    <div class="row justify-content-center">
      <div class="col">
        <div class="form-group row">
-           <label for="name" class="col-md-4 col-form-label text-md-right text-light">{{ labelName }}</label>
+           <label for="name" class="col-md-4 col-form-label text-md-right text-light">{{ $trans('messages.Name') }}</label>
 
            <div class="col-md-6">
                <input id="name" type="text" v-model="name" class="form-control" name="name" required autocomplete="name" autofocus>
@@ -29,7 +29,7 @@
            </div>
        </div>
        <div class="form-group row">
-           <label for="email" class="col-md-4 col-form-label text-md-right text-light">{{ labelEmail }}</label>
+           <label for="email" class="col-md-4 col-form-label text-md-right text-light">{{ $trans('messages.E-Mail Address') }}</label>
 
            <div class="col-md-6">
                <input id="email" type="email" v-model="email" class="form-control" name="email" required autocomplete="email">
@@ -37,7 +37,7 @@
            </div>
        </div>
        <div class="form-group row">
-           <label for="password" class="col-md-4 col-form-label text-md-right text-light">{{ labelPass }}</label>
+           <label for="password" class="col-md-4 col-form-label text-md-right text-light">{{ $trans('messages.Password') }}</label>
 
            <div class="col-md-6">
                <input id="password" type="password" v-model="password" class="form-control" name="password" required autocomplete="new-password">
@@ -45,7 +45,7 @@
            </div>
        </div>
        <div class="form-group row">
-           <label for="password-confirm" class="col-md-4 col-form-label text-md-right text-light">{{ labelConfirmPass }}</label>
+           <label for="password-confirm" class="col-md-4 col-form-label text-md-right text-light">{{ $trans('messages.Confirm Password') }}</label>
 
            <div class="col-md-6">
                <input id="password-confirm" type="password" v-model="password_confirmation" class="form-control" name="password_confirmation" required autocomplete="new-password">
@@ -61,9 +61,9 @@
         <div class="form-group row mb-0">
             <div class="col-md-6 offset-md-4">
                 <button type="button" class="btn btn-primary bg-dark" @click=registerUser()>
-                    {{ titleRegister }}
+                    {{ $trans('messages.Register') }}
                 </button>
-                <button type="button" class="modal-default-button btn btn-danger" @click="$emit('close')">Cerrar</button>
+                <button type="button" class="modal-default-button btn btn-danger" @click="$emit('close')">{{ $trans('messages.Close') }}</button>
             </div>
         </div>
       </div>
@@ -88,13 +88,8 @@
           password:'',
           password_confirmation:'',
           ventanaRegister:false,
-          labelName:this.$attrs.labelname,
-          labelPass:this.$attrs.labelpass,
-          labelConfirmPass:this.$attrs.labelconfirmpass,
           labelForgPass:this.$attrs.labelforgpass,
           forgPass:this.$attrs.forgpass,
-          labelEmail:this.$attrs.labelemail,
-          titleRegister:this.$attrs.titleregister,
           token   : window.CSRF_TOKEN,
 
         }
@@ -103,9 +98,9 @@
 
         registerUser: function(){
           let url=this.urlRegister;
-          let mensaje='Error no identificado';
+          let mensaje=this.$trans('messages.Unidentified error');
           if (this.email==''||this.password==''||this.password_confirmation==''||this.name=='') {
-            mensaje='No puede dejar campos vacíos, revise por favor';
+            mensaje=this.$trans('messages.You cannot leave empty fields, please check');
           }
           let data={
             name:this.name,
@@ -115,8 +110,8 @@
           };
           axios.post(url,data)
                .then(response=>{
-                 swal({title:'Usted se ha registrado satisfactoriamente',
-                       text:'Datos correctos',
+                 swal({title:this.$trans('messages.Correct data'),
+                       text:this.$trans('messages.You have successfully registered'),
                        icon:'success',
                        closeOnClickOutside:false,
                        closeOnEsc:false
@@ -154,7 +149,12 @@
 
       },
         mounted() {
-            console.log('Component mounted.')
+          if (this.$attrs.locale) {
+               this.$lang.setLocale(this.$attrs.locale);
+               }
+          else {
+            this.$lang.setLocale('en');
+          }
         }
     }
 </script>

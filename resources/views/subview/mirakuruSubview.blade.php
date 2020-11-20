@@ -20,32 +20,27 @@
   </div>
 @endauth
 <section class="section-ppal pb-5" id="nosotros" name="nosotros"><!--Section Nosotros-->
-  <div class="box"><h1 id="us_ttle" class="text-uppercase text-center pt-5 animate__animated animate__zoomIn">En busca de un hostal</h1></div>
-  <p class="text-justify mx-2 my-2">Sabe qué nos diferencia del resto de la gran comunidad de hostales que existen en Trinidad? Seguro pensarás que allá vamos con nuevas viejas que todos dicen &#128545;!
-    Pues no, déjeme decirle en pocas líneas lo que creemos con mucho aínco que nos diferencia del resto. Primero que todo, cobramos un precio muy similar al resto, con la diferencia
-    que en muchos casos le ponemos un valor añadido que puede ir desde un <mark>DESAYUNO</mark> sencillo incluido hasta un <mark>TOUR</mark> por los principales lugares de nuestra ciudad, <mark>TODO POR UN MISMO VALOR</mark>.
-    Además entre nuestras ofertas queremos incluir <mark>EL INTERCAMBIO, sí, has leído muy bien, sabemos que nos encontramos en situaciones muy difíciles de la economía mundial, y <mark>QUÉ MEJOR</mark> que
-    poder obtener hospedaje gracias al intercambio de objetos al cual no le das ya uso, se encuentran en buen estado y a alguien como nosotros se nos hace difícil obtener en nuestros mercados,
-   aunque también sucede que puedan traernos lo que a nosotros en nuestro país nos cuesta 3 veces el valor que a ustedes en el suyo como son aseo personal, alimentos, etc. Hagamos una cosa
-   entonces, le invito a que si alguna de estas ofertas le interesa nos <mark><a href="#contacto" class="text-dark">CONTACTE</a></mark> para más información y/o se mantenga visitando periódicamente nuestra web donde pondremos las ofertas vigentes según las fechas especiales de nuestra
-   casa, aunque también puede <a href="#suscripcion" class="text-dark">SUSCRIBIRSE</a> para poder recibir nuestras últimas noticias y ofertas de primera mano, sobre todo si ya tiene una fecha a futuro de viaje a nuestro país, y si encontró
-   esta web por casualidad y <mark>NO PENSABA VISITAR TRINIDAD</mark> le invito a que lea <mark>RAZONES PARA VISITAR LA ISLA MUSEO DEL CARIBE</mark>, verá que si no lo tenía dentro de sus destinos, lo incluirá de todas todas.
-   Vió que en pocas líneas logré atrapar su atención (Al menos eso espero &#128591;)!! No olvide la <mark><a href="#suscripcion" class="text-dark">SUSCRIPCIÓN</a></mark>.</p>
+  <div class="box"><h1 id="us_ttle" class="text-uppercase text-center pt-5 animate__animated animate__zoomIn">{{ __('Searching hostal') }}</h1></div>
+  <p class="text-justify mx-2 my-2">{{__('Do you know what differentiates us from the rest of the great community of hostels that exist in Trinidad? Surely you will think that there we go with new old women that everyone says')}} &#128545;!
+    {{__('Well no, let me tell you in a few lines what we believe in a lot that differentiates us from the rest. First of all, we charge a price very similar to the rest, with the difference that in many cases we put an added value that can range from a simple')}} <mark>{{__('BREAKFAST')}}</mark> {{ __('included up to a') }} <mark>{{ __('TOUR') }}</mark> {{ __('through the main places of our city,') }}, <mark>{{ __('ALL FOR THE SAME VALUE') }}</mark>.
+    {{__('In addition, among our offers we want to include')}} <mark>{{__('THE EXCHANGE, yes, you have read very well, we know that we find ourselves in very difficult situations in the world economy, and ')}} <mark>{{ __('WHAT BETTER') }}</mark> {{ __('than being able to obtain accommodation thanks to the exchange of objects that you no longer use, it is They find it in good condition and it is difficult for us to obtain someone like us in our markets, although it also happens that they can bring us what costs us in our country 3 times the value that you in yours, such as personal hygiene, food, etc. . Let us do one thing then, I invite you to that if any of these offers interest you') }}
+    <mark><a href="#contacto" class="text-dark">{{ __('CONTACT US') }}</a></mark> {{ __('for more information and / or keep visiting our website periodically where we will put the current offers according to the special dates of our house, although you can also') }} <a href="#suscripcion" class="text-dark">{{ __('SUBSCRIBE') }}</a>
+     {{ __('to be able to receive our latest news and offers first-hand, especially if you already have a future travel date to our country, and if you found this website by chance and') }} <mark>{{ __('YOU DID NOT THINK TO VISIT TRINIDAD') }}</mark> {{ __('i invite you to read') }} <mark>{{ __('REASONS TO VISIT THE ISLAND MUSEUM OF THE CARIBBEAN') }}</mark>, {{ __('you will see that if it did not have it in its destinations, it will include it of all. He saw that in a few lines I managed to catch his attention (At least I hope so') }} &#128591;)!! {{ __('Don not forget the') }} <mark><a href="#suscripcion" class="text-dark">{{__('SUBSCRIPTION')}}</a></mark>.</p>
 <div class="clearfix"></div>
 <div class="row pb-5 pt-5">
   <div id="fac_plac" class="panel panel-primary col-xs-12 col-md-6 animate__animated animate__slideInLeft">
-    <div class="bg-primary rounded container pt-2"><img src="/images/img/facilidades.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2"><h3 class="text-center text-uppercase text-light">Facilidades</h3></div>
+    <div class="bg-primary rounded container pt-2"><img src="/images/img/facilidades.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2"><h3 class="text-center text-uppercase text-light">{{ __('Facilities') }}</h3></div>
   <section class="border border-primary rounded"><p>Facilities</p></section>
   </div>
   <div id="plac_fac" class="panel panel-primary col-xs-12 col-md-6 animate__animated animate__slideInRight">
-    <div class="bg-primary rounded container pt-2"><img src="/images/img/Lugares.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2"><h3 class="text-center text-uppercase text-light">Lugares Cerca</h3></div>
+    <div class="bg-primary rounded container pt-2"><img src="/images/img/Lugares.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2"><h3 class="text-center text-uppercase text-light">{{ __('CLose Places') }}</h3></div>
   <section class="border border-primary rounded"><p>CLose Places</p></section>
   </div>
 </div>
 </section><!--END Section Nosotros-->
 <div class="row" id="galeria" name="galeria"><!--Section Galeria-->
 <section class="galeria pt-5">
-  <h1 id="galer" class="text-center text-uppercase text-light pt-5 animate__animated animate__slideInRight">Conozca nuestros espacios</h1>
+  <h1 id="galer" class="text-center text-uppercase text-light pt-5 animate__animated animate__slideInRight">{{ __('Know our places') }}</h1>
   <div class="gallery-container">
     <div class="gallery-card">
       <a href="/images/images_galery/Amanecer Terraza.jpg" data-lightbox="roadtrip">
@@ -82,27 +77,27 @@
 </div><!--END Section Galeria-->
 <div class="row pb-5" id="servicios" name="servicios"><!--Section Servicios-->
 <section class="container services pb-5 pt-5">
-<h1 id="services" class="col-xs-12 text-center text-uppercase pt-5 px-2 animate__animated animate__bounceIn">Servicios</h1>
+<h1 id="services" class="col-xs-12 text-center text-uppercase pt-5 px-2 animate__animated animate__bounceIn">{{ __('Services') }}</h1>
 <div class="clearfix"></div>
 <div class="row">
 <div id="alimen" class="panel panel-primary col-xs-12 col-md-6 col-lg-4 h-500px pb-5">
   <div class="bg-primary rounded container pt-2 pb-2">
     <img src="/images/img/cenas.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2">
-    <h3 class="text-center text-uppercase text-light">Alimentos</h3>
+    <h3 class="text-center text-uppercase text-light">{{ __('Foods') }}</h3>
   </div>
   <section class="border border-primary rounded h-100"><p class="pt-2 mx-2 my-2 text-justify">Nuestra casa pone a su disposición los servicios de cena y desayuno con productos frescos y totalmente naturales</p></section>
 </div>
 <div id="excurs" class="panel panel-primary col-xs-12 col-md-6 col-lg-4 h-500px pb-5">
   <div class="bg-primary rounded container pt-2 pb-2">
     <img src="/images/img/excursiones.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2">
-    <h3 class="text-center text-uppercase text-light">Excursiones</h3>
+    <h3 class="text-center text-uppercase text-light">{{ __('Excursions') }}</h3>
   </div>
   <section class="border border-primary rounded h-100"><p class="pt-2 mx-2 my-2 text-justify">Le proporcionamos a usted varias excursiones, desde incluidas en su precio de reserva hasta otras con precio adicional, en diferentes idiomas donde conocerán varios atractivos de la ciudad</p></section>
 </div>
 <div id="transp" class="panel panel-primary col-xs-12 col-md-12 col-lg-4 h-500px pb-5">
   <div class="bg-primary rounded container pt-2 pb-2">
     <img src="/images/img/transporte.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2">
-    <h3 class="text-center text-uppercase text-light">Transportación</h3>
+    <h3 class="text-center text-uppercase text-light">{{ __('Transportation') }}</h3>
   </div>
   <section class="border border-primary rounded h-100"><p class="pt-2 mx-2 my-2 text-justify">Donde quiera que usted piense ir nosotros podremos ayudar a gestionar su traslado desde precios económicos hasta precios más especializados dependiendo del confort y seguridad con el que guste viajar.</p></section>
 </div>
@@ -112,7 +107,7 @@
 <div class="contenedor-testimonios"><!--SECTION TESTIMONIOS-->
   <div class="contenedor-slider-testimonios">
     <div class="testimonial-slider">
-      <div class="slider-overflow"><h1 class="text-center text-light text-uppercase">Testimonios</h1>
+      <div class="slider-overflow"><h1 class="text-center text-light text-uppercase">{{ __('Testimonials') }}</h1>
         <div class="slider-carousel">
 <div class="carousel slide" id="demo" data-ride="carousel">
   <!--Indicadores-->
@@ -209,7 +204,7 @@
 </div>
 </div>
 </div><!--Fin SECTION TESTIMONIOS-->
-<section class="container-fluid col-12 pt-5" id="blog" name="blog"><h1 id="post" class="text-center pb-2 pt-5 text-uppercase animate__animated animate__zoomIn">Posts</h1><!--Section Blog-->
+<section class="container-fluid col-12 pt-5" id="blog" name="blog"><h1 id="post" class="text-center pb-2 pt-5 text-uppercase animate__animated animate__zoomIn">{{ __('Posts') }}</h1><!--Section Blog-->
   <div class="row mb-2">
     <div class="col-md-6">
       <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
@@ -286,27 +281,27 @@
 <div class="modal-dialog" role="document">
 <div class="modal-content">
 <div class="modal-header">
- <h4 class="modal-title">Contacto</h4>
+ <h4 class="modal-title">{{ __('Contact') }}</h4>
  <button type="button" class="close" data-dismiss="modal">&times;</button>
 </div>
 <div class="modal-body">
  <div class="row justify-content-center">
    <div class="col-6">
  <form action="" class="">
-     <input type="text" class="form-control font-italic mt-5" placeholder="Email...">
-     <input type="text" class="form-control font-italic mt-2" placeholder="Nombre...">
-     <textarea name="mensaje" class="form-control font-italic mt-2" id="" cols="33" rows="2" placeholder="Su mensaje..."></textarea>
-    <button type="button" class="btn btn-primary rounded btn-lg mt-3">Enviar</button>
+     <input type="text" class="form-control font-italic mt-5" placeholder="{{ __('Email') }}...">
+     <input type="text" class="form-control font-italic mt-2" placeholder="{{ __('Name') }}...">
+     <textarea name="mensaje" class="form-control font-italic mt-2" id="" cols="33" rows="2" placeholder="{{ __('Your message') }}..."></textarea>
+    <button type="button" class="btn btn-primary rounded btn-lg mt-3">{{ __('Send') }}</button>
  </form>
  </div>
  <div class="col-6">
  <section class="info-contact">
    <div class="container mt-5">
-       <div class="tel-fijo"><p><mark class="bg-dark text-light">Teléfono Fijo: <br></mark>+53-41993797</p></div>
-       <div class="movil"><p><mark class="bg-dark text-light">Móvil Arasay: <br></mark>+53-53419001</p>
-       <p><mark class="bg-dark text-light">Móvil Youblián: <br></mark>+53-52474269</p></div>
-       <div class="email"> <p><mark class="bg-dark text-light">Email: <br></mark>hostalgranfamilia@gmail.com</p></div>
-       <div class="direc"><p><mark class="bg-dark text-light">Dirección: <br></mark>Camilo Cienfuegos #180A entre José Martí y Miguel Calzada. Trinidad, Sancti Spíritus, Cuba. CP-62600</p></div>
+       <div class="tel-fijo"><p><mark class="bg-dark text-light">{{ __('Landline') }}: <br></mark>+53-41993797</p></div>
+       <div class="movil"><p><mark class="bg-dark text-light">{{ __('Mobile Phone') }} Arasay: <br></mark>+53-53419001</p>
+       <p><mark class="bg-dark text-light">{{ __('Mobile Phone') }} Youblián: <br></mark>+53-52474269</p></div>
+       <div class="email"> <p><mark class="bg-dark text-light">{{ __('Email') }}: <br></mark>hostalgranfamilia@gmail.com</p></div>
+       <div class="direc"><p><mark class="bg-dark text-light">{{ __('Adress') }}: <br></mark>{{ __('At 180A Camilo Cienfuegos, between José Martí and Miguel Calzada street. Trinidad, Sancti Spíritus, Cuba. PC: 62600') }}</p></div>
      </div>
  </section>
  </div>

@@ -9,7 +9,7 @@
       <slot>
         <div class="col justify-content-center">
       <img :src="imgPpal" class="bg-primary mx-auto d-block py-2 px-2 ">
-      <div class=" bg-primary"><h1 class="text-center text-light">{{ titleLogin }}</h1>
+      <div class=" bg-primary"><h1 class="text-center text-light">{{ $trans('messages.Login') }}</h1>
         </div>
         </div>
       </slot>
@@ -24,7 +24,7 @@
 
 
       <div class="form-group row">
-          <label for="email" class="col-md-4 col-form-label text-md-right text-light">{{ labelEmail }}</label>
+          <label for="email" class="col-md-4 col-form-label text-md-right text-light">{{ $trans('messages.E-Mail Address') }}</label>
 
           <div class="col-md-6">
               <input id="email" v-model="email" type="email" class="form-control" name="email" required autocomplete="email" autofocus>
@@ -33,7 +33,7 @@
       </div>
 
       <div class="form-group row">
-          <label for="password" class="col-md-4 col-form-label text-md-right text-light">{{ labelPass }}</label>
+          <label for="password" class="col-md-4 col-form-label text-md-right text-light">{{ $trans('messages.Password') }}</label>
 
           <div class="col-md-6">
               <input id="password" v-model="password" type="password" class="form-control" name="password" required autocomplete="current-password">
@@ -59,13 +59,13 @@
     <div class="form-group row mb-0">
         <div class="col-md-5 offset-md-4">
             <button type="button" class="btn btn-primary bg-dark" @click=startSession()>
-                {{ titleLogin }}
+                {{ $trans('messages.Start') }}
             </button>
-            <button type="button" class="modal-default-button btn btn-danger" @click="$emit('close')">Cerrar</button>
+            <button type="button" class="modal-default-button btn btn-danger" @click="$emit('close')">{{ $trans('messages.Close') }}</button>
 
 
                 <a class="btn btn-link text-light" href="#" id="show-reset-modal" @click="openReset()">
-                    Forgot Your Password?
+                    {{ $trans('messages.Forgot your password?') }}
                 </a>
         </div>
     </div>
@@ -90,12 +90,9 @@
           email    : '',
           password:'',
           ventanaLogin:false,
-          labelPass:this.$attrs.labelpass,
           labelForgPass:this.$attrs.labelforgpass,
           forgPass:this.$attrs.forgpass,
           oldEmail:this.$attrs.oldemail,
-          labelEmail:this.$attrs.labelemail,
-          titleLogin:this.$attrs.titlelogin,
           token   : window.CSRF_TOKEN,
 
         }
@@ -104,9 +101,9 @@
 
         startSession: function(){
           let url=this.urlLogin;
-          let mensaje='Error no identificado';
+          let mensaje=this.$trans('messages.Unidentified error');
           if (this.email==''||this.password=='') {
-            mensaje='No puede dejar campos vacíos, revise por favor';
+            mensaje=this.$trans('messages.You cannot leave empty fields, please check');
           }
           let data={
             email:this.email,
@@ -114,8 +111,8 @@
           };
           axios.post(url,data)
                .then(response=>{
-                 swal({title:'Usted ha iniciado sesión satisfactoriamente',
-                       text:'Datos correctos',
+                 swal({title:this.$trans('messages.Correct data'),
+                       text:this.$trans('messages.You have successfully logged in'),
                        icon:'success',
                        closeOnClickOutside:false,
                        closeOnEsc:false
@@ -149,7 +146,12 @@
 
       },
         mounted() {
-            console.log('Component mounted.')
+          if (this.$attrs.locale) {
+               this.$lang.setLocale(this.$attrs.locale);
+               }
+          else {
+            this.$lang.setLocale('en');
+          }
         }
     }
 </script>

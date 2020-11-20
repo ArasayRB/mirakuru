@@ -9,7 +9,7 @@
       <slot>
         <div class="col justify-content-center">
       <img :src="imgPpal" class="bg-primary mx-auto d-block py-2 px-2 ">
-      <div class=" bg-primary"><h1 class="text-center text-light">{{ titleReset }}</h1>
+      <div class=" bg-primary"><h1 class="text-center text-light">{{ $trans('messages.Reset Password') }}</h1>
         </div>
         </div>
       </slot>
@@ -19,7 +19,7 @@
     <slot>
       <div class="form-group row">
           <label for="email" class="col-md-4 col-form-label text-md-right
-          text-light">{{ labelEmail }}</label>
+          text-light">{{ $trans('messages.E-Mail Address') }}</label>
 
           <div class="col-md-6">
               <input id="email" type="email" v-model="email" class="form-control" name="email" required autocomplete="email" autofocus>
@@ -35,9 +35,9 @@
             <div class="col-md-5 offset-md-4">
 
                   <button type="button" class="btn btn-primary bg-dark" @click=resetPassword()>
-                      {{buttonEmail}}
+                      {{ $trans('messages.Send Password Reset Link') }}
                   </button>
-                  <button type="button" class="modal-default-button btn btn-danger" @click="$emit('close')">Cerrar</button>
+                  <button type="button" class="modal-default-button btn btn-danger" @click="$emit('close')">{{ $trans('messages.Close') }}</button>
             </div>
         </div>
       </div>
@@ -57,12 +57,9 @@
         return {
           imgPpal:this.$attrs.imgppal,
           urlResetEmail:this.$attrs.urlresetemail,
-          buttonEmail:this.$attrs.buttonemail,
           name:'',
           email    : '',
           ventanaResetEmail:false,
-          labelEmail:this.$attrs.labelemail,
-          titleReset:this.$attrs.titlereset,
           token   : window.CSRF_TOKEN,
 
         }
@@ -71,9 +68,9 @@
 
         resetPassword: function(){
           let url=this.urlResetEmail;
-          let mensaje='Error no identificado';
+          let mensaje=this.$trans('messages.Unidentified error');
           if (this.email=='') {
-            mensaje='No puede dejar campos vacíos, revise por favor';
+            mensaje=this.$trans('messages.You cannot leave empty fields, please check');
           }
           let data={
             email:this.email,
@@ -81,8 +78,8 @@
           };
           axios.post(url,data)
                .then(response=>{
-                 swal({title:'Revise su email: Link enviado',
-                       text:'Usted ha de recibir en su email un link al que debe acceder para continuar con el cambio de contraseña',
+                 swal({title:this.$trans('messages.Check your email: Link password reset sent'),
+                       text:this.$trans('messages.You must receive in your email a link that you must access to continue with the password change'),
                        icon:'success',
                        closeOnClickOutside:false,
                        closeOnEsc:false
@@ -107,7 +104,12 @@
 
       },
         mounted() {
-            console.log('Component mounted.')
+          if (this.$attrs.locale) {
+               this.$lang.setLocale(this.$attrs.locale);
+               }
+          else {
+            this.$lang.setLocale('en');
+          }
         }
     }
 </script>
