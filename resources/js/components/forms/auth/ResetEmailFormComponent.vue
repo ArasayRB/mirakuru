@@ -9,7 +9,7 @@
       <slot>
         <div class="col justify-content-center">
       <img :src="imgPpal" class="bg-primary mx-auto d-block py-2 px-2 ">
-      <div class=" bg-primary"><h1 class="text-center text-light">{{ $trans('messages.Reset Password') }}</h1>
+      <div class=" bg-primary"><h1 class="text-center text-light">{{ $trans('messages.Send Password Reset Link') }}</h1>
         </div>
         </div>
       </slot>
@@ -35,7 +35,7 @@
             <div class="col-md-5 offset-md-4">
 
                   <button type="button" class="btn btn-primary bg-dark" @click=resetPassword()>
-                      {{ $trans('messages.Send Password Reset Link') }}
+                      {{ $trans('messages.Send') }}
                   </button>
                   <button type="button" class="modal-default-button btn btn-danger" @click="$emit('close')">{{ $trans('messages.Close') }}</button>
             </div>

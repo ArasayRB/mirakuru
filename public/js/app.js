@@ -41797,7 +41797,9 @@ var render = function() {
                                   [
                                     _vm._v(
                                       _vm._s(
-                                        _vm.$trans("messages.Reset Password")
+                                        _vm.$trans(
+                                          "messages.Send Password Reset Link"
+                                        )
                                       )
                                     )
                                   ]
@@ -41899,9 +41901,7 @@ var render = function() {
                                           _vm._v(
                                             "\n                      " +
                                               _vm._s(
-                                                _vm.$trans(
-                                                  "messages.Send Password Reset Link"
-                                                )
+                                                _vm.$trans("messages.Send")
                                               ) +
                                               "\n                  "
                                           )
