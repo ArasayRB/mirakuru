@@ -6,6 +6,7 @@ use App\Models\Foto;
 use App\Models\Habitacion;
 use App\Models\Keyword;
 use App\Models\Noticia;
+use App\Models\Oferta;
 use App\Models\Pago;
 use App\Models\PublicacionHostal;
 use App\Models\Reserva;
@@ -51,6 +52,10 @@ class Hostal extends Model
 
     public function noticias(){
       return hasMany(Noticia::class)->withTimestamps();
+    }
+
+    public function ofertas(){
+      return hasMany(Oferta::class)->withTimestamps();
     }
 
     public function reservas(){
