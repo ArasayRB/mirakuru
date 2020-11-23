@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Hostal;
 use App\Models\Keyword;
-use App\Models\Tag;
 use App\Models\TemaNoticia;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -36,9 +35,5 @@ class Noticia extends Model
 
     public function hostales(){
       return belongsTo(Hostal::class)->withTimestamps();
-    }
-
-    public function tags(){
-      return hasMany(Tag::class)->withTimestamps();
     }
 }

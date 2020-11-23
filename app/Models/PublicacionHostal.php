@@ -4,7 +4,6 @@ namespace App\Models;
 
 use App\Models\Hostal;
 use App\Models\Keyword;
-use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,9 +25,5 @@ class PublicacionHostal extends Model
 
     public function keywords(){
       return hasMany(Keyword::class)->withTimestamps();
-    }
-
-    public function tags(){
-      return hasMany(Tag::class)->withTimestamps();
     }
 }
