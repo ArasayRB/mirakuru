@@ -27,6 +27,7 @@ class CreatePostsTable extends Migration
             $table->integer('cant_access_read')->nullable();
             $table->integer('cant_likes')->nullable();
             $table->integer('cant_shares')->nullable();
+            $table->text('tags');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categoria_posts')->onDelete('cascade');

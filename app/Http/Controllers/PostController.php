@@ -66,6 +66,7 @@ class PostController extends Controller
           'category'=> 'required',
           'checkEditSummary'=> 'required',
           'checkEditContent'=> 'required',
+          'tags'=> 'required',
         ]);
         $fileImageNameExtencion=request('image')->getClientOriginalName();
 
@@ -76,6 +77,7 @@ class PostController extends Controller
         $newFileName=$fileName."_".time().".".$fileExtencion;
 
         $saveAs=request('image')->storeAs('public/img_web/posts_img',$newFileName);
+        $tags = explode(", ", request('tags'));
         $post= new Post();
         $post->title=request('title');
         $post->content=request('checkEditContent');
@@ -87,7 +89,9 @@ class PostController extends Controller
         $post->cant_access_read=0;
         $post->cant_likes=0;
         $post->cant_shares=0;
+        $post->tags=request('tags');
         $post->save();
+        $post->tag($tags);
         return $post;
     }
 

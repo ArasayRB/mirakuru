@@ -23,6 +23,7 @@ class Noticia extends Model
         'qr_img_url',
         'tema_id',
         'hostal_id',
+        'tags',
     ];
 
     public function temas(){

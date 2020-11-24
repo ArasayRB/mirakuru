@@ -85,7 +85,7 @@
 </template>
 
 <script>
-  import VueCkeditor from '@ckeditor/ckeditor5-build-classic';
+  import VueCkeditor from 'vue-ckeditor2';
     export default {
       components: { VueCkeditor },
       props:['post',

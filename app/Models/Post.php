@@ -25,6 +25,7 @@ class Post extends Model
         'cant_access_read',
         'cant_likes',
         'cant_shares',
+        'tags',
     ];
 
     public function users(){
@@ -32,7 +33,7 @@ class Post extends Model
     }
 
     public function categoriaPosts(){
-      return $this->belongsTo(CategoriaPost::class,'category_id');
+      return $this->belongsTo('App\Models\CategoriaPost','category_id');
     }
 
     public function keywords(){

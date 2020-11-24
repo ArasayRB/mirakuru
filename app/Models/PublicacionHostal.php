@@ -17,6 +17,7 @@ class PublicacionHostal extends Model
         'video_url',
         'qr_img_url',
         'hostal_id',
+        'tags',
     ];
 
     public function hostales(){

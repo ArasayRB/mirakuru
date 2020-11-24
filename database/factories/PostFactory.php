@@ -38,6 +38,7 @@ class PostFactory extends Factory
           'cant_access_read' => $this->faker->randomDigitNotNull,
           'cant_likes' => $this->faker->randomDigitNotNull,
           'cant_shares' => $this->faker->randomDigitNotNull,
+          'tags' => $this->faker->text($maxNbChars = 50),
         ];
     }
 }

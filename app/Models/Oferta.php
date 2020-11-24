@@ -22,6 +22,7 @@ class Oferta extends Model
         'fecha_final',
         'hostal_id',
         'type_oferta_id',
+        'tags',
     ];
 
     public function hostales(){

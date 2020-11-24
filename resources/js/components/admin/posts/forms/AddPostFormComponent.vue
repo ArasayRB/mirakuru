@@ -52,6 +52,13 @@
                  @fileUploadResponse="onFileUploadResponse($event)" />
                 </div>
 
+                <div class="form-group">
+                           <label>Tags : <span class="text-danger">*</span></label>
+                           <br>
+                           <input type="text" data-role="tagsinput" name="tags" class="form-control tags">
+                           
+                </div>
+
 
             </div>
 
@@ -82,11 +89,10 @@
 </template>
 
 <script>
-  import VueCkeditor from '@ckeditor/ckeditor5-build-classic';
+  import VueCkeditor from 'vue-ckeditor2';
     export default {
       components: { VueCkeditor },
-      props:['post',
-              'locale'],
+      props:['locale'],
       data(){
         return {
           config: {

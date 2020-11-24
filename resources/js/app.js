@@ -11,7 +11,7 @@ window.Vue = require('vue');
 import swal from 'sweetalert';
 import VueLocalStorage from 'vue-localstorage';
 import VueCookies from 'vue-cookies';
-import VueLang from '@eli5/vue-lang-js'
+import VueLang from '@eli5/vue-lang-js';
 // get the data source
 import translations from './vue-translations.js';
 var Vue = require('vue');

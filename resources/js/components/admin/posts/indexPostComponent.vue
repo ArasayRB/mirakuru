@@ -70,14 +70,14 @@
                   <td>{{post.id}}</td>
                   <td>{{post.title}}</td>
                   <td>{{post.content}}</td>
-                  <td></td>
+                  <td>{{post.tags}}</td>
                   <td>{{post.summary}}</td>
                   <td>{{post.publicate_state}}</td>
                   <td><img :src="src+post.img_url"  width="100"></td>
                   <td></td>
                   <td></td>
                   <td>{{user}}</td>
-                  <td>{{post.category_id}}</td>
+                  <td>{{post.categoria_posts.category_post}}</td>
                   <td>{{post.cant_access_read}}</td>
                   <td>{{post.cant_likes}}</td>
                   <td>{{post.cant_shares}}</td>
@@ -91,7 +91,7 @@
 </template>
 
 <script>
-  import VueCkeditor from '@ckeditor/ckeditor5-build-classic';
+  import VueCkeditor from 'vue-ckeditor2';
   export default {
       components: { VueCkeditor },
       data(){
@@ -235,7 +235,9 @@
       },
       created: function () {
          axios.get('/postsTable')
-              .then(response => this.posts = response.data)
+              .then(response =>{
+                this.posts = response.data;
+                console.log('CatPost- '+response.data[0]['categoria_posts']['category_post']);})
               .catch(error => this.errors.push(error));
          axios.get('/categoriesList')
                .then(response =>{
