@@ -121,6 +121,7 @@ return [
   "New Password"=> "Nueva contraseña",
   "New Post"=>"Crear Post",
   "Not Found"=> "No encontrado",
+  "None Post added yet"=> "Ningún Post añadido aún",
   "of"=> "de",
   "Oh no"=> "Ay no",
   "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain."=> "Una vez que se elimina un equipo, todos sus recursos y datos se eliminarán de forma permanente. Antes de eliminar este equipo, descargue cualquier dato o información sobre este equipo que desee conservar.",

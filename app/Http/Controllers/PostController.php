@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -93,6 +94,7 @@ class PostController extends Controller
 
         $saveAs=request('image')->storeAs('public/img_web/posts_img',$newFileName);
         $tags = explode(",", request('tags'));
+        $slug = Str::slug($post->title, '-');
         $post= new Post();
         $post->title=request('title');
         $post->content=request('checkEditContent');
@@ -105,6 +107,7 @@ class PostController extends Controller
         $post->cant_likes=0;
         $post->cant_shares=0;
         $post->tags=request('tags');
+        $post->slug=$slug;
         $post->save();
         $post->tag($tags);
         $postToAdd=$this->getPostWithCategory($post->id);
@@ -179,6 +182,7 @@ class PostController extends Controller
       }
 
         $tags = explode(",", request('tags'));
+        $slug = Str::slug($post->title, '-');
         $post->title=request('title');
         $post->content=request('content');
         $post->publicate_state=false;
@@ -188,6 +192,7 @@ class PostController extends Controller
         $post->cant_likes=0;
         $post->cant_shares=0;
         $post->tags=request('tags');
+        $post->slug=$slug;
         $post->update();
         $post->retag($tags);
         $postToUpd=$this->getPostWithCategory($post->id);

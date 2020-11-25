@@ -121,6 +121,7 @@ return [
   "New Password"=> "New Password",
   "New Post"=>"New Post",
   "Not Found"=> "Not Found",
+  "None Post added yet"=> "None Post added yet",
   "of"=> "of",
   "Oh no"=> "Oh no",
   "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain."=> "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.",

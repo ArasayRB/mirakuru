@@ -27,6 +27,7 @@ class Post extends Model
         'cant_likes',
         'cant_shares',
         'tags',
+        'slug',
     ];
 
     public function users(){

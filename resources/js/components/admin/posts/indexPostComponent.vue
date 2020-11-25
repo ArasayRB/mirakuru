@@ -19,6 +19,11 @@
     <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary">{{ $trans('messages.List') }}</h6>
     </div>
+    <div class="alert alert-success" v-if="mensage!=''">
+      <ul>
+        <li>{{mensage}}</li>
+      </ul>
+    </div>
     <div class="card-body">
 
       <div class="table-responsive">
@@ -126,6 +131,7 @@
           idPostActualizar:-1,
           value:'',
           id:'',
+          mensage:'',
           valueImg:'',
           title:'',
           locale:'',
@@ -242,7 +248,10 @@
          axios.get('/postsTable')
               .then(response =>{
                 this.posts = response.data;
-                console.log('CatPost- '+response.data[0]['categoria_posts']['category_post']);})
+                if (response.data==''){
+                  this.mensage=this.$trans('messages.None Post added yet');
+                }
+                console.log('CatPost- '+response.data);})
               .catch(error => this.errors.push(error));
          axios.get('/categoriesList')
                .then(response =>{

@@ -2796,6 +2796,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2846,6 +2851,7 @@ __webpack_require__.r(__webpack_exports__);
       idPostActualizar: -1,
       value: '',
       id: '',
+      mensage: '',
       valueImg: '',
       title: '',
       locale: '',
@@ -2966,7 +2972,12 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('/postsTable').then(function (response) {
       _this2.posts = response.data;
-      console.log('CatPost- ' + response.data[0]['categoria_posts']['category_post']);
+
+      if (response.data == '') {
+        _this2.mensage = _this2.$trans('messages.None Post added yet');
+      }
+
+      console.log('CatPost- ' + response.data);
     })["catch"](function (error) {
       return _this2.errors.push(error);
     });
@@ -42137,6 +42148,12 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
+        _vm.mensage != ""
+          ? _c("div", { staticClass: "alert alert-success" }, [
+              _c("ul", [_c("li", [_vm._v(_vm._s(_vm.mensage))])])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
         _c("div", { staticClass: "card-body" }, [
           _c("div", { staticClass: "table-responsive" }, [
             _c(
@@ -56764,6 +56781,7 @@ module.exports = {
     "Nevermind": "Nevermind",
     "New Password": "New Password",
     "New Post": "New Post",
+    "None Post added yet": "None Post added yet",
     "Not Found": "Not Found",
     "Oh no": "Oh no",
     "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.": "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.",
@@ -57183,6 +57201,7 @@ module.exports = {
     "Nevermind": "Olvidar",
     "New Password": "Nueva contrase\xF1a",
     "New Post": "Crear Post",
+    "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
     "Not Found": "No encontrado",
     "Oh no": "Ay no",
     "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.": "Una vez que se elimina un equipo, todos sus recursos y datos se eliminar\xE1n de forma permanente. Antes de eliminar este equipo, descargue cualquier dato o informaci\xF3n sobre este equipo que desee conservar.",
@@ -57481,6 +57500,7 @@ module.exports = {
     "Name": "Nombre",
     "Nevermind": "Olvidar",
     "New Password": "Nueva contrase\xF1a",
+    "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
     "Not Found": "No encontrado",
     "Oh no": "Ay no",
     "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.": "Una vez que se elimina un equipo, todos sus recursos y datos se eliminar\xE1n de forma permanente. Antes de eliminar este equipo, descargue cualquier dato o informaci\xF3n sobre este equipo que desee conservar.",
