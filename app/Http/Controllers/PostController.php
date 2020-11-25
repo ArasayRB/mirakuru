@@ -62,9 +62,9 @@ class PostController extends Controller
     public function getTags()
     {
       $post=Post::first();
-      $tags=$post->tagged();
+      $tags=$post->existingTags();
 
-        dd( $tags);
+        return $tags;
     }
 
     /**

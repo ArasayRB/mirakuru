@@ -59,12 +59,10 @@
                            <label>Tags : <span class="text-danger">*</span></label>
                            <br>
                            <tags-input element-id="tags" :add-tags-on-comma=true	class=""
-    v-model="selectedTags"
-    :existing-tags="[
-        { key: 'web-development', value: 'Web Development' },
-        { key: 'php', value: 'PHP' },
-        { key: 'javascript', value: 'JavaScript' },
-    ]"
+    v-model="post.tags"
+    :existing-tags="tags"
+    id-field="slug"
+    text-field="name"
     :typeahead="true"></tags-input>
 
 
@@ -109,7 +107,7 @@
               'locale'],
       data(){
         return {
-          tag: '',
+          tags: [],
           selectedTags: [],
           config: {
        toolbar: [
@@ -237,6 +235,13 @@
               .then(response =>{
                  this.categories = response.data;
                })
+              .catch(error => this.errors.push(error));
+
+         axios.get('/available-tags')
+              .then(response =>{
+                this.tags = response.data;
+                console.log(this.tags);
+              })
               .catch(error => this.errors.push(error));
          },
         mounted() {

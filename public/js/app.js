@@ -2207,7 +2207,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -2218,7 +2217,7 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
   props: ['locale'],
   data: function data() {
     return {
-      tag: '',
+      tags: [],
       selectedTags: [],
       config: {
         toolbar: [{
@@ -2377,6 +2376,12 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
     })["catch"](function (error) {
       return _this2.errors.push(error);
     });
+    axios.get('/available-tags').then(function (response) {
+      _this2.tags = response.data;
+      console.log(_this2.tags);
+    })["catch"](function (error) {
+      return _this2.errors.push(error);
+    });
   },
   mounted: function mounted() {
     if (this.$attrs.locale) {
@@ -2499,8 +2504,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -2511,7 +2514,7 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
   props: ['post', 'locale'],
   data: function data() {
     return {
-      tag: '',
+      tags: [],
       selectedTags: [],
       config: {
         toolbar: [{
@@ -2665,6 +2668,12 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
     this.categoria = this.post.category_id;
     axios.get('/categoriesList').then(function (response) {
       _this2.categories = response.data;
+    })["catch"](function (error) {
+      return _this2.errors.push(error);
+    });
+    axios.get('/available-tags').then(function (response) {
+      _this2.tags = response.data;
+      console.log(_this2.tags);
     })["catch"](function (error) {
       return _this2.errors.push(error);
     });
@@ -41494,17 +41503,9 @@ var render = function() {
                                         attrs: {
                                           "element-id": "tags",
                                           "add-tags-on-comma": true,
-                                          "existing-tags": [
-                                            {
-                                              key: "web-development",
-                                              value: "Web Development"
-                                            },
-                                            { key: "php", value: "PHP" },
-                                            {
-                                              key: "javascript",
-                                              value: "JavaScript"
-                                            }
-                                          ],
+                                          "existing-tags": _vm.tags,
+                                          "id-field": "slug",
+                                          "text-field": "name",
                                           typeahead: true
                                         },
                                         model: {
@@ -41953,25 +41954,17 @@ var render = function() {
                                         attrs: {
                                           "element-id": "tags",
                                           "add-tags-on-comma": true,
-                                          "existing-tags": [
-                                            {
-                                              key: "web-development",
-                                              value: "Web Development"
-                                            },
-                                            { key: "php", value: "PHP" },
-                                            {
-                                              key: "javascript",
-                                              value: "JavaScript"
-                                            }
-                                          ],
+                                          "existing-tags": _vm.tags,
+                                          "id-field": "slug",
+                                          "text-field": "name",
                                           typeahead: true
                                         },
                                         model: {
-                                          value: _vm.selectedTags,
+                                          value: _vm.post.tags,
                                           callback: function($$v) {
-                                            _vm.selectedTags = $$v
+                                            _vm.$set(_vm.post, "tags", $$v)
                                           },
-                                          expression: "selectedTags"
+                                          expression: "post.tags"
                                         }
                                       })
                                     ],
