@@ -6,12 +6,13 @@ use App\Models\CategoriaPost;
 use App\Models\ComentarioPost;
 use App\Models\Keyword;
 use App\Models\User;
+use Conner\Tagging\Taggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory; use Taggable;
     protected $fillable = [
         'title',
         'content',

@@ -55,8 +55,16 @@
                 <div class="form-group">
                            <label>Tags : <span class="text-danger">*</span></label>
                            <br>
-                           <input type="text" data-role="tagsinput" name="tags" class="form-control tags">
-                           
+                           <tags-input element-id="tags" :add-tags-on-comma=true	class=""
+    v-model="selectedTags"
+    :existing-tags="[
+        { key: 'web-development', value: 'Web Development' },
+        { key: 'php', value: 'PHP' },
+        { key: 'javascript', value: 'JavaScript' },
+    ]"
+    :typeahead="true"></tags-input>
+
+
                 </div>
 
 
@@ -90,11 +98,15 @@
 
 <script>
   import VueCkeditor from 'vue-ckeditor2';
+  import VoerroTagsInput from '@voerro/vue-tagsinput';
+  Vue.component('tags-input', VoerroTagsInput);
     export default {
-      components: { VueCkeditor },
+      components: { VueCkeditor},
       props:['locale'],
       data(){
         return {
+          tag: '',
+          selectedTags: [],
           config: {
        toolbar: [
 
@@ -156,8 +168,18 @@
 
             let url="/posts";
             let mensaje=this.$trans('messages.Unidentified error');
-            if (this.title==''||this.imagenPost==''||this.categoria==''||this.checkEditSummary==''||this.checkEditContent=='') {
+            if (this.title==''||this.imagenPost==''||this.categoria==''||this.checkEditSummary==''||this.checkEditContent==''||this.selectedTags=='') {
               mensaje=this.$trans('messages.You cannot leave empty fields, please check');
+            }
+            let tagsList=this.selectedTags;
+            let postTags="";
+            for(var i=0; i<tagsList.length;i=i+1){
+              if(i==(tagsList.length-1)){
+              postTags= ''+postTags+tagsList[i].value;
+            }
+            else{
+              postTags= ''+postTags+tagsList[i].value+',';
+            }
             }
             let data = new FormData();
               data.append("title", this.title);
@@ -165,6 +187,7 @@
               data.append("category", this.categoria);
               data.append("checkEditSummary", this.checkEditSummary);
               data.append("checkEditContent", this.checkEditContent);
+              data.append("tags", postTags);
             axios.post(url,data)
                  .then(response=>{
                    swal({title:this.$trans('messages.Correct data'),
@@ -197,6 +220,9 @@
                    }
                   if (wrong.hasOwnProperty('checkEditContent')) {
                      mensaje+='-'+wrong.checkEditContent[0];
+                   }
+                  if (wrong.hasOwnProperty('tags')) {
+                     mensaje+='-'+wrong.tags[0];
                    }
                    else if (wrong.hasOwnProperty('login')){
                      mensaje+='-'+wrong.login[0];

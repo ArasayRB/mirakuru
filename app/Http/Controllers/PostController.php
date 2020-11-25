@@ -32,6 +32,13 @@ class PostController extends Controller
                    return $posts;
     }
 
+    public function getPostWithCategory($post){
+      $posts=Post::with('categoriaPosts')
+                   ->where('id',$post)
+                   ->first();
+                   return $posts;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -50,6 +57,14 @@ class PostController extends Controller
       $categories=$post->allCategories();
 
         return $categories;
+    }
+
+    public function getTags()
+    {
+      $post=Post::first();
+      $tags=$post->tagged();
+
+        dd( $tags);
     }
 
     /**
@@ -77,7 +92,7 @@ class PostController extends Controller
         $newFileName=$fileName."_".time().".".$fileExtencion;
 
         $saveAs=request('image')->storeAs('public/img_web/posts_img',$newFileName);
-        $tags = explode(", ", request('tags'));
+        $tags = explode(",", request('tags'));
         $post= new Post();
         $post->title=request('title');
         $post->content=request('checkEditContent');
@@ -92,7 +107,8 @@ class PostController extends Controller
         $post->tags=request('tags');
         $post->save();
         $post->tag($tags);
-        return $post;
+        $postToAdd=$this->getPostWithCategory($post->id);
+        return $postToAdd;
     }
 
     /**
@@ -138,6 +154,7 @@ class PostController extends Controller
           'category_id'=> 'required',
           'summary'=> 'required',
           'content'=> 'required',
+          'tags'=> 'required',
         ]);
         $fileImageNameExtencion=request('img_url')->getClientOriginalName();
 
@@ -157,10 +174,11 @@ class PostController extends Controller
           'category_id'=> 'required',
           'summary'=> 'required',
           'content'=> 'required',
+          'tags'=> 'required',
         ]);
       }
 
-
+        $tags = explode(",", request('tags'));
         $post->title=request('title');
         $post->content=request('content');
         $post->publicate_state=false;
@@ -169,8 +187,11 @@ class PostController extends Controller
         $post->cant_access_read=0;
         $post->cant_likes=0;
         $post->cant_shares=0;
+        $post->tags=request('tags');
         $post->update();
-        return $post;
+        $post->retag($tags);
+        $postToUpd=$this->getPostWithCategory($post->id);
+        return $postToUpd;
     }
 
     /**
@@ -184,6 +205,7 @@ class PostController extends Controller
     {
         $post=Post::find($post->id);
         $post->delete();
+        $post->untag();
         return response()->json('Post deleted');
     }
 }

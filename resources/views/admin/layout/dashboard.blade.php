@@ -24,6 +24,9 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/admin/sb-admin-2.min.css') }}" rel="stylesheet">
 
+    <!--Tags Style-->
+    <link href="{{ asset('vendor/css/tagsstyle.css') }}" rel="stylesheet">
+
   </head>
 @show
 

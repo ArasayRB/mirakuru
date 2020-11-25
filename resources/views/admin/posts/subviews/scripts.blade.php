@@ -18,4 +18,5 @@
 <script src="{{ asset('vendor/ckeditor/adapters/jquery.js') }}"></script>
 <script type="text/javascript">
 CKEDITOR.replace( 'check-edit-content' );
+
 </script>

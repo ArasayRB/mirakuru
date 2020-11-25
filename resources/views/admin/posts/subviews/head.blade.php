@@ -18,4 +18,7 @@
   <!-- Custom styles for this page -->
   <link href="{{ asset('vendor/datatables/dataTables.bootstrap4.min.css') }}" rel="stylesheet">
 
+  <!--Tags Style-->
+  <link href="{{ asset('vendor/css/tagsstyle.css') }}" rel="stylesheet">
+
 </head>

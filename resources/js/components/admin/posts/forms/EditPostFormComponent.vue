@@ -55,6 +55,21 @@
                  @fileUploadResponse="onFileUploadResponse($event)" />
                 </div>
 
+                <div class="form-group">
+                           <label>Tags : <span class="text-danger">*</span></label>
+                           <br>
+                           <tags-input element-id="tags" :add-tags-on-comma=true	class=""
+    v-model="selectedTags"
+    :existing-tags="[
+        { key: 'web-development', value: 'Web Development' },
+        { key: 'php', value: 'PHP' },
+        { key: 'javascript', value: 'JavaScript' },
+    ]"
+    :typeahead="true"></tags-input>
+
+
+                </div>
+
 
             </div>
 
@@ -86,12 +101,16 @@
 
 <script>
   import VueCkeditor from 'vue-ckeditor2';
+  import VoerroTagsInput from '@voerro/vue-tagsinput';
+  Vue.component('tags-input', VoerroTagsInput);
     export default {
       components: { VueCkeditor },
       props:['post',
               'locale'],
       data(){
         return {
+          tag: '',
+          selectedTags: [],
           config: {
        toolbar: [
 
@@ -148,6 +167,16 @@
         },
         editedPost:function(post){
           let config= { headers: {"Content-Type": "multipart/form-data" }};
+          let tagsList=this.selectedTags;
+          let postTags="";
+          for(var i=0; i<tagsList.length;i=i+1){
+            if(i==(tagsList.length-1)){
+            postTags= ''+postTags+tagsList[i].value;
+          }
+          else{
+            postTags= ''+postTags+tagsList[i].value+',';
+          }
+          }
           let data = new FormData();
 	          data.append('_method', 'patch');
             data.append("title", post.title);
@@ -155,6 +184,7 @@
             data.append("category_id", this.categoria);
             data.append("summary", post.summary);
             data.append("content", post.content);
+            data.append("tags", postTags);
           let url="/posts/"+post.id;
           post.img_url=this.imagenPost;
           axios.post(url,data,config)
@@ -188,6 +218,9 @@
                  }
                 if (wrong.hasOwnProperty('content')) {
                    mensaje+='-'+wrong.content[0];
+                 }
+                if (wrong.hasOwnProperty('tags')) {
+                   mensaje+='-'+wrong.tags[0];
                  }
                  else if (wrong.hasOwnProperty('login')){
                    mensaje+='-'+wrong.login[0];

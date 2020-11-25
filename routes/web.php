@@ -96,6 +96,7 @@ Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index']);
 Route::resource('/posts', App\Http\Controllers\PostController::class);
 Route::get('/categoriesList', [App\Http\Controllers\PostController::class, 'getCategories']);
 Route::get('/postsTable', [App\Http\Controllers\PostController::class, 'getPostAutentUser']);
+Route::get('/available-tags', [App\Http\Controllers\PostController::class, 'getTags']);
 Route::get('/hola', function(){
   return 'hola';
 });

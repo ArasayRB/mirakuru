@@ -10,16 +10,17 @@
 
   </div>
   <div class="card shadow mb-4">
+    <add-post-form-component @postnew="addPostIndex" :locale="locale" v-if="ventanaCreatPost" @close="ventanaCreatPost = false">
+
+    </add-post-form-component>
+    <edit-post-form-component @postupd="updPostIndex" :locale="locale" :post="post" v-if="ventanaEditPost" @close="ventanaEditPost = false">
+
+    </edit-post-form-component>
     <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary">{{ $trans('messages.List') }}</h6>
     </div>
     <div class="card-body">
-      <add-post-form-component @postnew="addPostIndex" :locale="locale" v-if="ventanaCreatPost" @close="ventanaCreatPost = false">
 
-      </add-post-form-component>
-      <edit-post-form-component @postupd="updPostIndex" :locale="locale" :post="post" v-if="ventanaEditPost" @close="ventanaEditPost = false">
-
-      </edit-post-form-component>
       <div class="table-responsive">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
@@ -70,7 +71,11 @@
                   <td>{{post.id}}</td>
                   <td>{{post.title}}</td>
                   <td>{{post.content}}</td>
-                  <td>{{post.tags}}</td>
+                  <td>
+                    <div class="" v-for="tag in post.tags ">
+                    {{tag.name}}
+                    </div>
+                  </td>
                   <td>{{post.summary}}</td>
                   <td>{{post.publicate_state}}</td>
                   <td><img :src="src+post.img_url"  width="100"></td>
