@@ -2217,14 +2217,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -2369,6 +2361,10 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
           }
         }); //console.log(response);
       })["catch"](function (error) {
+        if (error.response.data.message) {
+          swal('Error', '' + error.response.data.message, 'error');
+        }
+
         var wrong = error.response.data.errors;
 
         if (wrong.hasOwnProperty('title')) {
@@ -2703,6 +2699,10 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
           }
         }); //console.log(response);
       })["catch"](function (error) {
+        if (error.response.data.message) {
+          swal('Error', '' + error.response.data.message, 'error');
+        }
+
         var wrong = error.response.data.errors;
 
         if (wrong.hasOwnProperty('title')) {
@@ -41596,10 +41596,6 @@ var render = function() {
                                         attrs: {
                                           "element-id": "tags",
                                           "add-tags-on-comma": true,
-                                          "existing-tags": _vm.tags,
-                                          placeholder: _vm.msgAddTag,
-                                          "id-field": "slug",
-                                          "text-field": "name",
                                           typeahead: true
                                         },
                                         model: {
@@ -41644,9 +41640,6 @@ var render = function() {
                                           "element-id": "keys",
                                           "add-tags-on-comma": true,
                                           placeholder: "Add a keyword",
-                                          "existing-tags": _vm.keywords,
-                                          "id-field": "id",
-                                          "text-field": "name",
                                           typeahead: true
                                         },
                                         model: {

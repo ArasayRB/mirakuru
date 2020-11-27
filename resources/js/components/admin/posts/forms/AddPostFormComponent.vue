@@ -57,11 +57,6 @@
                            <br>
                            <tags-input element-id="tags" :add-tags-on-comma=true	class=""
     v-model="selectedTags"
-    :existing-tags="tags"
-      :placeholder="msgAddTag"
-
-    id-field="slug"
-    text-field="name"
 
     :typeahead="true"></tags-input>
 
@@ -74,9 +69,6 @@
                   <tags-input element-id="keys" :add-tags-on-comma=true	class=""
 v-model="selectedKeys"
   placeholder="Add a keyword"
-  :existing-tags="keywords"
-  id-field="id"
-  text-field="name"
 
 
 :typeahead="true"></tags-input>
@@ -237,6 +229,9 @@ v-model="selectedKeys"
                    //console.log(response);
                  })
                  .catch(error=>{
+                   if(error.response.data.message){
+                     swal('Error',''+error.response.data.message,'error');
+                   }
                    let wrong=error.response.data.errors;
                    if(wrong.hasOwnProperty('title')){
                      mensaje+='-'+wrong.title[0];

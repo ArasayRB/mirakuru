@@ -232,6 +232,9 @@ placeholder="Add a keyword"
                  //console.log(response);
                })
                .catch(error=>{
+                 if(error.response.data.message){
+                   swal('Error',''+error.response.data.message,'error');                      
+                 }
                  let wrong=error.response.data.errors;
                  if(wrong.hasOwnProperty('title')){
                    mensaje+='-'+wrong.title[0];
