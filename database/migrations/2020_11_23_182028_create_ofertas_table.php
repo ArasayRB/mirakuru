@@ -26,6 +26,8 @@ class CreateOfertasTable extends Migration
             $table->unsignedBigInteger('hostal_id');
             $table->unsignedBigInteger('type_oferta_id');
             $table->text('tags');
+            $table->text('slug');
+            $table->text('keywords');
             $table->timestamps();
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');
             $table->foreign('type_oferta_id')->references('id')->on('oferta_tipos')->onDelete('cascade');

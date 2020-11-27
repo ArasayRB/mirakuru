@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="form-group">
-                           <label>Tags : <span class="text-danger">*</span></label>
+                           <label>{{ $trans('messages.Tags') }} : <span class="text-danger">*</span></label>
                            <br>
                            <tags-input element-id="tags" :add-tags-on-comma=true	class=""
     v-model="post.tags"
@@ -64,6 +64,21 @@
     id-field="slug"
     text-field="name"
     :typeahead="true"></tags-input>
+
+
+                </div>
+
+                <div class="form-group">
+                  <label for="title">{{ $trans('messages.Keywords') }}: <span class="text-danger">{{ $trans('messages.Separate with (,) please') }}</span></label></label>
+
+                  <tags-input element-id="keys" :add-tags-on-comma=true	class=""
+v-model="post.keywords"
+:existing-tags="keywords"
+id-field="id"
+text-field="name"
+placeholder="Add a keyword"
+
+:typeahead="true"></tags-input>
 
 
                 </div>
@@ -109,6 +124,8 @@
         return {
           tags: [],
           selectedTags: [],
+          keywords: [],
+          selectedKeys: [],
           config: {
        toolbar: [
 
@@ -165,16 +182,28 @@
         },
         editedPost:function(post){
           let config= { headers: {"Content-Type": "multipart/form-data" }};
-          let tagsList=this.selectedTags;
-          let postTags="";
-          for(var i=0; i<tagsList.length;i=i+1){
-            if(i==(tagsList.length-1)){
-            postTags= ''+postTags+tagsList[i].value;
-          }
-          else{
-            postTags= ''+postTags+tagsList[i].value+',';
-          }
-          }
+
+            let tagsList=post.tags;
+            let postTags="";
+            for(var i=0; i<tagsList.length;i=i+1){
+              if(i==(tagsList.length-1)){
+              postTags= ''+postTags+tagsList[i].name;
+            }
+            else{
+              postTags= ''+postTags+tagsList[i].name+',';
+            }
+            }
+
+            let keysList=post.keywords;
+            let postKeys="";
+            for(var i=0; i<keysList.length;i=i+1){
+              if(i==(keysList.length-1)){
+              postKeys= ''+postKeys+keysList[i].name;
+            }
+            else{
+              postKeys= ''+postKeys+keysList[i].name+',';
+            }
+            }
           let data = new FormData();
 	          data.append('_method', 'patch');
             data.append("title", post.title);
@@ -183,8 +212,10 @@
             data.append("summary", post.summary);
             data.append("content", post.content);
             data.append("tags", postTags);
+            data.append("keywords", postKeys);
           let url="/posts/"+post.id;
           post.img_url=this.imagenPost;
+          console.log('textTgs- '+postTags+', textKeys- '+postKeys);
           axios.post(url,data,config)
                .then(response=>{
                  swal({title:this.$trans('messages.Post'),
@@ -243,6 +274,13 @@
                 console.log(this.tags);
               })
               .catch(error => this.errors.push(error));
+
+              axios.get('/available-keys')
+                   .then(response =>{
+                     this.keywords = response.data;
+                     console.log(this.keywords);
+                   })
+                   .catch(error => this.errors.push(error));
          },
         mounted() {
           if (this.$attrs.locale) {

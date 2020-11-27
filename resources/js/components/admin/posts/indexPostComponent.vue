@@ -238,6 +238,7 @@
 
         },
         openEditPost:function(index,post){
+
         this.post=post;
           this.ventanaEditPost=true;
 

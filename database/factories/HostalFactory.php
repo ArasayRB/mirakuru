@@ -32,6 +32,9 @@ class HostalFactory extends Factory
           'active' => $this->faker->boolean,
           'email' => $this->faker->email,
           'user_id' => $this->faker->numberBetween(1,$cantUser),
+          'tags' => $this->faker->text($maxNbChars = 50),
+          'slug' => $this->faker->text($maxNbChars = 50),
+          'keywords' => $this->faker->text($maxNbChars = 50),
         ];
     }
 }

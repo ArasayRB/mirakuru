@@ -28,6 +28,7 @@ class Post extends Model
         'cant_shares',
         'tags',
         'slug',
+        'keywords',
     ];
 
     public function users(){
@@ -39,15 +40,10 @@ class Post extends Model
     }
 
     public function keywords(){
-      return hasMany(Keyword::class)->withTimestamps();
+      return $this->belongsToMany(Keyword::class)->withTimestamps();
     }
 
     public function comentarioPosts(){
       return $this->hasMany(ComentarioPost::class)->withTimestamps();
-    }
-
-    public function allCategories(){
-      $categories=CategoriaPost::all();
-    return  $categories;
     }
 }

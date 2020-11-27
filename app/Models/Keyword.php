@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Hostal;
-use App\Models\KeywordConfig;
 use App\Models\Noticia;
 use App\Models\PublicacionHostal;
 use App\Models\Post;
@@ -15,27 +14,22 @@ class Keyword extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'keyconfig_id',
     ];
 
     public function hostales(){
-      return belongsToMany(Hostal::class)->withTimestamps();
-    }
-
-    public function keywordsconfigs(){
-      return belongsTo(KeywordConfig::class)->withTimestamps();
+      return $this->belongsToMany(Hostal::class)->withTimestamps();
     }
 
     public function noticias(){
-      return belongsToMany(Noticia::class)->withTimestamps();
+      return $this->belongsToMany(Noticia::class)->withTimestamps();
     }
 
     public function publicaciones(){
-      return belongsToMany(PublicacionHostal::class)->withTimestamps();
+      return $this->belongsToMany(PublicacionHostal::class)->withTimestamps();
     }
 
     public function posts(){
-      return belongsToMany(Post::class)->withTimestamps();
+      return $this->belongsToMany(Post::class)->withTimestamps();
     }
 
 }

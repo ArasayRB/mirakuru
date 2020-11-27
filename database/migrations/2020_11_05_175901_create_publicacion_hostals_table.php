@@ -20,8 +20,11 @@ class CreatePublicacionHostalsTable extends Migration
             $table->string('img_url')->default('storage/img_web/publicacions_img/publicaFoto.jpg');
             $table->string('video_url')->nullable();
             $table->string('qr_img_url')->nullable();
+            $table->boolean('publicate_state');
             $table->unsignedBigInteger('hostal_id');
             $table->text('tags');
+            $table->text('slug');
+            $table->text('keywords');
             $table->timestamps();
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');
         });

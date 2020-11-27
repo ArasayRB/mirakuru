@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Hostal;
 use App\Models\Keyword;
 use App\Models\OfertaTipo;
+use Conner\Tagging\Taggable;
 use Illuminate\Database\Eloquent\Model;
 
 class Oferta extends Model
 {
-    use HasFactory;
+    use HasFactory; use Taggable;
     protected $fillable = [
         'name',
         'description',
@@ -23,6 +24,8 @@ class Oferta extends Model
         'hostal_id',
         'type_oferta_id',
         'tags',
+        'slug',
+        'keywords',
     ];
 
     public function hostales(){

@@ -33,7 +33,10 @@ class OfertaFactory extends Factory
               'price'=>$this->faker->randomFloat($nbMaxDecimals = 2, $min = 1, $max = 200),
               'fecha_inicio' =>$this->faker->date($format = 'Y-m-d', $max = 'now'),
               'fecha_final'=>$this->faker->date($format = 'Y-m-d', $max = 'now'),
-              'hostal_id'=>$this->faker->numberBetween(1,$cantHostal),            
+              'hostal_id'=>$this->faker->numberBetween(1,$cantHostal),
+              'tags' => $this->faker->text($maxNbChars = 50),
+              'slug' => $this->faker->text($maxNbChars = 50),
+              'keywords' => $this->faker->text($maxNbChars = 50),          
         ];
     }
 }

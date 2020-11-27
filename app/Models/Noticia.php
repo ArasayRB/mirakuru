@@ -5,12 +5,13 @@ namespace App\Models;
 use App\Models\Hostal;
 use App\Models\Keyword;
 use App\Models\TemaNoticia;
+use Conner\Tagging\Taggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Noticia extends Model
 {
-    use HasFactory;
+    use HasFactory; use Taggable;
     protected $fillable = [
         'title',
         'noticia',
@@ -24,6 +25,8 @@ class Noticia extends Model
         'tema_id',
         'hostal_id',
         'tags',
+        'slug',
+        'keywords',
     ];
 
     public function temas(){

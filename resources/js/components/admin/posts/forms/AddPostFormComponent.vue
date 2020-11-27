@@ -53,15 +53,33 @@
                 </div>
 
                 <div class="form-group">
-                           <label>Tags : <span class="text-danger">*</span></label>
+                           <label>{{ $trans('messages.Tags') }} : <span class="text-danger">*</span></label>
                            <br>
                            <tags-input element-id="tags" :add-tags-on-comma=true	class=""
     v-model="selectedTags"
     :existing-tags="tags"
+      :placeholder="msgAddTag"
+
     id-field="slug"
     text-field="name"
 
     :typeahead="true"></tags-input>
+
+
+                </div>
+
+                <div class="form-group">
+                  <label for="title">{{ $trans('messages.Keywords') }}: <span class="text-danger">{{ $trans('messages.Separate with (,) please') }}</span></label></label>
+
+                  <tags-input element-id="keys" :add-tags-on-comma=true	class=""
+v-model="selectedKeys"
+  placeholder="Add a keyword"
+  :existing-tags="keywords"
+  id-field="id"
+  text-field="name"
+
+
+:typeahead="true"></tags-input>
 
 
                 </div>
@@ -106,6 +124,9 @@
         return {
           tags: [],
           selectedTags: [],
+          msgAddTag:this.$trans('messages.Add a new Tag'),
+          keywords: [],
+          selectedKeys: [],
           config: {
        toolbar: [
 
@@ -167,7 +188,7 @@
 
             let url="/posts";
             let mensaje=this.$trans('messages.Unidentified error');
-            if (this.title==''||this.imagenPost==''||this.categoria==''||this.checkEditSummary==''||this.checkEditContent==''||this.selectedTags=='') {
+            if (this.title==''||this.imagenPost==''||this.categoria==''||this.checkEditSummary==''||this.checkEditContent==''||this.selectedTags==''||this.keywords=='') {
               mensaje=this.$trans('messages.You cannot leave empty fields, please check');
             }
             let tagsList=this.selectedTags;
@@ -180,6 +201,17 @@
               postTags= ''+postTags+tagsList[i].value+',';
             }
             }
+
+            let keysList=this.selectedKeys;
+            let postKeys="";
+            for(var i=0; i<keysList.length;i=i+1){
+              if(i==(keysList.length-1)){
+              postKeys= ''+postKeys+keysList[i].value;
+            }
+            else{
+              postKeys= ''+postKeys+keysList[i].value+',';
+            }
+            }
             let data = new FormData();
               data.append("title", this.title);
               data.append("image", this.imagenPost);
@@ -187,6 +219,7 @@
               data.append("checkEditSummary", this.checkEditSummary);
               data.append("checkEditContent", this.checkEditContent);
               data.append("tags", postTags);
+              data.append("keywords", postKeys);
             axios.post(url,data)
                  .then(response=>{
                    swal({title:this.$trans('messages.Correct data'),
@@ -223,6 +256,9 @@
                   if (wrong.hasOwnProperty('tags')) {
                      mensaje+='-'+wrong.tags[0];
                    }
+                   if (wrong.hasOwnProperty('keywords')) {
+                      mensaje+='-'+wrong.tags[0];
+                    }
                    else if (wrong.hasOwnProperty('login')){
                      mensaje+='-'+wrong.login[0];
                    }
@@ -242,6 +278,13 @@
                 console.log(this.tags);
               })
               .catch(error => this.errors.push(error));
+
+              axios.get('/available-keys')
+                   .then(response =>{
+                     this.keywords = response.data;
+                     console.log(this.keywords);
+                   })
+                   .catch(error => this.errors.push(error));
          },
         mounted() {
           if (this.$attrs.locale) {

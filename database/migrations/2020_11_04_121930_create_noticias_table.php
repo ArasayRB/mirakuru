@@ -27,6 +27,8 @@ class CreateNoticiasTable extends Migration
             $table->unsignedBigInteger('tema_id');
             $table->unsignedBigInteger('hostal_id');
             $table->text('tags');
+            $table->text('slug');
+            $table->text('keywords');
             $table->timestamps();
             $table->foreign('tema_id')->references('id')->on('tema_noticias')->onDelete('cascade');
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');

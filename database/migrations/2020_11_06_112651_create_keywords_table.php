@@ -16,9 +16,7 @@ class CreateKeywordsTable extends Migration
         Schema::create('keywords', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('keyconfig_id');
             $table->timestamps();
-            $table->foreign('keyconfig_id')->references('id')->on('keyword_configs')->onDelete('cascade');
         });
     }
 

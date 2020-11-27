@@ -39,6 +39,8 @@ class PostFactory extends Factory
           'cant_likes' => $this->faker->randomDigitNotNull,
           'cant_shares' => $this->faker->randomDigitNotNull,
           'tags' => $this->faker->text($maxNbChars = 50),
+          'slug' => $this->faker->text($maxNbChars = 50),
+          'keywords' => $this->faker->text($maxNbChars = 50),
         ];
     }
 }

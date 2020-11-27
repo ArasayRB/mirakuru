@@ -2207,6 +2207,24 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -2219,6 +2237,9 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
     return {
       tags: [],
       selectedTags: [],
+      msgAddTag: this.$trans('messages.Add a new Tag'),
+      keywords: [],
+      selectedKeys: [],
       config: {
         toolbar: [{
           name: 'document',
@@ -2298,7 +2319,7 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
       var url = "/posts";
       var mensaje = this.$trans('messages.Unidentified error');
 
-      if (this.title == '' || this.imagenPost == '' || this.categoria == '' || this.checkEditSummary == '' || this.checkEditContent == '' || this.selectedTags == '') {
+      if (this.title == '' || this.imagenPost == '' || this.categoria == '' || this.checkEditSummary == '' || this.checkEditContent == '' || this.selectedTags == '' || this.keywords == '') {
         mensaje = this.$trans('messages.You cannot leave empty fields, please check');
       }
 
@@ -2313,6 +2334,17 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
         }
       }
 
+      var keysList = this.selectedKeys;
+      var postKeys = "";
+
+      for (var i = 0; i < keysList.length; i = i + 1) {
+        if (i == keysList.length - 1) {
+          postKeys = '' + postKeys + keysList[i].value;
+        } else {
+          postKeys = '' + postKeys + keysList[i].value + ',';
+        }
+      }
+
       var data = new FormData();
       data.append("title", this.title);
       data.append("image", this.imagenPost);
@@ -2320,6 +2352,7 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
       data.append("checkEditSummary", this.checkEditSummary);
       data.append("checkEditContent", this.checkEditContent);
       data.append("tags", postTags);
+      data.append("keywords", postKeys);
       axios.post(url, data).then(function (response) {
         swal({
           title: _this.$trans('messages.Correct data'),
@@ -2360,6 +2393,10 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
 
         if (wrong.hasOwnProperty('tags')) {
           mensaje += '-' + wrong.tags[0];
+        }
+
+        if (wrong.hasOwnProperty('keywords')) {
+          mensaje += '-' + wrong.tags[0];
         } else if (wrong.hasOwnProperty('login')) {
           mensaje += '-' + wrong.login[0];
         }
@@ -2379,6 +2416,12 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
     axios.get('/available-tags').then(function (response) {
       _this2.tags = response.data;
       console.log(_this2.tags);
+    })["catch"](function (error) {
+      return _this2.errors.push(error);
+    });
+    axios.get('/available-keys').then(function (response) {
+      _this2.keywords = response.data;
+      console.log(_this2.keywords);
     })["catch"](function (error) {
       return _this2.errors.push(error);
     });
@@ -2504,6 +2547,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["default"]);
@@ -2516,6 +2574,8 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
     return {
       tags: [],
       selectedTags: [],
+      keywords: [],
+      selectedKeys: [],
       config: {
         toolbar: [{
           name: 'document',
@@ -2594,14 +2654,25 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
           "Content-Type": "multipart/form-data"
         }
       };
-      var tagsList = this.selectedTags;
+      var tagsList = post.tags;
       var postTags = "";
 
       for (var i = 0; i < tagsList.length; i = i + 1) {
         if (i == tagsList.length - 1) {
-          postTags = '' + postTags + tagsList[i].value;
+          postTags = '' + postTags + tagsList[i].name;
         } else {
-          postTags = '' + postTags + tagsList[i].value + ',';
+          postTags = '' + postTags + tagsList[i].name + ',';
+        }
+      }
+
+      var keysList = post.keywords;
+      var postKeys = "";
+
+      for (var i = 0; i < keysList.length; i = i + 1) {
+        if (i == keysList.length - 1) {
+          postKeys = '' + postKeys + keysList[i].name;
+        } else {
+          postKeys = '' + postKeys + keysList[i].name + ',';
         }
       }
 
@@ -2613,8 +2684,10 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
       data.append("summary", post.summary);
       data.append("content", post.content);
       data.append("tags", postTags);
+      data.append("keywords", postKeys);
       var url = "/posts/" + post.id;
       post.img_url = this.imagenPost;
+      console.log('textTgs- ' + postTags + ', textKeys- ' + postKeys);
       axios.post(url, data, config).then(function (response) {
         swal({
           title: _this.$trans('messages.Post'),
@@ -2674,6 +2747,12 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
     axios.get('/available-tags').then(function (response) {
       _this2.tags = response.data;
       console.log(_this2.tags);
+    })["catch"](function (error) {
+      return _this2.errors.push(error);
+    });
+    axios.get('/available-keys').then(function (response) {
+      _this2.keywords = response.data;
+      console.log(_this2.keywords);
     })["catch"](function (error) {
       return _this2.errors.push(error);
     });
@@ -41500,7 +41579,10 @@ var render = function() {
                                     { staticClass: "form-group" },
                                     [
                                       _c("label", [
-                                        _vm._v("Tags : "),
+                                        _vm._v(
+                                          _vm._s(_vm.$trans("messages.Tags")) +
+                                            " : "
+                                        ),
                                         _c(
                                           "span",
                                           { staticClass: "text-danger" },
@@ -41515,6 +41597,7 @@ var render = function() {
                                           "element-id": "tags",
                                           "add-tags-on-comma": true,
                                           "existing-tags": _vm.tags,
+                                          placeholder: _vm.msgAddTag,
                                           "id-field": "slug",
                                           "text-field": "name",
                                           typeahead: true
@@ -41525,6 +41608,53 @@ var render = function() {
                                             _vm.selectedTags = $$v
                                           },
                                           expression: "selectedTags"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group" },
+                                    [
+                                      _c("label", { attrs: { for: "title" } }, [
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm.$trans("messages.Keywords")
+                                          ) + ": "
+                                        ),
+                                        _c(
+                                          "span",
+                                          { staticClass: "text-danger" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.$trans(
+                                                  "messages.Separate with (,) please"
+                                                )
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("tags-input", {
+                                        attrs: {
+                                          "element-id": "keys",
+                                          "add-tags-on-comma": true,
+                                          placeholder: "Add a keyword",
+                                          "existing-tags": _vm.keywords,
+                                          "id-field": "id",
+                                          "text-field": "name",
+                                          typeahead: true
+                                        },
+                                        model: {
+                                          value: _vm.selectedKeys,
+                                          callback: function($$v) {
+                                            _vm.selectedKeys = $$v
+                                          },
+                                          expression: "selectedKeys"
                                         }
                                       })
                                     ],
@@ -41951,7 +42081,10 @@ var render = function() {
                                     { staticClass: "form-group" },
                                     [
                                       _c("label", [
-                                        _vm._v("Tags : "),
+                                        _vm._v(
+                                          _vm._s(_vm.$trans("messages.Tags")) +
+                                            " : "
+                                        ),
                                         _c(
                                           "span",
                                           { staticClass: "text-danger" },
@@ -41976,6 +42109,53 @@ var render = function() {
                                             _vm.$set(_vm.post, "tags", $$v)
                                           },
                                           expression: "post.tags"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group" },
+                                    [
+                                      _c("label", { attrs: { for: "title" } }, [
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm.$trans("messages.Keywords")
+                                          ) + ": "
+                                        ),
+                                        _c(
+                                          "span",
+                                          { staticClass: "text-danger" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.$trans(
+                                                  "messages.Separate with (,) please"
+                                                )
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("tags-input", {
+                                        attrs: {
+                                          "element-id": "keys",
+                                          "add-tags-on-comma": true,
+                                          "existing-tags": _vm.keywords,
+                                          "id-field": "id",
+                                          "text-field": "name",
+                                          placeholder: "Add a keyword",
+                                          typeahead: true
+                                        },
+                                        model: {
+                                          value: _vm.post.keywords,
+                                          callback: function($$v) {
+                                            _vm.$set(_vm.post, "keywords", $$v)
+                                          },
+                                          expression: "post.keywords"
                                         }
                                       })
                                     ],
@@ -56674,6 +56854,7 @@ module.exports = {
     "Accounts": "Accounts",
     "Add": "Add",
     "Add Team Member": "Add Team Member",
+    "Add a new Tag": "Add a new Tag",
     "Add a new team member to your team, allowing them to collaborate with you.": "Add a new team member to your team, allowing them to collaborate with you.",
     "Add additional security to your account using two factor authentication.": "Add additional security to your account using two factor authentication.",
     "Added.": "Added.",
@@ -56757,6 +56938,7 @@ module.exports = {
     "Image": "Image",
     "Interface": "Interface",
     "Invalid signature.": "Invalid signature.",
+    "Keywords": "Keywords",
     "Know our places": "Know our places",
     "Landline": "Landline",
     "Languages": "Languages",
@@ -56854,6 +57036,7 @@ module.exports = {
     "Select A New Photo": "Select A New Photo",
     "Send": "Send",
     "Send Password Reset Link": "Send Password Reset Link",
+    "Separate with (,) please": "Separate with (,) please",
     "Server Error": "Server Error",
     "Service Unavailable": "Service Unavailable",
     "Services": "Services",
@@ -57094,6 +57277,7 @@ module.exports = {
     "Accounts": "Cuentas",
     "Add": "Agregar",
     "Add Team Member": "Agregar miembro al equipo",
+    "Add a new Tag": "A\xF1ada nueva etiqueta",
     "Add a new team member to your team, allowing them to collaborate with you.": "Agregue un nuevo miembro a su equipo, lo que le permitir\xE1 colaborar con usted.",
     "Add additional security to your account using two factor authentication.": "Agregue seguridad adicional a su cuenta mediante la autenticaci\xF3n de dos factores.",
     "Added.": "Agregado.",
@@ -57177,6 +57361,7 @@ module.exports = {
     "Image": "Imagen",
     "Interface": "Interface",
     "Invalid signature.": "Firma no v\xE1lida.",
+    "Keywords": "Palabras claves",
     "Know our places": "Conozca nuestros espacios",
     "Landline": "Tel\xE9fono Fijo",
     "Languages": "Idioma",
@@ -57274,6 +57459,7 @@ module.exports = {
     "Select A New Photo": "Seleccione una nueva foto",
     "Send": "Enviar",
     "Send Password Reset Link": "Enviar enlace para restablecer la contrase\xF1a",
+    "Separate with (,) please": "Separado por (,) por favor",
     "Server Error": "Error del servidor",
     "Service Unavailable": "Servicio no disponible",
     "Services": "Servicios",
@@ -57398,6 +57584,7 @@ module.exports = {
     "Accounts": "Cuentas",
     "Add": "Agregar",
     "Add Team Member": "Agregar miembro al equipo",
+    "Add a new Tag": "A\xF1ada nueva etiqueta",
     "Add a new team member to your team, allowing them to collaborate with you.": "Agregue un nuevo miembro a su equipo, lo que le permitir\xE1 colaborar con usted.",
     "Add additional security to your account using two factor authentication.": "Agregue seguridad adicional a su cuenta mediante la autenticaci\xF3n de dos factores.",
     "Added.": "Agregado.",
@@ -57480,6 +57667,7 @@ module.exports = {
     "In addition, among our offers we want to include": "Adem\xE1s entre nuestras ofertas queremos incluir",
     "Interface": "Interface",
     "Invalid signature.": "Firma no v\xE1lida.",
+    "Keywords": "Palabras claves",
     "Know our places": "Conozca nuestros espacios",
     "Landline": "Tel\xE9fono Fijo",
     "Languages": "Idioma",
@@ -57552,6 +57740,7 @@ module.exports = {
     "Select A New Photo": "Seleccione una nueva foto",
     "Send": "Enviar",
     "Send Password Reset Link": "Enviar enlace para restablecer la contrase\xF1a",
+    "Separate with (,) please": "Separado por (,) por favor",
     "Server Error": "Error del servidor",
     "Service Unavailable": "Servicio no disponible",
     "Services": "Servicios",

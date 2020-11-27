@@ -97,6 +97,7 @@ Route::resource('/posts', App\Http\Controllers\PostController::class);
 Route::get('/categoriesList', [App\Http\Controllers\PostController::class, 'getCategories']);
 Route::get('/postsTable', [App\Http\Controllers\PostController::class, 'getPostAutentUser']);
 Route::get('/available-tags', [App\Http\Controllers\PostController::class, 'getTags']);
+Route::get('/available-keys', [App\Http\Controllers\PostController::class, 'availableKeys']);
 Route::get('/hola', function(){
   return 'hola';
 });

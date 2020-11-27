@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
+use App\Traits\KeywordTrait;
+use App\Traits\CategoryPostTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
+  use KeywordTrait; use CategoryPostTrait;
   public function __construct()
   {
       $this->middleware('auth');
@@ -27,14 +30,16 @@ class PostController extends Controller
 
     public function getPostAutentUser(){
       $posts=Post::with('categoriaPosts')
+                   ->with('keywords')
                    ->where('user_id',auth()->user()->id)
                    ->orderBy('created_at','asc')
                    ->get();
                    return $posts;
     }
 
-    public function getPostWithCategory($post){
+    public function getPost($post){
       $posts=Post::with('categoriaPosts')
+                   ->with('keywords')
                    ->where('id',$post)
                    ->first();
                    return $posts;
@@ -55,7 +60,7 @@ class PostController extends Controller
     public function getCategories()
     {
       $post=Post::first();
-      $categories=$post->allCategories();
+      $categories=$this->allCategories();
 
         return $categories;
     }
@@ -66,6 +71,13 @@ class PostController extends Controller
       $tags=$post->existingTags();
 
         return $tags;
+    }
+
+    public function availableKeys()
+    {
+      $keywords=$this->getAllKeyword();
+
+        return $keywords;
     }
 
     /**
@@ -94,8 +106,9 @@ class PostController extends Controller
 
         $saveAs=request('image')->storeAs('public/img_web/posts_img',$newFileName);
         $tags = explode(",", request('tags'));
-        $slug = Str::slug($post->title, '-');
+        $keywords = explode(",", request('keywords'));
         $post= new Post();
+        $slug = Str::slug($post->title, '-');
         $post->title=request('title');
         $post->content=request('checkEditContent');
         $post->publicate_state=false;
@@ -108,9 +121,16 @@ class PostController extends Controller
         $post->cant_shares=0;
         $post->tags=request('tags');
         $post->slug=$slug;
+        $post->keywords=request('keywords');
         $post->save();
         $post->tag($tags);
-        $postToAdd=$this->getPostWithCategory($post->id);
+        foreach($keywords as $keyword){
+          $existKey=$this->getKeywordIf($keyword);
+
+          $post->keywords()->attach($existKey->id);
+        }
+
+        $postToAdd=$this->getPost($post->id);
         return $postToAdd;
     }
 
@@ -158,6 +178,7 @@ class PostController extends Controller
           'summary'=> 'required',
           'content'=> 'required',
           'tags'=> 'required',
+          'keywords'=> 'required',
         ]);
         $fileImageNameExtencion=request('img_url')->getClientOriginalName();
 
@@ -178,10 +199,12 @@ class PostController extends Controller
           'summary'=> 'required',
           'content'=> 'required',
           'tags'=> 'required',
+          'keywords'=> 'required',
         ]);
       }
 
         $tags = explode(",", request('tags'));
+        $keywords = explode(",", request('keywords'));
         $slug = Str::slug($post->title, '-');
         $post->title=request('title');
         $post->content=request('content');
@@ -195,7 +218,15 @@ class PostController extends Controller
         $post->slug=$slug;
         $post->update();
         $post->retag($tags);
-        $postToUpd=$this->getPostWithCategory($post->id);
+        $post->keywords()->detach();
+        foreach($keywords as $keyword){
+          $existKey=$this->getKeywordIf($keyword);
+
+
+          $post->keywords()->attach($existKey->id);
+        }
+
+        $postToUpd=$this->getPost($post->id);
         return $postToUpd;
     }
 
@@ -211,6 +242,7 @@ class PostController extends Controller
         $post=Post::find($post->id);
         $post->delete();
         $post->untag();
+        $post->keywords()->detach();
         return response()->json('Post deleted');
     }
 }

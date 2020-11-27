@@ -23,6 +23,9 @@ class CreateHostalsTable extends Migration
             $table->boolean('active');
             $table->string('email')->unique()->required();
             $table->unsignedBigInteger('user_id');
+            $table->text('tags');
+            $table->text('slug');
+            $table->text('keywords');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });

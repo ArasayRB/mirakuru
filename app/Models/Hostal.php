@@ -13,12 +13,13 @@ use App\Models\Reserva;
 use App\Models\Servicio;
 use App\Models\Suscripcion;
 use App\Models\User;
+use Conner\Tagging\Taggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Hostal extends Model
 {
-    use HasFactory;
+    use HasFactory; use Taggable;
     protected $fillable = [
         'name',
         'phone',
@@ -28,6 +29,9 @@ class Hostal extends Model
         'active',
         'email',
         'user_id',
+        'tags',
+        'slug',
+        'keywords',
     ];
 
     public function users(){

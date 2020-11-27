@@ -37,6 +37,9 @@ class NoticiaFactory extends Factory
           'qr_img_url'=>$this->faker->url,
           'tema_id'=>$this->faker->numberBetween(1,$cantTema),
           'hostal_id'=>$this->faker->numberBetween(1,$cantHostal),
+          'tags' => $this->faker->text($maxNbChars = 50),
+          'slug' => $this->faker->text($maxNbChars = 50),
+          'keywords' => $this->faker->text($maxNbChars = 50),
         ];
     }
 }
