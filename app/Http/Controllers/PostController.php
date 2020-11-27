@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Traits\KeywordTrait;
+use App\Traits\ImageTrait;
 use App\Traits\CategoryPostTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
-  use KeywordTrait; use CategoryPostTrait;
+  use KeywordTrait; use CategoryPostTrait; use ImageTrait;
   public function __construct()
   {
       $this->middleware('auth');
@@ -96,15 +97,8 @@ class PostController extends Controller
           'checkEditContent'=> 'required',
           'tags'=> 'required',
         ]);
-        $fileImageNameExtencion=request('image')->getClientOriginalName();
+        $newFileName=$this->manageImage(request('image'));
 
-        $fileName=pathInfo($fileImageNameExtencion, PATHINFO_FILENAME);
-
-        $fileExtencion=request('image')->getClientOriginalExtension();
-
-        $newFileName=$fileName."_".time().".".$fileExtencion;
-
-        $saveAs=request('image')->storeAs('public/img_web/posts_img',$newFileName);
         $tags = explode(",", request('tags'));
         $keywords = explode(",", request('keywords'));
         $post= new Post();
@@ -180,17 +174,10 @@ class PostController extends Controller
           'tags'=> 'required',
           'keywords'=> 'required',
         ]);
-        $fileImageNameExtencion=request('img_url')->getClientOriginalName();
+        $newFileName=$this->manageImage(request('img_url'));
 
-        $fileName=pathInfo($fileImageNameExtencion, PATHINFO_FILENAME);
-
-        $fileExtencion=request('img_url')->getClientOriginalExtension();
-
-        $newFileName=$fileName."_".time().".".$fileExtencion;
-
-        $saveAs=request('img_url')->storeAs('public/img_web/posts_img',$newFileName);
-
-        $post->img_url=$newFileName;
+        $this->delImage($post->img_url);
+          $post->img_url=$newFileName;
       }
       else{
         $dataPost=request()->validate([
@@ -240,6 +227,7 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $post=Post::find($post->id);
+        $this->delImage($post->img_url);
         $post->delete();
         $post->untag();
         $post->keywords()->detach();
