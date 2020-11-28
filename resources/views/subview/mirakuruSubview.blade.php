@@ -206,65 +206,31 @@
 </div><!--Fin SECTION TESTIMONIOS-->
 <section class="container-fluid col-12 pt-5" id="blog" name="blog"><h1 id="post" class="text-center pb-2 pt-5 text-uppercase animate__animated animate__zoomIn">{{ __('Posts') }}</h1><!--Section Blog-->
   <div class="row mb-2">
-    <div class="col-md-6">
-      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-        <div class="col p-4 d-flex flex-column position-static">
-          <strong class="d-inline-block mb-2 text-primary">World</strong>
-          <h3 class="mb-0">Featured post</h3>
-          <div class="mb-1 text-muted">Nov 12</div>
-          <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="stretched-link">Continue reading</a>
-        </div>
-        <div class="col-auto d-none d-lg-block">
-          <img src="/images/img/comentario01.jpg" class="mx-auto d-block rounded-circle w-200 h-300">
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-        <div class="col p-4 d-flex flex-column position-static">
-          <strong class="d-inline-block mb-2 text-primary">World</strong>
-          <h3 class="mb-0">Featured post</h3>
-          <div class="mb-1 text-muted">Nov 12</div>
-          <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="stretched-link">Continue reading</a>
-        </div>
-        <div class="col-auto d-none d-lg-block">
-          <img src="/images/img/comentario02.jpg" class="mx-auto d-block rounded-circle w-200 h-300">
+    @if ($posts)
+      @foreach ($posts ?? '' as $post)
+
+
+      <div class="col-md-6">
+        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+          <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-primary">{{__('Posted by: ')}}{{$post->users->name}}</strong>
+            <h3 class="mb-0">{{$post->title}}</h3>
+            <div class="mb-1 text-muted">{{$post->created_at}}</div>
+            <p class="card-text mb-auto">{{$post->summary}}</p>
+            <a href="/welcome/{{$post->id}}" class="stretched-link">{{__('Continue reading')}}</a>
+          </div>
+          <div class="col-auto d-none d-lg-block">
+            <img src="{{ asset('/storage/img_web/posts_img/'.$post->img_url) }}" class="mx-auto d-block rounded-circle w-200 h-300">
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-md-6">
-      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-        <div class="col p-4 d-flex flex-column position-static">
-          <strong class="d-inline-block mb-2 text-primary">World</strong>
-          <h3 class="mb-0">Featured post</h3>
-          <div class="mb-1 text-muted">Nov 12</div>
-          <p class="card-text mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="stretched-link">Continue reading</a>
-        </div>
-        <div class="col-auto d-none d-lg-block">
-          <img src="/images/img/comentario03.jpg" class="mx-auto d-block rounded-circle w-200 h-300">
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-        <div class="col p-4 d-flex flex-column position-static">
-          <strong class="d-inline-block mb-2 text-success">Design</strong>
-          <h3 class="mb-0">Post title</h3>
-          <div class="mb-1 text-muted">Nov 11</div>
-          <p class="mb-auto">This is a wider card with supporting text below as a natural lead-in to additional content.</p>
-          <a href="#" class="stretched-link">Continue reading</a>
-        </div>
-        <div class="col-auto d-none d-lg-block">
-           <img src="/images/img/comentario02.jpg" class="mx-auto d-block rounded-circle w-200 h-300">
-        </div>
-      </div>
-    </div>
+      @endforeach
+    @endif
+
   </div>
 </section><!--END Section Blog-->
-<section class="mb-5" id="contacto" name="contacto"><!--Section Contacto-->
+
+<section class="mb-5 mt-5 pt-5 pb-5" id="contacto" name="contacto"><!--Section Contacto-->
   <div class="text-center container" id="containermap">
     <div id="map-mirak">
       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3704.5133468314734!2d-79.98591988563838!3d21.79908798558619!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8f2ae45daa922d5f%3A0x26f3b3fd9ea784e7!2sHostal%20MIRAKURU%20Gran%20Familia!5e0!3m2!1ses!2scu!4v1598546597306!5m2!1ses!2scu" width="1200" height="700" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>

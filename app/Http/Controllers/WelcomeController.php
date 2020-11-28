@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Traits\PostTrait;
 
-class HomeController extends Controller
+class WelcomeController extends Controller
 {
   use PostTrait;
     /**
@@ -15,7 +15,7 @@ class HomeController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth');
+
     }
 
     /**
@@ -23,9 +23,14 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+
+    public function welcome()
     {
       $posts=$this->getPosts();
-        return view('home',['posts'=>$posts]);
+        return view('welcome',['posts'=>$posts]);
+    }
+
+    public function showPost($id){
+      return $this->show($id);
     }
 }

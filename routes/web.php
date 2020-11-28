@@ -20,9 +20,7 @@ use Illuminate\Support\Str;
 */
 App::setLocale("en");
 
-Route::get('/', function () {
-    return view('welcome');
-})->name('mirakuru');
+Route::get('/', [App\Http\Controllers\WelcomeController::class, 'welcome'])->name('welcome');
 
 Auth::routes(['verify' => true]);
 
@@ -98,6 +96,4 @@ Route::get('/categoriesList', [App\Http\Controllers\PostController::class, 'getC
 Route::get('/postsTable', [App\Http\Controllers\PostController::class, 'getPostAutentUser']);
 Route::get('/available-tags', [App\Http\Controllers\PostController::class, 'getTags']);
 Route::get('/available-keys', [App\Http\Controllers\PostController::class, 'availableKeys']);
-Route::get('/hola', function(){
-  return 'hola';
-});
+Route::get('/welcome/{id}', [App\Http\Controllers\WelcomeController::class, 'showPost']);

@@ -94,6 +94,17 @@ nav{
   font-size: 20px;
 }
 
+#body-post{
+  background-color: #ffdd90;
+  background-image: url("../images/img/posts.jpg");
+}
+
+#body-post-text{
+  position: relative;
+	padding: 70px 40px 90px 40px;
+	background: rgba(0,0,0,0.5);
+}
+
 input[type="radio"] {
   display: none;
 }
