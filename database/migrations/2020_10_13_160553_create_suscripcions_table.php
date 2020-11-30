@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHostalSuscripcionTable extends Migration
+class CreateSuscripcionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class CreateHostalSuscripcionTable extends Migration
      */
     public function up()
     {
-        Schema::create('hostal_suscripcion', function (Blueprint $table) {
+        Schema::create('suscripcions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('hostal_id');
-            $table->unsignedBigInteger('suscripcion_id');
+            $table->unsignedBigInteger('user_id');
             $table->timestamps();
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');
-            $table->foreign('suscripcion_id')->references('id')->on('suscripcions')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 
@@ -30,6 +30,6 @@ class CreateHostalSuscripcionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hostal_suscripcion');
+        Schema::dropIfExists('suscripcions');
     }
 }

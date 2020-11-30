@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\File;
 use App\Models\Hostal;
 use App\Models\Keyword;
 use App\Models\TemaNoticia;
@@ -30,14 +31,18 @@ class Noticia extends Model
     ];
 
     public function temas(){
-      return belongsTo(TemaNoticia::class)->withTimestamps();
+      return $this->belongsTo(TemaNoticia::class)->withTimestamps();
     }
 
     public function keywords(){
-      return hasMany(Keyword::class)->withTimestamps();
+      return $this->hasMany(Keyword::class)->withTimestamps();
+    }
+
+    public function files(){
+      return $this->belongsToMany(File::class)->withTimestamps();
     }
 
     public function hostales(){
-      return belongsTo(Hostal::class)->withTimestamps();
+      return $this->belongsTo(Hostal::class)->withTimestamps();
     }
 }

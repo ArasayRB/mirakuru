@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\CategoriaPost;
+use App\Models\File;
 use App\Models\ComentarioPost;
 use App\Models\Keyword;
 use App\Models\User;
@@ -45,5 +46,9 @@ class Post extends Model
 
     public function comentarioPosts(){
       return $this->hasMany(ComentarioPost::class)->withTimestamps();
+    }
+
+    public function files(){
+      return $this->belongsToMany(File::class)->withTimestamps();
     }
 }

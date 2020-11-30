@@ -75,6 +75,6 @@ class Hostal extends Model
     }
 
     public function suscripciones(){
-      return belongsToMany(Suscripcion::class)->withTimestamps();
+      return belongsToMany(User::class,'suscripcions','hostal_id','user_id')->withTimestamps();
     }
 }

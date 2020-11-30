@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\File;
 use App\Models\Hostal;
 use App\Models\Keyword;
 use Conner\Tagging\Taggable;
@@ -30,5 +31,9 @@ class PublicacionHostal extends Model
 
     public function keywords(){
       return hasMany(Keyword::class)->withTimestamps();
+    }
+
+    public function files(){
+      return $this->belongsToMany(File::class)->withTimestamps();
     }
 }

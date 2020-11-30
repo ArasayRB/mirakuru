@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\File;
 use App\Models\Hostal;
 use App\Models\Keyword;
 use App\Models\OfertaTipo;
@@ -34,6 +35,10 @@ class Oferta extends Model
 
     public function tipoOfertas(){
       return belongsTo(OfertaTipo::class)->withTimestamps();
+    }
+
+    public function files(){
+      return $this->belongsToMany(File::class)->withTimestamps();
     }
 
     public function keywords(){

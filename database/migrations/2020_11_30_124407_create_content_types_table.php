@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSuscripcionsTable extends Migration
+class CreateContentTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,9 @@ class CreateSuscripcionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('suscripcions', function (Blueprint $table) {
+        Schema::create('content_types', function (Blueprint $table) {
             $table->id();
-            $table->string('email');
-            $table->string('fullName');
+            $table->string('name')->unique();
             $table->timestamps();
         });
     }
@@ -28,6 +27,6 @@ class CreateSuscripcionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('suscripcions');
+        Schema::dropIfExists('content_types');
     }
 }

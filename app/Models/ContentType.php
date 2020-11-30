@@ -2,19 +2,18 @@
 
 namespace App\Models;
 
-use App\Models\Hostal;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Translate;
 
-class Suscripcion extends Model
+class ContentType extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'email',
-        'fullName',
+        'name',
     ];
 
-    public function hostales(){
-      return belongsToMany(Hostal::class)->withTimestamps();
+    public function translates(){
+      return $this->hasMany(Translate::class)->withTimestamps();
     }
 }

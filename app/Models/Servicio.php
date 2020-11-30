@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\File;
 use App\Models\Hostal;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,5 +22,9 @@ class Servicio extends Model
 
     public function hostales(){
       return belongsToMany(Hostal::class)->withTimestamps();
+    }
+
+    public function files(){
+      return $this->belongsToMany(File::class)->withTimestamps();
     }
 }

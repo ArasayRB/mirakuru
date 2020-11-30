@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Cuenta;
+use App\Models\File;
 use App\Models\Hostal;
 use App\Models\Pago;
 use App\Models\Post;
@@ -30,6 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'imagen_url',
     ];
 
     /**
@@ -59,6 +61,10 @@ class User extends Authenticatable implements MustVerifyEmail
       return $this->hasOne(Hostal::class)->withTimestamps();
     }
 
+    public function suscripciones(){
+      return belongsToMany(Hostal::class,'suscripcions','user_id','hostal_id')->withTimestamps();
+    }
+
     public function reservas(){
       return $this->hasMany(Reserva::class)->withTimestamps();
     }
@@ -69,6 +75,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function pagos(){
       return $this->hasMany(Pago::class)->withTimestamps();
+    }
+
+    public function files(){
+      return $this->belongsToMany(File::class)->withTimestamps();
     }
 
     public function cuentas(){
