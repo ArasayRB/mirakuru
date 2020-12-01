@@ -97,3 +97,5 @@ Route::get('/postsTable', [App\Http\Controllers\PostController::class, 'getPostA
 Route::get('/available-tags', [App\Http\Controllers\PostController::class, 'getTags']);
 Route::get('/available-keys', [App\Http\Controllers\PostController::class, 'availableKeys']);
 Route::get('/welcome/{id}', [App\Http\Controllers\WelcomeController::class, 'showPost']);
+Route::post('/suscripcion', [App\Http\Controllers\SuscripcionController::class, 'store']);
+Route::get('/unsubscribe/{suscriptor}/{hostal}', [App\Http\Controllers\SuscripcionController::class, 'delete'])->middleware(['guest'])->name('unsubscribe');

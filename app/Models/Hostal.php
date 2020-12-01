@@ -35,46 +35,46 @@ class Hostal extends Model
     ];
 
     public function users(){
-      return belongsTo(User::class)->withTimestamps();
+      return $this->belongsTo(User::class)->withTimestamps();
     }
 
     public function keywords(){
-      return hasMany(Keyword::class)->withTimestamps();
+      return $this->hasMany(Keyword::class)->withTimestamps();
     }
 
     public function services(){
-      return belongsToMany(Servicio::class)->withTimestamps();
+      return $this->belongsToMany(Servicio::class)->withTimestamps();
     }
 
     public function habitaciones(){
-      return hasMany(Habitacion::class)->withTimestamps();
+      return $this->hasMany(Habitacion::class)->withTimestamps();
     }
 
     public function fotos(){
-      return hasMany(Foto::class)->withTimestamps();
+      return $this->hasMany(Foto::class)->withTimestamps();
     }
 
     public function noticias(){
-      return hasMany(Noticia::class)->withTimestamps();
+      return $this->hasMany(Noticia::class)->withTimestamps();
     }
 
     public function ofertas(){
-      return hasMany(Oferta::class)->withTimestamps();
+      return $this->hasMany(Oferta::class)->withTimestamps();
     }
 
     public function reservas(){
-      return hasMany(Reserva::class)->withTimestamps();
+      return $this->hasMany(Reserva::class)->withTimestamps();
     }
 
     public function pagos(){
-      return hasMany(Pago::class)->withTimestamps();
+      return $this->hasMany(Pago::class)->withTimestamps();
     }
 
     public function publicaciones(){
-      return hasMany(PublicacionHostal::class)->withTimestamps();
+      return $this->hasMany(PublicacionHostal::class)->withTimestamps();
     }
 
     public function suscripciones(){
-      return belongsToMany(User::class,'suscripcions','hostal_id','user_id')->withTimestamps();
+      return $this->belongsToMany(Suscripcion::class,'hostal_suscripcion','hostal_id','suscripcion_id')->withTimestamps();
     }
 }

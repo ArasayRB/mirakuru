@@ -61,10 +61,6 @@ class User extends Authenticatable implements MustVerifyEmail
       return $this->hasOne(Hostal::class)->withTimestamps();
     }
 
-    public function suscripciones(){
-      return belongsToMany(Hostal::class,'suscripcions','user_id','hostal_id')->withTimestamps();
-    }
-
     public function reservas(){
       return $this->hasMany(Reserva::class)->withTimestamps();
     }

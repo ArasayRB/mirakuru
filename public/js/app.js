@@ -3102,8 +3102,54 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      email: '',
+      token: window.CSRF_TOKEN
+    };
+  },
+  methods: {
+    suscribe: function suscribe() {
+      var _this = this;
+
+      var url = "/suscripcion";
+      var mensaje = this.$trans('messages.Unidentified error');
+
+      if (this.email == '') {
+        mensaje = this.$trans('messages.You cannot leave empty fields, please check');
+      }
+
+      var data = new FormData();
+      data.append("email", this.email);
+      axios.post(url, data).then(function (response) {
+        swal({
+          title: _this.$trans('messages.Correct data'),
+          text: _this.$trans('messages.Thank you for subscribe'),
+          icon: 'success',
+          closeOnClickOutside: false,
+          closeOnEsc: false
+        }); //console.log(response);
+      })["catch"](function (error) {
+        if (error.response.data.message) {
+          swal('Error', '' + error.response.data.message, 'error');
+        }
+
+        var wrong = error.response.data.errors;
+
+        if (wrong.hasOwnProperty('email')) {
+          mensaje += '-' + wrong.email[0];
+        }
+
+        swal('Error', mensaje, 'error'); //console.log(error.response.data);
+      }); //alert('Hola');
+    }
+  },
   mounted: function mounted() {
-    console.log('Component mounted.');
+    if (this.$attrs.locale) {
+      this.$lang.setLocale(this.$attrs.locale);
+    } else {
+      this.$lang.setLocale('en');
+    }
   }
 });
 
@@ -42528,45 +42574,66 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("form", { staticClass: "mt-5", attrs: { action: "" } }, [
-      _c("div", { staticClass: "container mt-5" }, [
-        _c("h4", { staticClass: "text-uppercase text-center mt-5 mb-5" }, [
-          _vm._v("Suscríbete y recibe nuestras ofertas e informaciones")
+  return _c("form", { staticClass: "mt-5", attrs: { id: "newsletter" } }, [
+    _c("div", { staticClass: "container mt-5" }, [
+      _c("h4", { staticClass: "text-uppercase text-center mt-5 mb-5" }, [
+        _vm._v(
+          _vm._s(
+            _vm.$trans(
+              "messages.Subscribe yourself and receive our offer and informations"
+            )
+          )
+        )
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row justify-content-center" }, [
+        _c("div", { staticClass: "col-2 d-block" }),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-6" }, [
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.email,
+                expression: "email"
+              }
+            ],
+            staticClass: "form-control font-italic",
+            attrs: { type: "text", placeholder: "Email/Correo..." },
+            domProps: { value: _vm.email },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.email = $event.target.value
+              }
+            }
+          })
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "row justify-content-center" }, [
-          _c("div", { staticClass: "col-2 d-block" }),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-6" }, [
-            _c("input", {
-              staticClass: "form-control font-italic",
-              attrs: { type: "text", placeholder: "Déjanos tu email..." }
-            })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-2" }, [
-            _c("img", {
-              staticClass: "btn rounded px-2 py-2 newsletter",
-              attrs: {
-                src: "/images/img/enviar.png",
-                alt: "",
-                type: "button",
-                id: "enviar-news"
+        _c("div", { staticClass: "col-2" }, [
+          _c("img", {
+            staticClass: "btn rounded px-2 py-2 newsletter",
+            attrs: {
+              src: "/images/img/enviar.png",
+              alt: "",
+              type: "button",
+              id: "enviar-news"
+            },
+            on: {
+              click: function($event) {
+                return _vm.suscribe()
               }
-            })
-          ])
+            }
+          })
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -56923,11 +56990,13 @@ module.exports = {
     "Hello!": "Hello!",
     "Home": "Home",
     "Hostals": "Hostals",
+    "I need your name": "I need your name",
     "ID": "ID",
     "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.": "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.",
     "If you did not create an account, no further action is required.": "If you did not create an account, no further action is required.",
     "If you did not receive the email": "If you did not receive the email",
     "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
+    "If you did not subscribe link this url for unsubscribe": "If you did not subscribe link this url for unsubscribe",
     "If you\u2019re having trouble clicking the \"=>actionText\" button, copy and paste the URL below\ninto your web browser=>": "If you\u2019re having trouble clicking the \"=>actionText\" button, copy and paste the URL below\ninto your web browser=>",
     "Image": "Image",
     "Interface": "Interface",
@@ -56940,6 +57009,7 @@ module.exports = {
     "Last used": "Last used",
     "Leave": "Leave",
     "Leave Team": "Leave Team",
+    "Leave us your email": "Leave us your email",
     "Likes": "Likes",
     "List": "List",
     "Login": "Login",
@@ -56957,6 +57027,7 @@ module.exports = {
     "Nevermind": "Nevermind",
     "New Password": "New Password",
     "New Post": "New Post",
+    "Newsletter ": "Newsletter ",
     "None Post added yet": "None Post added yet",
     "Not Found": "Not Found",
     "Oh no": "Oh no",
@@ -56978,6 +57049,7 @@ module.exports = {
     "Please copy your new API token. For your security, it won't be shown again.": "Please copy your new API token. For your security, it won't be shown again.",
     "Please enter your password to confirm you would like to logout of your other browser sessions across all of your devices.": "Please enter your password to confirm you would like to logout of your other browser sessions across all of your devices.",
     "Please provide the email address of the person you would like to add to this team. The email address must be associated with an existing account.": "Please provide the email address of the person you would like to add to this team. The email address must be associated with an existing account.",
+    "Please, send an answare as soon like is possible for you.": "Please, send an answare as soon like is possible for you.",
     "Post": "Post",
     "Post created successfully": "Post created successfully",
     "Posted by: ": "Posted by: ",
@@ -57018,6 +57090,7 @@ module.exports = {
     "Remove": "Remove",
     "Remove Photo": "Remove Photo",
     "Remove Team Member": "Remove Team Member",
+    "Request Contact ": "Request Contact ",
     "Resend Verification Email": "Resend Verification Email",
     "Reset Password": "Reset Password",
     "Reset Password Notification": "Reset Password Notification",
@@ -57046,6 +57119,7 @@ module.exports = {
     "Sorry, your session has expired. Please refresh and try again.": "Sorry, your session has expired. Please refresh and try again.",
     "Start": "Start",
     "Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two factor authentication device is lost.": "Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two factor authentication device is lost.",
+    "Subscribe yourself and receive our offer and informations": "Subscribe yourself and receive our offer and informations",
     "Subscription": "Subscription",
     "Summary": "Summary",
     "Switch Teams": "Switch Teams",
@@ -57059,6 +57133,7 @@ module.exports = {
     "Team Settings": "Team Settings",
     "Testimonials": "Testimonials",
     "Testimonials Calification": "Testimonials Calification",
+    "Thank you for subscribe!": "Thank you for subscribe!",
     "Thank you for using our application!": "Thank you for using our application!",
     "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.": "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.",
     "The :attribute must be a valid role.": "The :attribute must be a valid role.",
@@ -57113,6 +57188,7 @@ module.exports = {
     "Whoops! Something went wrong.": "Whoops! Something went wrong.",
     "Yes, delete": "Yes, delete",
     "You are logged in!": "You are logged in!",
+    "You are receiving a new contact email with content: ": "You are receiving a new contact email with content: ",
     "You are receiving this email because we received a password reset request for your account.": "You are receiving this email because we received a password reset request for your account.",
     "You cannot leave empty fields, please check": "You cannot leave empty fields, please check",
     "You have enabled two factor authentication.": "You have enabled two factor authentication.",
@@ -57349,11 +57425,13 @@ module.exports = {
     "Hello!": "\xA1Hola!",
     "Home": "Inicio",
     "Hostals": "Hostales",
+    "I need your name": "Necesito su nombre",
     "ID": "ID",
     "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.": "Si es necesario, puede salir de todas las dem\xE1s sesiones de otros navegadores en todos sus dispositivos. Si cree que su cuenta se ha visto comprometida, tambi\xE9n deber\xEDa actualizar su contrase\xF1a.",
     "If you did not create an account, no further action is required.": "Si no ha creado una cuenta, no se requiere ninguna acci\xF3n adicional.",
     "If you did not receive the email": "Si no ha recibido el correo electr\xF3nico",
     "If you did not request a password reset, no further action is required.": "Si no ha solicitado el restablecimiento de contrase\xF1a, omita este mensaje de correo electr\xF3nico.",
+    "If you did not subscribe link this url for unsubscribe": "Si usted no se ha suscripto, por favor vaya al link que dejamos aqu\xED para notificar el error",
     "If you\u2019re having trouble clicking the \"=>actionText\" button, copy and paste the URL below\ninto your web browser=>": "Si tiene problemas para hacer clic en el bot\xF3n \"=>actionText\", copie y pegue la siguiente URL \nen su navegador web=>",
     "Image": "Imagen",
     "Interface": "Interface",
@@ -57366,6 +57444,7 @@ module.exports = {
     "Last used": "Usado por \xFAltima vez",
     "Leave": "Abandonar",
     "Leave Team": "Abandonar equipo",
+    "Leave us your email": "D\xE9janos tu email",
     "Likes": "Me Gusta",
     "List": "Lista",
     "Login": "Iniciar Sesi\xF3n",
@@ -57383,6 +57462,7 @@ module.exports = {
     "Nevermind": "Olvidar",
     "New Password": "Nueva contrase\xF1a",
     "New Post": "Crear Post",
+    "Newsletter ": "Noticias ",
     "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
     "Not Found": "No encontrado",
     "Oh no": "Ay no",
@@ -57404,6 +57484,7 @@ module.exports = {
     "Please copy your new API token. For your security, it won't be shown again.": "Por favor copie su nuevo token API. Por su seguridad, no se volver\xE1 a mostrar.",
     "Please enter your password to confirm you would like to logout of your other browser sessions across all of your devices.": "Por favor ingrese su contrase\xF1a para confirmar que desea cerrar las dem\xE1s sesiones de otros navegadores en todos tus dispositivos.",
     "Please provide the email address of the person you would like to add to this team. The email address must be associated with an existing account.": "Por favor proporcione la direcci\xF3n de correo electr\xF3nico de la persona que le gustar\xEDa agregar a este equipo. La direcci\xF3n de correo electr\xF3nico debe estar asociada a una cuenta existente.",
+    "Please, send an answare as soon like is possible for you.": "Por favor, env\xEDe una respuesta tan pronto como le sea posible.",
     "Post": "Post",
     "Post created successfully": "Post creado satisfactoriamente",
     "Posted by: ": "Posteado por: ",
@@ -57444,6 +57525,7 @@ module.exports = {
     "Remove": "Retirar",
     "Remove Photo": "Eliminar Foto",
     "Remove Team Member": "Retirar miembro del equipo",
+    "Request Contact ": "Petici\xF3n de contacto ",
     "Resend Verification Email": "Reenviar correo de verificaci\xF3n",
     "Reset Password": "Restablecer Contrase\xF1a",
     "Reset Password Notification": "Notificaci\xF3n de restablecimiento de contrase\xF1a",
@@ -57472,6 +57554,7 @@ module.exports = {
     "Sorry, your session has expired. Please refresh and try again.": "Lo sentimos, su sesi\xF3n ha expirado. Por favor, actualice y pruebe de nuevo.",
     "Start": "Entrar",
     "Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two factor authentication device is lost.": "Guarde estos c\xF3digos de recuperaci\xF3n en un administrador de contrase\xF1as seguro. Se pueden utilizar para recuperar el acceso a su cuenta si pierde su dispositivo de autenticaci\xF3n de dos factores.",
+    "Subscribe yourself and receive our offer and informations": "Suscr\xEDbete y recibe nuestras ofertas e informaciones",
     "Subscription": "Suscripcion",
     "Summary": "Resumen",
     "Switch Teams": "Cambiar de equipo",
@@ -57485,6 +57568,7 @@ module.exports = {
     "Team Settings": "Ajustes del equipo",
     "Testimonials": "Comentarios",
     "Testimonials Calification": "Calificacion de comentarios",
+    "Thank you for subscribe!": "Gracias por suscribirse!",
     "Thank you for using our application!": "Gracias por usar nuestra aplicaci\xF3n!",
     "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.": "\xA1Gracias por registrarse! Antes de comenzar, \xBFpodr\xEDa verificar su direcci\xF3n de correo electr\xF3nico haciendo clic en el enlace que le acabamos de enviar? Si no recibi\xF3 el correo electr\xF3nico, con gusto le enviaremos otro.",
     "The :attribute must be a valid role.": ":Attribute debe ser un rol v\xE1lido.",
@@ -57539,6 +57623,7 @@ module.exports = {
     "Whoops! Something went wrong.": "\xA1Vaya! Algo sali\xF3 mal",
     "Yes, delete": "S\xED, elimiinar",
     "You are logged in!": "\xA1Ya iniciaste sesi\xF3n!",
+    "You are receiving a new contact email with content: ": "Usted est\xE1 reciviendo un nuevo email de contacto con el contenido: ",
     "You are receiving this email because we received a password reset request for your account.": "Ha recibido este mensaje porque se solicit\xF3 un restablecimiento de contrase\xF1a para su cuenta.",
     "You cannot leave empty fields, please check": "No puede dejar campos vac\xEDos, revise por favor",
     "You have enabled two factor authentication.": "Has habilitado la autenticaci\xF3n de dos factores.",
@@ -57659,10 +57744,12 @@ module.exports = {
     "Hello!": "\xA1Hola!",
     "Home": "Inicio",
     "Hostals": "Hostales",
+    "I need your name": "Necesito su nombre",
     "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.": "Si es necesario, puede salir de todas las dem\xE1s sesiones de otros navegadores en todos sus dispositivos. Si cree que su cuenta se ha visto comprometida, tambi\xE9n deber\xEDa actualizar su contrase\xF1a.",
     "If you did not create an account, no further action is required.": "Si no ha creado una cuenta, no se requiere ninguna acci\xF3n adicional.",
     "If you did not receive the email": "Si no ha recibido el correo electr\xF3nico",
     "If you did not request a password reset, no further action is required.": "Si no ha solicitado el restablecimiento de contrase\xF1a, omita este mensaje de correo electr\xF3nico.",
+    "If you did not subscribe link this url for unsubscribe": "Si usted no se ha suscripto, por favor vaya al link que dejamos aqu\xED para notificar el error",
     "If you\u2019re having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:": "Si tiene problemas para hacer clic en el bot\xF3n \":actionText\", copie y pegue la siguiente URL \nen su navegador web:",
     "In addition, among our offers we want to include": "Adem\xE1s entre nuestras ofertas queremos incluir",
     "Interface": "Interface",
@@ -57675,6 +57762,7 @@ module.exports = {
     "Last used": "Usado por \xFAltima vez",
     "Leave": "Abandonar",
     "Leave Team": "Abandonar equipo",
+    "Leave us your email": "D\xE9janos tu email",
     "Login": "Iniciar Sesi\xF3n",
     "Logout": "Cerrar sesi\xF3n",
     "Logout Other Browser Sessions": "Cerrar las dem\xE1s sesiones",
@@ -57688,6 +57776,7 @@ module.exports = {
     "Name": "Nombre",
     "Nevermind": "Olvidar",
     "New Password": "Nueva contrase\xF1a",
+    "Newsletter ": "Noticias ",
     "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
     "Not Found": "No encontrado",
     "Oh no": "Ay no",
@@ -57709,6 +57798,7 @@ module.exports = {
     "Please copy your new API token. For your security, it won't be shown again.": "Por favor copie su nuevo token API. Por su seguridad, no se volver\xE1 a mostrar.",
     "Please enter your password to confirm you would like to logout of your other browser sessions across all of your devices.": "Por favor ingrese su contrase\xF1a para confirmar que desea cerrar las dem\xE1s sesiones de otros navegadores en todos tus dispositivos.",
     "Please provide the email address of the person you would like to add to this team. The email address must be associated with an existing account.": "Por favor proporcione la direcci\xF3n de correo electr\xF3nico de la persona que le gustar\xEDa agregar a este equipo. La direcci\xF3n de correo electr\xF3nico debe estar asociada a una cuenta existente.",
+    "Please, send an answare as soon like is possible for you.": "Por favor, env\xEDe una respuesta tan pronto como le sea posible.",
     "Post": "Post",
     "Post created successfully": "Post creado satisfactoriamente",
     "Posted by: ": "Posteado por: ",
@@ -57726,6 +57816,7 @@ module.exports = {
     "Remove": "Retirar",
     "Remove Photo": "Eliminar Foto",
     "Remove Team Member": "Retirar miembro del equipo",
+    "Request Contact ": "Petici\xF3n de contacto ",
     "Resend Verification Email": "Reenviar correo de verificaci\xF3n",
     "Reset Password": "Restablecer Contrase\xF1a",
     "Reset Password Notification": "Notificaci\xF3n de restablecimiento de contrase\xF1a",
@@ -57754,6 +57845,7 @@ module.exports = {
     "Sorry, you are not authorized to access this page.": "Lo sentimos, no est\xE1 autorizado para acceder a esta p\xE1gina.",
     "Sorry, your session has expired. Please refresh and try again.": "Lo sentimos, su sesi\xF3n ha expirado. Por favor, actualice y pruebe de nuevo.",
     "Store these recovery codes in a secure password manager. They can be used to recover access to your account if your two factor authentication device is lost.": "Guarde estos c\xF3digos de recuperaci\xF3n en un administrador de contrase\xF1as seguro. Se pueden utilizar para recuperar el acceso a su cuenta si pierde su dispositivo de autenticaci\xF3n de dos factores.",
+    "Subscribe yourself and receive our offer and informations": "Suscr\xEDbete y recibe nuestras ofertas e informaciones",
     "Suscription": "Suscripcion",
     "Switch Teams": "Cambiar de equipo",
     "THE EXCHANGE, yes, you have read very well, we know that we find ourselves in very difficult situations in the world economy, and ": "EL INTERCAMBIO, s\xED, has le\xEDdo muy bien, sabemos que nos encontramos en situaciones muy dif\xEDciles de la econom\xEDa mundial, y ",
@@ -57767,6 +57859,7 @@ module.exports = {
     "Team Settings": "Ajustes del equipo",
     "Testimonials": "Comentarios",
     "Testimonials Calification": "Calificacion de comentarios",
+    "Thank you for subscribe!": "Gracias por suscribirse!",
     "Thank you for using our application!": "Gracias por usar nuestra aplicaci\xF3n!",
     "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.": "\xA1Gracias por registrarse! Antes de comenzar, \xBFpodr\xEDa verificar su direcci\xF3n de correo electr\xF3nico haciendo clic en el enlace que le acabamos de enviar? Si no recibi\xF3 el correo electr\xF3nico, con gusto le enviaremos otro.",
     "The :attribute must be a valid role.": ":Attribute debe ser un rol v\xE1lido.",
@@ -57820,6 +57913,7 @@ module.exports = {
     "YOU DIDN'T THINK TO VISIT TRINIDAD": "NO PENSABA VISITAR TRINIDAD",
     "Yes, delete": "S\xED, elimiinar",
     "You are logged in!": "\xA1Ya iniciaste sesi\xF3n!",
+    "You are receiving a new contact email with content: ": "Usted est\xE1 reciviendo un nuevo email de contacto con el contenido: ",
     "You are receiving this email because we received a password reset request for your account.": "Ha recibido este mensaje porque se solicit\xF3 un restablecimiento de contrase\xF1a para su cuenta.",
     "You have enabled two factor authentication.": "Has habilitado la autenticaci\xF3n de dos factores.",
     "You have not enabled two factor authentication.": "No has habilitado la autenticaci\xF3n de dos factores.",

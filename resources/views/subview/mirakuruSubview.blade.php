@@ -19,6 +19,13 @@
       </div>
   </div>
 @endauth
+@if (isset($message))
+  <div class="alert alert-success">
+    <ul>
+      <li>{{$message}}</li>
+    </ul>
+  </div>
+@endif
 <section class="section-ppal pb-5" id="nosotros" name="nosotros"><!--Section Nosotros-->
   <div class="box"><h1 id="us_ttle" class="text-uppercase text-center pt-5 animate__animated animate__zoomIn">{{ __('Searching hostal') }}</h1></div>
   <p class="text-justify mx-2 my-2">{{__('Do you know what differentiates us from the rest of the great community of hostels that exist in Trinidad? Surely you will think that there we go with new old women that everyone says')}} &#128545;!
@@ -104,7 +111,7 @@
 </div>
 </section>
 </div><!--END Section Servicios-->
-<div class="contenedor-testimonios"><!--SECTION TESTIMONIOS-->
+<div hidden="true" class="contenedor-testimonios"><!--SECTION TESTIMONIOS-->
   <div class="contenedor-slider-testimonios">
     <div class="testimonial-slider">
       <div class="slider-overflow"><h1 class="text-center text-light text-uppercase">{{ __('Testimonials') }}</h1>
@@ -206,7 +213,7 @@
 </div><!--Fin SECTION TESTIMONIOS-->
 <section class="container-fluid col-12 pt-5" id="blog" name="blog"><h1 id="post" class="text-center pb-2 pt-5 text-uppercase animate__animated animate__zoomIn">{{ __('Posts') }}</h1><!--Section Blog-->
   <div class="row mb-2">
-    @if ($posts)
+    @if ( $posts ?? '')
       @foreach ($posts ?? '' as $post)
 
 
