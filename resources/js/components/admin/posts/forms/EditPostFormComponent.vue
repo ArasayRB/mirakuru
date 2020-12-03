@@ -114,8 +114,6 @@ placeholder="Add a keyword"
 
 <script>
   import VueCkeditor from 'vue-ckeditor2';
-  import VoerroTagsInput from '@voerro/vue-tagsinput';
-  Vue.component('tags-input', VoerroTagsInput);
     export default {
       components: { VueCkeditor },
       props:['post',
@@ -233,7 +231,7 @@ placeholder="Add a keyword"
                })
                .catch(error=>{
                  if(error.response.data.message){
-                   swal('Error',''+error.response.data.message,'error');                      
+                   swal('Error',''+error.response.data.message,'error');
                  }
                  let wrong=error.response.data.errors;
                  if(wrong.hasOwnProperty('title')){

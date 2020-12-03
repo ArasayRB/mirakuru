@@ -39,6 +39,8 @@
     <link rel="stylesheet" href="{{ asset('vendor/lightbox2-dev/css/lightbox.min.css') }}"><!--Galeria CSS Page-->
     <link rel="stylesheet" href="{{ asset('vendor/css/animate.min.css') }}"><!--Animate CSS Page-->
     <link rel="stylesheet" href="{{ asset('css/all.css') }}">
+    <!--Tags Style-->
+    <link href="{{ asset('vendor/css/tagsstyle.css') }}" rel="stylesheet">
   </head>
 @show
   <body class="bg-light">

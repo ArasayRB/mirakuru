@@ -14,6 +14,7 @@ import VueCookies from 'vue-cookies';
 import VueLang from '@eli5/vue-lang-js';
 // get the data source
 import translations from './vue-translations.js';
+import VoerroTagsInput from '@voerro/vue-tagsinput';
 var Vue = require('vue');
 require('lang.js');
 
@@ -36,6 +37,7 @@ Vue.use(VueLocalStorage);
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+Vue.component('tags-input', VoerroTagsInput);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('reservar-hostal-component', require('./components/forms/ReservarHostalComponent.vue').default);
 Vue.component('newsletter-component', require('./components/forms/NewsletterComponent.vue').default);

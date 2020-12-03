@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Cama;
 use App\Models\CategoriaHabitacion;
+use App\Models\Reserva;
 use App\Models\Hostal;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -15,6 +16,7 @@ class Habitacion extends Model
         'name',
         'price_high',
         'price_low',
+        'capacity',
         'active',
         'hostal_id',
         'category_id',
@@ -30,5 +32,9 @@ class Habitacion extends Model
 
     public function camas(){
       return belongsToMany(Cama::class)->withTimestamps();
+    }
+
+    public function reservas(){
+      return belongsToMany(Reserva::class,'habitacion_reserva','habitacion_id','reserva_id')->withPivot('active','active_date','inactive_date')->withTimestamps();
     }
 }

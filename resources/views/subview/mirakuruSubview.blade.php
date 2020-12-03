@@ -288,10 +288,10 @@
 @include('forms.registerForm')
 @include('forms.resetEmailForm')
 <section class="mt-5 pt-5" id="suscripcion" name="suscripcion"><!--Section Newsletter-->
-      <newsletter-component></newsletter-component>
+      <newsletter-component locale="{{ App::getLocale() }}"></newsletter-component>
 </section><!--END Section Newsletter-->
 @auth
     <section id="reserva" name="reserva" class="mt-5 pt-5 bg-primary pb-5 mb-5"><!--Section Reserva-->
-<reservar-hostal-component></reservar-hostal-component>
+<reservar-hostal-component locale="{{ App::getLocale() }}"></reservar-hostal-component>
 </section><!--END Section Reserva-->
 @endauth

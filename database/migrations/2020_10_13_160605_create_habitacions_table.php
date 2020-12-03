@@ -18,6 +18,7 @@ class CreateHabitacionsTable extends Migration
             $table->string('name');
             $table->float('price_high',8,2);
             $table->float('price_low',8,2);
+            $table->integer('capacity');
             $table->boolean('active');
             $table->unsignedBigInteger('hostal_id');
             $table->unsignedBigInteger('category_id');

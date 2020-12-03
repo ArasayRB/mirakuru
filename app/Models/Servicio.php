@@ -21,7 +21,7 @@ class Servicio extends Model
     ];
 
     public function hostales(){
-      return belongsToMany(Hostal::class)->withTimestamps();
+      return belongsToMany(Hostal::class,'hostal_servicio','servicio_id','hostal_id')->withPivot('cant_personas','active','active_date','inactive_date')->withTimestamps();
     }
 
     public function files(){

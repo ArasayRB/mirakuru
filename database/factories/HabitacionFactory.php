@@ -29,6 +29,7 @@ class HabitacionFactory extends Factory
           'name' => $this->faker->jobTitle,
           'price_high' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 1, $max = 500),
           'price_low' => $this->faker->randomFloat($nbMaxDecimals = 2, $min = 1, $max = 200),
+          'capacity' => $this->faker->numberBetween(1,4),
           'active' => $this->faker->boolean,
           'hostal_id' => $this->faker->numberBetween(1,$cantHostal),
           'category_id' => $this->faker->numberBetween(1,$cantCateg),

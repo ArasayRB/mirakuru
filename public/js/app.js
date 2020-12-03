@@ -2109,7 +2109,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-ckeditor2 */ "./node_modules/vue-ckeditor2/dist/vue-ckeditor2.esm.js");
-/* harmony import */ var _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @voerro/vue-tagsinput */ "./node_modules/@voerro/vue-tagsinput/src/main.js");
 //
 //
 //
@@ -2218,8 +2217,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
-
-Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     VueCkeditor: vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__["default"]
@@ -2443,7 +2440,6 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-ckeditor2 */ "./node_modules/vue-ckeditor2/dist/vue-ckeditor2.esm.js");
-/* harmony import */ var _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @voerro/vue-tagsinput */ "./node_modules/@voerro/vue-tagsinput/src/main.js");
 //
 //
 //
@@ -2559,8 +2555,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
-
-Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_1__["default"]);
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     VueCkeditor: vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__["default"]
@@ -3124,7 +3118,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post(url, data).then(function (response) {
         swal({
           title: _this.$trans('messages.Correct data'),
-          text: _this.$trans('messages.Thank you for subscribe'),
+          text: _this.$trans('messages.Thank you for subscribe!'),
           icon: 'success',
           closeOnClickOutside: false,
           closeOnEsc: false
@@ -3190,9 +3184,134 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      email: '',
+      name: '',
+      adress: '',
+      phone: '',
+      rooms: [],
+      selectedRooms: [],
+      services: [],
+      selectedServices: [],
+      roomCapacityMax: 0,
+      childCapacityMax: 0,
+      countries: [],
+      cant_person: '',
+      childs: '',
+      date_in: '',
+      date_out: '',
+      token: window.CSRF_TOKEN
+    };
+  },
+  methods: {
+    book: function book() {
+      var _this = this;
+
+      var url = "/suscripcion";
+      var mensaje = this.$trans('messages.Unidentified error');
+
+      if (this.email == '') {
+        mensaje = this.$trans('messages.You cannot leave empty fields, please check');
+      }
+
+      var data = new FormData();
+      data.append("email", this.email);
+      axios.post(url, data).then(function (response) {
+        swal({
+          title: _this.$trans('messages.Correct data'),
+          text: _this.$trans('messages.Thank you for subscribe!'),
+          icon: 'success',
+          closeOnClickOutside: false,
+          closeOnEsc: false
+        }); //console.log(response);
+      })["catch"](function (error) {
+        if (error.response.data.message) {
+          swal('Error', '' + error.response.data.message, 'error');
+        }
+
+        var wrong = error.response.data.errors;
+
+        if (wrong.hasOwnProperty('email')) {
+          mensaje += '-' + wrong.email[0];
+        }
+
+        swal('Error', mensaje, 'error'); //console.log(error.response.data);
+      }); //alert('Hola');
+    }
+  },
+  created: function created() {
+    var _this2 = this;
+
+    var hostalName = 'Hostal Mirakuru Gran Familia';
+    axios.get('/available-services/' + hostalName).then(function (response) {
+      var hostalsServices = response.data;
+      var servicesHostal = hostalsServices[0].services;
+      _this2.services = servicesHostal;
+      console.log(_this2.services);
+    })["catch"](function (error) {
+      return _this2.errors.push(error);
+    });
+    axios.get('/available-rooms/' + hostalName).then(function (response) {
+      _this2.rooms = response.data;
+
+      for (var i = 0; i < _this2.rooms.length; i++) {
+        _this2.roomCapacityMax += _this2.rooms[i].capacity;
+      }
+
+      _this2.childCapacityMax = _this2.roomCapacityMax - 1;
+      console.log('CapAzul- ' + _this2.roomCapacityMax);
+    })["catch"](function (error) {
+      return _this2.errors.push(error);
+    });
+    axios.get('/countries-list').then(function (response) {
+      _this2.countries = response.data;
+      console.log(_this2.countries.length);
+    })["catch"](function (error) {
+      return _this2.errors.push(error);
+    });
+  },
   mounted: function mounted() {
-    console.log('Component mounted.');
+    if (this.$attrs.locale) {
+      this.$lang.setLocale(this.$attrs.locale);
+    } else {
+      this.$lang.setLocale('en');
+    }
   }
 });
 
@@ -42655,117 +42774,380 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("form", { staticClass: "mt-5", attrs: { action: "" } }, [
-      _c("div", { staticClass: "container mt-5" }, [
-        _c("h1", { staticClass: "text-center text-light mt-5 mb-5" }, [
-          _vm._v("Haga su reserva AHORA!!")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "row justify-content-center" }, [
-          _c("div", { staticClass: "col-6" }, [
+  return _c("form", { staticClass: "mt-5", attrs: { id: "reservation" } }, [
+    _c("div", { staticClass: "container mt-5" }, [
+      _c("h1", { staticClass: "text-center text-light mt-5 mb-5" }, [
+        _vm._v(_vm._s(_vm.$trans("messages.Book Now!")))
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "row justify-content-center" }, [
+        _c(
+          "div",
+          { staticClass: "col-6" },
+          [
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.name,
+                  expression: "name"
+                }
+              ],
               staticClass: "form-control font-italic mb-2",
               attrs: {
                 type: "text",
                 name: "nombre",
                 placeholder: "Nombre Completo/Full Name..."
+              },
+              domProps: { value: _vm.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.name = $event.target.value
+                }
               }
             }),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.adress,
+                  expression: "adress"
+                }
+              ],
               staticClass: "form-control font-italic mb-2",
               attrs: {
                 type: "text",
                 name: "dir",
                 placeholder: "Dirección/Adress..."
+              },
+              domProps: { value: _vm.adress },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.adress = $event.target.value
+                }
               }
             }),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.phone,
+                  expression: "phone"
+                }
+              ],
               staticClass: "form-control font-italic mb-2",
               attrs: {
                 type: "tel",
                 name: "tel",
                 placeholder: "Teléfono/Phone..."
+              },
+              domProps: { value: _vm.phone },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.phone = $event.target.value
+                }
               }
             }),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.email,
+                  expression: "email"
+                }
+              ],
               staticClass: "form-control font-italic mb-2",
               attrs: {
                 type: "email",
                 name: "email",
                 placeholder: "Correo/Email..."
+              },
+              domProps: { value: _vm.email },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.email = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "label",
+              { staticClass: "text-light", attrs: { for: "services" } },
+              [
+                _c("span", { staticClass: "text-danger" }, [
+                  _vm._v(
+                    _vm._s(_vm.$trans("messages.Separate with (,) please"))
+                  )
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _c("tags-input", {
+              attrs: {
+                "element-id": "services",
+                "add-tags-on-comma": true,
+                placeholder: "Servicios/Services...",
+                "existing-tags": _vm.services,
+                "id-field": "id",
+                "text-field": "name",
+                typeahead: true
+              },
+              model: {
+                value: _vm.selectedServices,
+                callback: function($$v) {
+                  _vm.selectedServices = $$v
+                },
+                expression: "selectedServices"
               }
             })
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-6" }, [
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-6" },
+          [
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.cant_person,
+                  expression: "cant_person"
+                }
+              ],
               staticClass: "form-control font-italic mb-2",
               attrs: {
                 type: "number",
                 name: "personas",
                 min: "1",
+                max: _vm.roomCapacityMax,
                 step: "1",
                 placeholder: "Huéspedes/Guests..."
+              },
+              domProps: { value: _vm.cant_person },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.cant_person = $event.target.value
+                }
               }
             }),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.childs,
+                  expression: "childs"
+                }
+              ],
               staticClass: "form-control font-italic mb-2",
               attrs: {
                 type: "number",
                 name: "ninos",
                 min: "1",
                 step: "1",
-                placeholder: "Niños/Childs..."
+                max: _vm.childCapacityMax,
+                placeholder: "#Niños de Huéspedes/#Childs of Guests..."
+              },
+              domProps: { value: _vm.childs },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.childs = $event.target.value
+                }
               }
             }),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.date_in,
+                  expression: "date_in"
+                }
+              ],
               staticClass: "form-control font-italic mb-2",
               attrs: {
                 type: "date",
                 name: "fecha-entrada",
                 placeholder: "Entrada/In..."
+              },
+              domProps: { value: _vm.date_in },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.date_in = $event.target.value
+                }
               }
             }),
             _vm._v(" "),
             _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.date_out,
+                  expression: "date_out"
+                }
+              ],
               staticClass: "form-control font-italic mb-2",
               attrs: {
                 type: "date",
                 name: "fecha-salida",
                 placeholder: "Salida/Out..."
+              },
+              domProps: { value: _vm.date_out },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.date_out = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "label",
+              { staticClass: "text-light", attrs: { for: "rooms" } },
+              [
+                _c("span", { staticClass: "text-danger" }, [
+                  _vm._v(
+                    _vm._s(_vm.$trans("messages.Separate with (,) please"))
+                  )
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _c("tags-input", {
+              attrs: {
+                "element-id": "rooms",
+                "add-tags-on-comma": true,
+                placeholder: "Habitación(s)/Room(s)...",
+                "existing-tags": _vm.rooms,
+                "id-field": "id",
+                "text-field": "name",
+                typeahead: true
+              },
+              model: {
+                value: _vm.selectedRooms,
+                callback: function($$v) {
+                  _vm.selectedRooms = $$v
+                },
+                expression: "selectedRooms"
               }
             })
-          ]),
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-12 form-group pt-2" }, [
+          _c(
+            "label",
+            { staticClass: "text-light", attrs: { for: "country" } },
+            [_vm._v(_vm._s(_vm.$trans("messages.Select Country")))]
+          ),
           _vm._v(" "),
-          _c("div", { staticClass: "col-2 " }, [
-            _c("div", { staticClass: "content-justify-center" }, [
-              _c(
-                "button",
+          _c(
+            "select",
+            {
+              directives: [
                 {
-                  staticClass: "btn w-20 rounded btn-light btn-lg mt-5 reserva",
-                  attrs: { type: "button" }
-                },
-                [_vm._v("Reservar")]
-              )
-            ])
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.pais,
+                  expression: "pais"
+                }
+              ],
+              staticClass: "form-control pt-2",
+              attrs: { name: "country", required: "" },
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.pais = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            [
+              _c("option", { attrs: { value: "" } }, [
+                _vm._v(_vm._s(_vm.$trans("messages.Select Country")))
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.countries, function(countri) {
+                return _c("option", { domProps: { value: countri.id } }, [
+                  _vm._v(_vm._s(countri.name_knowing))
+                ])
+              })
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-2 " }, [
+          _c("div", { staticClass: "content-justify-center" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn w-20 rounded btn-light btn-lg mt-5 reserva",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.book()
+                  }
+                }
+              },
+              [_vm._v(_vm._s(_vm.$trans("messages.Book")))]
+            )
           ])
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -56129,6 +56511,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _eli5_vue_lang_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_eli5_vue_lang_js__WEBPACK_IMPORTED_MODULE_3__);
 /* harmony import */ var _vue_translations_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./vue-translations.js */ "./resources/js/vue-translations.js");
 /* harmony import */ var _vue_translations_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_vue_translations_js__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @voerro/vue-tagsinput */ "./node_modules/@voerro/vue-tagsinput/src/main.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -56141,6 +56524,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
  // get the data source
+
 
 
 
@@ -56167,6 +56551,7 @@ Vue.use(vue_localstorage__WEBPACK_IMPORTED_MODULE_1___default.a);
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_5__["default"]);
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('reservar-hostal-component', __webpack_require__(/*! ./components/forms/ReservarHostalComponent.vue */ "./resources/js/components/forms/ReservarHostalComponent.vue")["default"]);
 Vue.component('newsletter-component', __webpack_require__(/*! ./components/forms/NewsletterComponent.vue */ "./resources/js/components/forms/NewsletterComponent.vue")["default"]);
@@ -56938,6 +57323,7 @@ module.exports = {
     "Before proceeding, please check your email for a verification link.": "Before proceeding, please check your email for a verification link.",
     "Blog": "Blog",
     "Book": "Book",
+    "Book Now!": "Book Now!",
     "Bookers": "Bookers",
     "Browser Sessions": "Browser Sessions",
     "CLose Places": "Close Places",
@@ -56953,6 +57339,7 @@ module.exports = {
     "Content": "Content",
     "Continue reading": "Continue reading",
     "Correct data": "Correct data",
+    "Country": "Country",
     "Create": "Create",
     "Create API Token": "Create API Token",
     "Create New Team": "Create New Team",
@@ -57102,6 +57489,7 @@ module.exports = {
     "Saved.": "Saved.",
     "Searching hostal": "Searching hostal",
     "Select A New Photo": "Select A New Photo",
+    "Select Country": "Select Country",
     "Send": "Send",
     "Send Password Reset Link": "Send Password Reset Link",
     "Separate with (,) please": "Separate with (,) please",
@@ -57167,6 +57555,8 @@ module.exports = {
     "Type Account": "Type Account",
     "Unauthorized": "Unauthorized",
     "Unidentified error": "Error no identify",
+    "Unsubscribe": "Unsubscribe",
+    "Unsubscribe Successfully": "Unsubscribe Successfully",
     "Update": "Update",
     "Update Password": "Update Password",
     "Update a Post": "Update a Post",
@@ -57373,6 +57763,7 @@ module.exports = {
     "Before proceeding, please check your email for a verification link.": "Antes de continuar, por favor, confirme su correo electr\xF3nico con el enlace de verificaci\xF3n que le fue enviado.",
     "Blog": "Blog",
     "Book": "Reservar",
+    "Book Now!": "Haga su reserva AHORA!",
     "Bookers": "Reservas",
     "Browser Sessions": "Sesiones del navegador",
     "CLose Places": "Lugares Cerca",
@@ -57388,6 +57779,7 @@ module.exports = {
     "Content": "Contenido",
     "Continue reading": "Contin\xFAe leyendo",
     "Correct data": "Datos correctos",
+    "Country": "Pa\xEDs",
     "Create": "Crear",
     "Create API Token": "Crear Token API",
     "Create New Team": "Crear nuevo equipo",
@@ -57537,6 +57929,7 @@ module.exports = {
     "Saved.": "Guardado.",
     "Searching hostal": "En busca de un hostal",
     "Select A New Photo": "Seleccione una nueva foto",
+    "Select Country": "Seleccione un pa\xEDs",
     "Send": "Enviar",
     "Send Password Reset Link": "Enviar enlace para restablecer la contrase\xF1a",
     "Separate with (,) please": "Separado por (,) por favor",
@@ -57602,6 +57995,8 @@ module.exports = {
     "Type Account": "Tipo de Cuenta",
     "Unauthorized": "No autorizado",
     "Unidentified error": "Error no identificado",
+    "Unsubscribe": "Eliminar subscripci\xF3n",
+    "Unsubscribe Successfully": "Suscripci\xF3n eliminada satisfactoriamente",
     "Update": "Actualizar",
     "Update Password": "Actualizar contrase\xF1a",
     "Update a Post": "Actualizar un Post",
@@ -57693,6 +58088,7 @@ module.exports = {
     "Before proceeding, please check your email for a verification link.": "Antes de continuar, por favor, confirme su correo electr\xF3nico con el enlace de verificaci\xF3n que le fue enviado.",
     "Blog": "Blog",
     "Book": "Reservar",
+    "Book Now!": "Haga su reserva AHORA!",
     "Bookers": "Reservas",
     "Browser Sessions": "Sesiones del navegador",
     "CONTACT US": "CONTACTE",
@@ -57707,6 +58103,7 @@ module.exports = {
     "Content": "Contenido",
     "Continue reading": "Contin\xFAe leyendo",
     "Correct data": "Datos correctos",
+    "Country": "Pa\xEDs",
     "Create": "Crear",
     "Create API Token": "Crear Token API",
     "Create New Team": "Crear nuevo equipo",
@@ -57830,6 +58227,7 @@ module.exports = {
     "Saved.": "Guardado.",
     "Searching hostal": "En busca de un hostal",
     "Select A New Photo": "Seleccione una nueva foto",
+    "Select Country": "Seleccione un pa\xEDs",
     "Send": "Enviar",
     "Send Password Reset Link": "Enviar enlace para restablecer la contrase\xF1a",
     "Separate with (,) please": "Separado por (,) por favor",
@@ -57890,6 +58288,8 @@ module.exports = {
     "Type Account": "Tipo de Cuenta",
     "Unauthorized": "No autorizado",
     "Unidentified error": "Error no identificado",
+    "Unsubscribe": "Eliminar subscripci\xF3n",
+    "Unsubscribe Successfully": "Suscripci\xF3n eliminada satisfactoriamente",
     "Update": "Actualizar",
     "Update Password": "Actualizar contrase\xF1a",
     "Update a Post": "Editar un Post",

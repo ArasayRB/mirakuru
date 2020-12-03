@@ -11,4 +11,17 @@ trait HostalTrait {
   return  $hostal;
   }
 
+
+  public function getHostalServiceActive($nameHostal){
+    $serviceHostalActive=Hostal::with('services')
+                    ->where('name',$nameHostal)
+                    ->get();
+  return  $serviceHostalActive;
+  }
+
+  public function getHostalIdByName($nameHostal){
+    $id=Hostal::where('name',$nameHostal)
+                    ->get();
+  return  $id[0]->id;
+  }
 }

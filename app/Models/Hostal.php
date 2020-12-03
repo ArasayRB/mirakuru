@@ -43,7 +43,7 @@ class Hostal extends Model
     }
 
     public function services(){
-      return $this->belongsToMany(Servicio::class)->withTimestamps();
+      return $this->belongsToMany(Servicio::class,'hostal_servicio','hostal_id','servicio_id')->withPivot('cant_personas','active','active_date','inactive_date')->withTimestamps();
     }
 
     public function habitaciones(){
