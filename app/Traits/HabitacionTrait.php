@@ -10,4 +10,10 @@ trait HabitacionTrait {
                     ->get();
   return  $roomsHostalActive;
   }
+
+  public function getHabByName($nameHab){
+    $roomsHostalActive=Habitacion::where('name',$nameHab)
+                    ->get();
+  return  $roomsHostalActive;
+  }
 }

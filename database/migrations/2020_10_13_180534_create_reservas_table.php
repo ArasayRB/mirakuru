@@ -22,6 +22,7 @@ class CreateReservasTable extends Migration
             $table->unsignedBigInteger('country_id');
             $table->integer('child')->default(0);
             $table->string('service')->nullable();
+            $table->string('name');
             $table->string('rooms');
             $table->string('adress');
             $table->string('phone');

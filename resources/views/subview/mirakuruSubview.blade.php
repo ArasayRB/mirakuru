@@ -292,6 +292,6 @@
 </section><!--END Section Newsletter-->
 @auth
     <section id="reserva" name="reserva" class="mt-5 pt-5 bg-primary pb-5 mb-5"><!--Section Reserva-->
-<reservar-hostal-component locale="{{ App::getLocale() }}"></reservar-hostal-component>
+<reservar-hostal-component email="{{Auth::user()->email}}" locale="{{ App::getLocale() }}"></reservar-hostal-component>
 </section><!--END Section Reserva-->
 @endauth

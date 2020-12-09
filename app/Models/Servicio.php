@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\File;
 use App\Models\Hostal;
+use App\Models\Reserva;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -21,7 +22,11 @@ class Servicio extends Model
     ];
 
     public function hostales(){
-      return belongsToMany(Hostal::class,'hostal_servicio','servicio_id','hostal_id')->withPivot('cant_personas','active','active_date','inactive_date')->withTimestamps();
+      return $this->belongsToMany(Hostal::class,'hostal_servicio','servicio_id','hostal_id')->withPivot('cant_personas','active','active_date','inactive_date')->withTimestamps();
+    }
+
+    public function reservas(){
+      return $this->belongsToMany(Reserva::class,'reserva_servicio','servicio_id','reserva_id')->withPivot('active','active_date','inactive_date','persons')->withTimestamps();
     }
 
     public function files(){

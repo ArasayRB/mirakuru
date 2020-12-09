@@ -6,7 +6,7 @@ trait HostalTrait {
 
 
   public function getHostalByName($name){
-    $hostal=Hostal::where('name','Hostal Mirakuru Gran Familia')
+    $hostal=Hostal::where('name',$name)
                     ->get();
   return  $hostal;
   }

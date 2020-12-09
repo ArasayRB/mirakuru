@@ -12,11 +12,27 @@ import swal from 'sweetalert';
 import VueLocalStorage from 'vue-localstorage';
 import VueCookies from 'vue-cookies';
 import VueLang from '@eli5/vue-lang-js';
+import moment from 'moment';
 // get the data source
 import translations from './vue-translations.js';
 import VoerroTagsInput from '@voerro/vue-tagsinput';
+import VCalendar from 'v-calendar';
 var Vue = require('vue');
 require('lang.js');
+
+Vue.use(VCalendar, {
+  componentPrefix: 'vc',  // Use <vc-calendar /> instead of <v-calendar />
+  locales: {
+   'pt-PT': {
+     firstDayOfWeek: 1,
+     masks: {
+       L: 'YYYY-MM-DD',
+       // ...optional `title`, `weekdays`, `navMonths`, etc
+     }
+   }
+ },
+                 // ...other defaults
+});
 
 Vue.use(VueLang, {
   messages: translations, // Provide locale file

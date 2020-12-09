@@ -23,6 +23,7 @@ class Reserva extends Model
         'country_id',
         'child',
         'service',
+        'name',
         'rooms',
         'adress',
         'phone',
@@ -32,26 +33,26 @@ class Reserva extends Model
     ];
 
     public function hostales(){
-      return belongsTo(Hostal::class)->withTimestamps();
+      return $this->belongsTo(Hostal::class)->withTimestamps();
     }
 
     public function usuarios(){
-      return belongsTo(User::class)->withTimestamps();
+      return $this->belongsTo(User::class)->withTimestamps();
     }
 
     public function pagos(){
-      return hasOne(Pago::class)->withTimestamps();
+      return $this->hasMany(Pago::class)->withTimestamps();
     }
 
     public function habitaciones(){
-      return belongsToMany(Habitacion::class,'habitacion_reserva','reserva_id','habitacion_id')->withPivot('active','active_date','inactive_date')->withTimestamps();
+      return $this->belongsToMany(Habitacion::class,'habitacion_reserva','reserva_id','habitacion_id')->withPivot('active','active_date','inactive_date')->withTimestamps();
     }
 
     public function servicios(){
-      return hasManyThrough(Servicio::class,Hostal::class);
+      return $this->belongsToMany(Servicio::class,'reserva_servicio','reserva_id','servicio_id')->withPivot('active','active_date','inactive_date','persons')->withTimestamps();
     }
 
     public function countries(){
-      return belongsTo(Country::class)->withTimestamps();
+      return $this->belongsTo(Country::class)->withTimestamps();
     }
 }
