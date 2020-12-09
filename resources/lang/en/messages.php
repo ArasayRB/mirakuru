@@ -53,6 +53,7 @@ return [
   "Contact"=>"Contact",
   "Content"=>"Content",
   "Continue reading"=>"Continue reading",
+  "Comunicate with our team by contact message way because we have a problem with your confirmation."=>"Comunicate with our team by contact message way because we have a problem with your confirmation.",
   "Correct data"=>"Correct data",
   "Country"=>"Country",
   "Create"=> "Create",

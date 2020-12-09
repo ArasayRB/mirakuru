@@ -51,6 +51,7 @@ return [
   "Confirm Password"=> "Confirmar contraseña",
   "Confirm your pre-reservation: "=>"Confirme su pre-reservación: ",
   "Contact"=>"Contacto",
+  "Comunicate with our team by contact message way because we have a problem with your confirmation."=>"Comuníquese con nuestro equipo por mensage de contacto porque tuvimos un problema confirmando su reserva.",
   "Content"=>"Contenido",
   "Continue reading"=>"Continúe leyendo",
   "Correct data"=>"Datos correctos",

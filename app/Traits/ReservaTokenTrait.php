@@ -17,9 +17,11 @@ trait ReservaTokenTrait {
                    return $reserva;
     }
 
-    public function findToken($token){
+    public function findToken($token,$reserva,$user){
       $reserva=ReservaToken::where('token',$token)
-                            ->get();
+                             ->where('reserva',$reserva)
+                             ->where('user_id',$user)
+                             ->get();
                             return $reserva;
     }
 

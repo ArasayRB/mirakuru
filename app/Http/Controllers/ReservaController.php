@@ -123,7 +123,7 @@ class ReservaController extends Controller
       $reserva=Reserva::with('servicios')->with('habitaciones')->find($reserva);
       $reserva->active=true;
       $reserva->update();
-      $tokenReserva=$this->findToken($token);
+      $tokenReserva=$this->findToken($token,$reserva->id,$user);
       if($tokenReserva){
         $actual_date=Carbon::now();
         $activeDate=$actual_date->toDateString();
@@ -134,8 +134,12 @@ class ReservaController extends Controller
           $reserva->habitaciones()->updateExistingPivot($habitacion->id,array('active'=>true,'active_date'=>$activeDate));
         }
         $this->deleteTokenReserva($tokenReserva[0]);
+        return view('home',['message'=>''.Lang::get('Reservation Confirmed succefully. Thank you!')]);
       }
-      return view('home',['message'=>''.Lang::get('Reservation Confirmed succefully. Thank you!')]);
+      else{
+        return view('home',['message'=>''.Lang::get('Comunicate with our team by contact message way because we have a problem with your confirmation.')]);
+      }
+
 
     }
 
