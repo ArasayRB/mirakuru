@@ -3248,6 +3248,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
@@ -3263,9 +3283,9 @@ __webpack_require__.r(__webpack_exports__);
       name: '',
       adress: '',
       pais: '',
-      tag_room: true,
-      tag_service: true,
       phone: '',
+      blockedDays: [],
+      blockedAllDays: [],
       rooms: [],
       selectedRooms: [],
       services: [],
@@ -3281,7 +3301,7 @@ __webpack_require__.r(__webpack_exports__);
       daylow: 0,
       reservation_days: 0,
       range: [],
-      childs: '',
+      childs: 0,
       nuSortArr: [],
       amount: 0,
       is_betwen: 'no',
@@ -3291,21 +3311,26 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    esconderMensage: function esconderMensage() {
+      $("#mensage").hide(true);
+    },
     totalAmount: function totalAmount(val, tipoIinput) {
       if (tipoIinput == 'service') {
         this.service_price = 0;
         var price_baj = 0;
         var price_alta = 0;
 
-        for (var i = 0; i < val.length; i++) {
-          if (this.tempor == 'Alta') {
-            this.service_price += val[i].price_high * this.cant_person * this.reservation_days;
-          } else if (this.tempor == 'Baja') {
-            this.service_price += val[i].price_low * this.cant_person * this.reservation_days;
-          } else {
-            price_baj = val[i].price_low * this.daylow * this.cant_person;
-            price_alta = val[i].price_high * this.dayhigh * this.cant_person;
-            this.service_price += price_baj + price_alta;
+        if (val.length > 0) {
+          for (var i = 0; i < val.length; i++) {
+            if (this.tempor == 'Alta') {
+              this.service_price += val[i].price_high * this.cant_person * this.reservation_days;
+            } else if (this.tempor == 'Baja') {
+              this.service_price += val[i].price_low * this.cant_person * this.reservation_days;
+            } else {
+              price_baj = val[i].price_low * this.daylow * this.cant_person;
+              price_alta = val[i].price_high * this.dayhigh * this.cant_person;
+              this.service_price += price_baj + price_alta;
+            }
           }
         }
       } else if (tipoIinput == 'room') {
@@ -3313,15 +3338,17 @@ __webpack_require__.r(__webpack_exports__);
         var price_baj = 0;
         var price_alta = 0;
 
-        for (var i = 0; i < val.length; i++) {
-          if (this.tempor == 'Alta') {
-            this.rooms_price += val[i].price_high * this.reservation_days;
-          } else if (this.tempor == 'Baja') {
-            this.rooms_price += val[i].price_low * this.reservation_days;
-          } else {
-            price_baj = val[i].price_low * this.daylow;
-            price_alta = val[i].price_high * this.dayhigh;
-            this.rooms_price += price_baj + price_alta;
+        if (val.length > 0 && this.cant_person > 0) {
+          for (var i = 0; i < val.length; i++) {
+            if (this.tempor == 'Alta') {
+              this.rooms_price += val[i].price_high * this.reservation_days;
+            } else if (this.tempor == 'Baja') {
+              this.rooms_price += val[i].price_low * this.reservation_days;
+            } else {
+              price_baj = val[i].price_low * this.daylow;
+              price_alta = val[i].price_high * this.dayhigh;
+              this.rooms_price += price_baj + price_alta;
+            }
           }
         }
       } else if (tipoIinput == 'range' || tipoIinput == 'cant_persons') {
@@ -3378,35 +3405,94 @@ __webpack_require__.r(__webpack_exports__);
 
       this.nuSortArr = numeros;
     },
-    book: function book() {
+    getCountryList: function getCountryList() {
       var _this = this;
+
+      axios.get('/countries-list').then(function (response) {
+        _this.countries = response.data;
+      })["catch"](function (error) {
+        return _this.errors.push(error);
+      });
+    },
+    getTemporadasHostal: function getTemporadasHostal(name) {
+      var _this2 = this;
+
+      axios.get('/temporadas-hostal/' + name).then(function (response) {
+        _this2.seasons = response.data.temporadas;
+      })["catch"](function (error) {
+        return _this2.errors.push(error);
+      });
+    },
+    getBookedDatesBD: function getBookedDatesBD(name) {
+      var _this3 = this;
+
+      axios.get('/blocked-dates/' + name).then(function (response) {
+        var dates_block = response.data;
+        var temp;
+        _this3.blockedAllDays = dates_block;
+      })["catch"](function (error) {
+        return _this3.errors.push(error);
+      });
+    },
+    getAvailableRooms: function getAvailableRooms(name) {
+      var _this4 = this;
+
+      axios.get('/available-rooms/' + name).then(function (response) {
+        _this4.rooms = response.data;
+
+        for (var i = 0; i < _this4.rooms.length; i++) {
+          _this4.roomCapacityMax += _this4.rooms[i].capacity;
+        }
+
+        _this4.childCapacityMax = _this4.roomCapacityMax - 1;
+      })["catch"](function (error) {
+        return _this4.errors.push(error);
+      });
+    },
+    getAvailableServices: function getAvailableServices(name) {
+      var _this5 = this;
+
+      axios.get('/available-services/' + name).then(function (response) {
+        var hostalsServices = response.data;
+        var servicesHostal = hostalsServices[0].services;
+        _this5.services = servicesHostal;
+      })["catch"](function (error) {
+        return _this5.errors.push(error);
+      });
+    },
+    book: function book() {
+      var _this6 = this;
 
       var url = "/reserva";
       var mensaje = this.$trans('messages.Unidentified error');
 
-      if (this.email == '' || this.name == '' || this.adress == '' || this.pais == '' || this.phone == '' || this.selectedRooms == '' || this.selectedServices == '' || this.cant_person == '' || this.childs == '' || this.date_in == '' || this.date_out == '') {
+      if (this.email == '' || this.name == '' || this.adress == '' || this.pais == '' || this.phone == '' || this.selectedRooms == '' || this.cant_person == 0 || this.date_in == '' || this.date_out == '') {
         mensaje = this.$trans('messages.You cannot leave empty fields, please check');
       }
 
       var roomsList = this.selectedRooms;
       var roomTags = '';
 
-      for (var i = 0; i < roomsList.length; i = i + 1) {
-        if (i == roomsList.length - 1) {
-          roomTags = '' + roomTags + roomsList[i].name;
-        } else {
-          roomTags = '' + roomTags + roomsList[i].name + ',';
+      if (this.selectedRooms.length > 0) {
+        for (var i = 0; i < roomsList.length; i = i + 1) {
+          if (i == roomsList.length - 1) {
+            roomTags = '' + roomTags + roomsList[i].name;
+          } else {
+            roomTags = '' + roomTags + roomsList[i].name + ',';
+          }
         }
       }
 
       var serviceList = this.selectedServices;
       var serviceTags = '';
 
-      for (var i = 0; i < serviceList.length; i = i + 1) {
-        if (i == serviceList.length - 1) {
-          serviceTags = '' + serviceTags + serviceList[i].name;
-        } else {
-          serviceTags = '' + serviceTags + serviceList[i].name + ',';
+      if (this.selectedServices.length > 0) {
+        for (var i = 0; i < serviceList.length; i = i + 1) {
+          if (i == serviceList.length - 1) {
+            serviceTags = '' + serviceTags + serviceList[i].name;
+          } else {
+            serviceTags = '' + serviceTags + serviceList[i].name + ',';
+          }
         }
       }
 
@@ -3425,14 +3511,44 @@ __webpack_require__.r(__webpack_exports__);
       data.append("date_in", this.range['start']);
       data.append("date_out", this.range['end']);
       data.append("hostal_id", 'Hostal Mirakuru Gran Familia');
+      data.append("reservation_days", this.reservation_days);
       axios.post(url, data).then(function (response) {
-        swal({
-          title: _this.$trans('messages.Correct data'),
-          text: _this.$trans('messages.You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment'),
-          icon: 'success',
-          closeOnClickOutside: false,
-          closeOnEsc: false
-        }); //console.log(response);
+        var valor = Object.keys(response.data);
+
+        if (valor.includes('msg')) {
+          swal({
+            title: _this6.$trans('messages.Whoops! Something went wrong.'),
+            text: _this6.$trans('messages.' + response.data['msg'] + ''),
+            icon: 'error',
+            closeOnClickOutside: false,
+            closeOnEsc: false
+          });
+        } else {
+          swal({
+            title: _this6.$trans('messages.Correct data'),
+            text: _this6.$trans('messages.You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment'),
+            icon: 'success',
+            closeOnClickOutside: false,
+            closeOnEsc: false
+          });
+          _this6.name = '';
+          _this6.adress = '';
+          _this6.pais = '';
+          _this6.phone = '';
+          _this6.cant_person = 0;
+          _this6.childs = 0;
+          _this6.amount = 0;
+          _this6.selectedRooms = [];
+          _this6.selectedServices = [];
+          _this6.range = [];
+
+          _this6.getAvailableServices(hostalName);
+
+          _this6.getAvailableRooms(hostalName);
+
+          _this6.getBookedDatesBD(hostalName);
+        } //console.log(response);
+
       })["catch"](function (error) {
         if (error.response.data.message) {
           swal('Error', '' + error.response.data.message, 'error');
@@ -3455,17 +3571,30 @@ __webpack_require__.r(__webpack_exports__);
     },
     selectedRooms: function selectedRooms(val) {
       var tipoIinput = 'room';
+
+      if (val.length > 1) {
+        this.blockedDays = this.blockedAllDays['together'];
+        this.blockedDays.push({
+          'start': null,
+          'end': new Date()
+        });
+      } else if (val.length === 1) {
+        this.blockedDays = this.blockedAllDays[val[0].name];
+        this.blockedDays.push({
+          'start': null,
+          'end': new Date()
+        });
+      } else {
+        this.blockedDays = {
+          'start': null,
+          'end': new Date()
+        };
+      }
+
       this.totalAmount(val, tipoIinput);
     },
     range: function range(val) {
-      if (this.range.length != 0) {
-        this.tag_service = false;
-        this.tag_room = false;
-      } else {
-        this.tag_service = true;
-        this.tag_room = true;
-      }
-
+      //this.blockedAllDays
       var date_satart = moment__WEBPACK_IMPORTED_MODULE_0___default()(val['start']);
       var date_end = moment__WEBPACK_IMPORTED_MODULE_0___default()(val['end']);
       var diff_min_start = [];
@@ -3529,40 +3658,19 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    var _this2 = this;
-
     var hostalName = 'Hostal Mirakuru Gran Familia';
-    axios.get('/available-services/' + hostalName).then(function (response) {
-      var hostalsServices = response.data;
-      var servicesHostal = hostalsServices[0].services;
-      _this2.services = servicesHostal;
-    })["catch"](function (error) {
-      return _this2.errors.push(error);
-    });
-    axios.get('/available-rooms/' + hostalName).then(function (response) {
-      _this2.rooms = response.data;
-
-      for (var i = 0; i < _this2.rooms.length; i++) {
-        _this2.roomCapacityMax += _this2.rooms[i].capacity;
-      }
-
-      _this2.childCapacityMax = _this2.roomCapacityMax - 1;
-    })["catch"](function (error) {
-      return _this2.errors.push(error);
-    });
-    axios.get('/countries-list').then(function (response) {
-      _this2.countries = response.data;
-    })["catch"](function (error) {
-      return _this2.errors.push(error);
-    });
-    axios.get('/temporadas-hostal/' + hostalName).then(function (response) {
-      _this2.seasons = response.data.temporadas;
-      console.log('Cant- ' + _this2.seasons.length + ', seasons- ' + _this2.seasons[0].name);
-    })["catch"](function (error) {
-      return _this2.errors.push(error);
-    });
+    this.getAvailableServices(hostalName);
+    this.getAvailableRooms(hostalName);
+    this.getCountryList();
+    this.getTemporadasHostal(hostalName);
+    this.getBookedDatesBD(hostalName);
   },
   mounted: function mounted() {
+    this.blockedDays = {
+      'start': null,
+      'end': new Date()
+    };
+
     if (this.$attrs.locale) {
       this.$lang.setLocale(this.$attrs.locale);
     } else {
@@ -64621,457 +64729,484 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "row justify-content-center" },
+        { staticClass: "alert alert-success", attrs: { id: "mensage" } },
         [
-          _c("label", { staticClass: "text-light" }, [
-            _vm._v(_vm._s(_vm.$trans("messages.Date")))
-          ]),
-          _vm._v(" "),
-          _c("vc-date-picker", {
-            staticClass: "pb-2",
-            attrs: {
-              "is-range": "",
-              "min-date": new Date(),
-              "model-config": _vm.modelConfig
-            },
-            scopedSlots: _vm._u([
-              {
-                key: "default",
-                fn: function(ref) {
-                  var inputValue = ref.inputValue
-                  var inputEvents = ref.inputEvents
-                  return [
-                    _c(
-                      "div",
-                      {
-                        staticClass: "flex justify-center items-center col-12"
-                      },
-                      [
-                        _c(
-                          "input",
-                          _vm._g(
-                            {
-                              staticClass:
-                                "border px-2 py-1 w-32 rounded focus:outline-none focus:border-indigo-300",
-                              attrs: { placeholder: " Entrada/ Date in" },
-                              domProps: { value: inputValue.start }
-                            },
-                            inputEvents.start
-                          )
-                        ),
-                        _vm._v(" "),
-                        _c("i", { staticClass: "fas fa-angle-right" }),
-                        _vm._v(" "),
-                        _c(
-                          "input",
-                          _vm._g(
-                            {
-                              staticClass:
-                                "border px-2 py-1 w-32 rounded focus:outline-none focus:border-indigo-300",
-                              attrs: { placeholder: "Salida/ Date out" },
-                              domProps: { value: inputValue.end }
-                            },
-                            inputEvents.end
-                          )
-                        )
-                      ]
-                    )
-                  ]
+          _c(
+            "button",
+            {
+              staticClass: "modal-default-button btn btn-lg",
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.esconderMensage()
                 }
               }
-            ]),
-            model: {
-              value: _vm.range,
-              callback: function($$v) {
-                _vm.range = $$v
-              },
-              expression: "range"
-            }
-          }),
-          _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-6" },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.name,
-                    expression: "name"
-                  }
-                ],
-                staticClass: "form-control font-italic mb-2",
-                attrs: {
-                  type: "text",
-                  id: "nombre",
-                  disabled: _vm.tag_room,
-                  name: "nombre",
-                  pattern: "[a-zA-Z]",
-                  placeholder: "Nombre Completo/Full Name...",
-                  required: ""
-                },
-                domProps: { value: _vm.name },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.name = $event.target.value
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.adress,
-                    expression: "adress"
-                  }
-                ],
-                staticClass: "form-control font-italic mb-2",
-                attrs: {
-                  type: "text",
-                  id: "dir",
-                  name: "dir",
-                  disabled: _vm.tag_room,
-                  placeholder: "Dirección/Adress...",
-                  required: ""
-                },
-                domProps: { value: _vm.adress },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.adress = $event.target.value
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.phone,
-                    expression: "phone"
-                  }
-                ],
-                staticClass: "form-control font-italic mb-2",
-                attrs: {
-                  type: "tel",
-                  id: "tel",
-                  name: "tel",
-                  disabled: _vm.tag_room,
-                  placeholder: "Teléfono/Phone...",
-                  pattern: "\\x2b[0-9]+",
-                  size: "15",
-                  required: ""
-                },
-                domProps: { value: _vm.phone },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.phone = $event.target.value
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "label",
-                {
-                  staticClass: "text-light",
-                  attrs: { for: "services", hidden: _vm.tag_service }
-                },
-                [
-                  _c("span", { staticClass: "text-danger" }, [
-                    _vm._v(
-                      _vm._s(_vm.$trans("messages.Separate with (,) please"))
-                    )
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c("br"),
-              _vm._v(" "),
-              _c("tags-input", {
-                attrs: {
-                  hidden: _vm.tag_service,
-                  id: "services",
-                  "element-id": "services",
-                  "add-tags-on-comma": true,
-                  placeholder: "Servicios/Services...",
-                  "existing-tags": _vm.services,
-                  "id-field": "id",
-                  "text-field": "name",
-                  typeahead: true
-                },
-                model: {
-                  value: _vm.selectedServices,
-                  callback: function($$v) {
-                    _vm.selectedServices = $$v
-                  },
-                  expression: "selectedServices"
-                }
-              })
-            ],
-            1
+            },
+            [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
           ),
           _vm._v(" "),
-          _c(
-            "div",
-            { staticClass: "col-6" },
-            [
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.cant_person,
-                    expression: "cant_person"
-                  }
-                ],
-                staticClass: "form-control font-italic mb-2",
-                attrs: {
-                  type: "number",
-                  disabled: _vm.tag_room,
-                  id: "personas",
-                  required: "",
-                  name: "personas",
-                  min: "1",
-                  max: _vm.roomCapacityMax,
-                  step: "1",
-                  placeholder: "Huéspedes/Guests..."
-                },
-                domProps: { value: _vm.cant_person },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.cant_person = $event.target.value
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.childs,
-                    expression: "childs"
-                  }
-                ],
-                staticClass: "form-control font-italic mb-2",
-                attrs: {
-                  type: "number",
-                  disabled: _vm.tag_room,
-                  id: "ninos",
-                  nrequired: "",
-                  ame: "ninos",
-                  min: "1",
-                  step: "1",
-                  max: _vm.childCapacityMax,
-                  placeholder: "#Niños de Huéspedes/#Childs of Guests..."
-                },
-                domProps: { value: _vm.childs },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.childs = $event.target.value
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.email,
-                    expression: "email"
-                  }
-                ],
-                staticClass: "form-control font-italic mb-2",
-                attrs: {
-                  type: "email",
-                  disabled: "true",
-                  name: "email",
-                  placeholder: "Correo/Email..."
-                },
-                domProps: { value: _vm.email },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.email = $event.target.value
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "label",
-                {
-                  staticClass: "text-light",
-                  attrs: { for: "rooms", hidden: _vm.tag_room }
-                },
-                [
-                  _c("span", { staticClass: "text-danger" }, [
-                    _vm._v(
-                      _vm._s(_vm.$trans("messages.Separate with (,) please"))
-                    )
-                  ])
-                ]
-              ),
-              _vm._v(" "),
-              _c("br"),
-              _vm._v(" "),
-              _c("tags-input", {
-                attrs: {
-                  hidden: _vm.tag_room,
-                  required: "",
-                  id: "rooms_input",
-                  "element-id": "rooms",
-                  "add-tags-on-comma": true,
-                  placeholder: "Habitación(s)/Room(s)...",
-                  "existing-tags": _vm.rooms,
-                  "id-field": "id",
-                  "text-field": "name",
-                  typeahead: true
-                },
-                model: {
-                  value: _vm.selectedRooms,
-                  callback: function($$v) {
-                    _vm.selectedRooms = $$v
-                  },
-                  expression: "selectedRooms"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-12 form-group pt-2" }, [
-            _c(
-              "label",
-              { staticClass: "text-light", attrs: { for: "country" } },
-              [_vm._v(_vm._s(_vm.$trans("messages.Select Country")))]
-            ),
-            _vm._v(" "),
-            _c(
-              "select",
-              {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.pais,
-                    expression: "pais"
-                  }
-                ],
-                staticClass: "form-control pt-2",
-                attrs: {
-                  disabled: _vm.tag_room,
-                  required: "",
-                  id: "country",
-                  name: "country",
-                  required: ""
-                },
-                on: {
-                  change: function($event) {
-                    var $$selectedVal = Array.prototype.filter
-                      .call($event.target.options, function(o) {
-                        return o.selected
-                      })
-                      .map(function(o) {
-                        var val = "_value" in o ? o._value : o.value
-                        return val
-                      })
-                    _vm.pais = $event.target.multiple
-                      ? $$selectedVal
-                      : $$selectedVal[0]
-                  }
-                }
-              },
-              [
-                _c("option", { attrs: { value: "" } }, [
-                  _vm._v(_vm._s(_vm.$trans("messages.Select Country")))
-                ]),
-                _vm._v(" "),
-                _vm._l(_vm.countries, function(countri) {
-                  return _c("option", { domProps: { value: countri.id } }, [
-                    _vm._v(_vm._s(countri.name_knowing))
-                  ])
-                })
-              ],
-              2
-            )
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "col-12" }, [
-            _c("div", { staticClass: "content-justify-center" }, [
-              _c(
-                "label",
-                { staticClass: "text-light", attrs: { for: "amount" } },
-                [_vm._v(_vm._s(_vm.$trans("messages.Amount")))]
-              ),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.amount,
-                    expression: "amount"
-                  }
-                ],
-                staticClass: "form-control font-italic mb-2",
-                attrs: {
-                  type: "number",
-                  disabled: "true",
-                  name: "amount",
-                  min: "1",
-                  step: "0.1"
-                },
-                domProps: { value: _vm.amount },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.amount = $event.target.value
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn w-20 rounded btn-light btn-lg mt-5 reserva",
-                  attrs: { type: "button" },
-                  on: {
-                    click: function($event) {
-                      return _vm.book()
-                    }
-                  }
-                },
-                [_vm._v(_vm._s(_vm.$trans("messages.Book")))]
+          _c("ul", [
+            _c("li", [
+              _vm._v(
+                _vm._s(
+                  _vm.$trans(
+                    "messages.Select first how many rooms do you need for see what days are available in calendar"
+                  )
+                )
               )
             ])
           ])
-        ],
-        1
-      )
+        ]
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "row justify-content-center" }, [
+        _c("div", { staticClass: "col-3" }),
+        _vm._v(" "),
+        _c(
+          "div",
+          {
+            staticClass:
+              "col-6 col-sm-12 col-xs-12 col-md-8 pb-2 justify-content-center"
+          },
+          [
+            _c("vc-date-picker", {
+              staticClass: "pb-2",
+              attrs: {
+                "is-range": "",
+                "model-config": _vm.modelConfig,
+                "disabled-dates": _vm.blockedDays
+              },
+              scopedSlots: _vm._u([
+                {
+                  key: "default",
+                  fn: function(ref) {
+                    var inputValue = ref.inputValue
+                    var inputEvents = ref.inputEvents
+                    return [
+                      _c(
+                        "div",
+                        {
+                          staticClass: "flex justify-center items-center col-12"
+                        },
+                        [
+                          _c("i", { staticClass: "fas fa-calendar-alt pb-2" }),
+                          _vm._v(" "),
+                          _c(
+                            "input",
+                            _vm._g(
+                              {
+                                staticClass:
+                                  "border px-2 py-1 pb-2 w-32 rounded focus:outline-none focus:border-indigo-300",
+                                attrs: { placeholder: " Entrada/ Date in" },
+                                domProps: { value: inputValue.start }
+                              },
+                              inputEvents.start
+                            )
+                          ),
+                          _vm._v(" "),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c("i", { staticClass: "fas fa-calendar-alt pb-2" }),
+                          _vm._v(" "),
+                          _c(
+                            "input",
+                            _vm._g(
+                              {
+                                staticClass:
+                                  "border px-2 py-1 pb-2 w-32 rounded focus:outline-none focus:border-indigo-300",
+                                attrs: { placeholder: "Salida/ Date out" },
+                                domProps: { value: inputValue.end }
+                              },
+                              inputEvents.end
+                            )
+                          )
+                        ]
+                      )
+                    ]
+                  }
+                }
+              ]),
+              model: {
+                value: _vm.range,
+                callback: function($$v) {
+                  _vm.range = $$v
+                },
+                expression: "range"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-3 col-sm-12 col-xs-12 col-md-8 pb-2" }),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-6" },
+          [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.name,
+                  expression: "name"
+                }
+              ],
+              staticClass: "form-control font-italic mb-2",
+              attrs: {
+                type: "text",
+                id: "nombre",
+                name: "nombre",
+                pattern: "[a-zA-Z]",
+                placeholder: "Nombre Completo/Full Name...",
+                required: ""
+              },
+              domProps: { value: _vm.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.name = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.adress,
+                  expression: "adress"
+                }
+              ],
+              staticClass: "form-control font-italic mb-2",
+              attrs: {
+                type: "text",
+                id: "dir",
+                name: "dir",
+                placeholder: "Dirección/Adress...",
+                required: ""
+              },
+              domProps: { value: _vm.adress },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.adress = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.phone,
+                  expression: "phone"
+                }
+              ],
+              staticClass: "form-control font-italic mb-2",
+              attrs: {
+                type: "tel",
+                id: "tel",
+                name: "tel",
+                placeholder: "Teléfono/Phone...",
+                pattern: "\\x2b[0-9]+",
+                size: "15",
+                required: ""
+              },
+              domProps: { value: _vm.phone },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.phone = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "label",
+              { staticClass: "text-light", attrs: { for: "services" } },
+              [
+                _c("span", { staticClass: "text-danger" }, [
+                  _vm._v(
+                    _vm._s(_vm.$trans("messages.Separate with (,) please"))
+                  )
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _c("tags-input", {
+              attrs: {
+                id: "services",
+                "element-id": "services",
+                "add-tags-on-comma": true,
+                placeholder: "Servicios/Services...",
+                "existing-tags": _vm.services,
+                "id-field": "id",
+                "text-field": "name",
+                typeahead: true
+              },
+              model: {
+                value: _vm.selectedServices,
+                callback: function($$v) {
+                  _vm.selectedServices = $$v
+                },
+                expression: "selectedServices"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "col-6" },
+          [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.cant_person,
+                  expression: "cant_person"
+                }
+              ],
+              staticClass: "form-control font-italic mb-2",
+              attrs: {
+                type: "number",
+                id: "personas",
+                required: "",
+                name: "personas",
+                min: "1",
+                max: _vm.roomCapacityMax,
+                step: "1",
+                placeholder: "Huéspedes/Guests..."
+              },
+              domProps: { value: _vm.cant_person },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.cant_person = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.childs,
+                  expression: "childs"
+                }
+              ],
+              staticClass: "form-control font-italic mb-2",
+              attrs: {
+                type: "number",
+                id: "ninos",
+                nrequired: "",
+                ame: "ninos",
+                min: "1",
+                step: "1",
+                max: _vm.childCapacityMax,
+                placeholder: "#Niños de Huéspedes/#Childs of Guests..."
+              },
+              domProps: { value: _vm.childs },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.childs = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.email,
+                  expression: "email"
+                }
+              ],
+              staticClass: "form-control font-italic mb-2",
+              attrs: {
+                type: "email",
+                disabled: "true",
+                name: "email",
+                placeholder: "Correo/Email..."
+              },
+              domProps: { value: _vm.email },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.email = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "label",
+              { staticClass: "text-light", attrs: { for: "rooms" } },
+              [
+                _c("span", { staticClass: "text-danger" }, [
+                  _vm._v(
+                    _vm._s(_vm.$trans("messages.Separate with (,) please"))
+                  )
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
+            _c("tags-input", {
+              attrs: {
+                required: "",
+                id: "rooms_input",
+                "element-id": "rooms",
+                "add-tags-on-comma": true,
+                placeholder: "Habitación(s)/Room(s)...",
+                "existing-tags": _vm.rooms,
+                "id-field": "id",
+                "text-field": "name",
+                typeahead: true
+              },
+              model: {
+                value: _vm.selectedRooms,
+                callback: function($$v) {
+                  _vm.selectedRooms = $$v
+                },
+                expression: "selectedRooms"
+              }
+            })
+          ],
+          1
+        ),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-12 form-group pt-2" }, [
+          _c(
+            "label",
+            { staticClass: "text-light", attrs: { for: "country" } },
+            [_vm._v(_vm._s(_vm.$trans("messages.Select Country")))]
+          ),
+          _vm._v(" "),
+          _c(
+            "select",
+            {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.pais,
+                  expression: "pais"
+                }
+              ],
+              staticClass: "form-control pt-2",
+              attrs: {
+                required: "",
+                id: "country",
+                name: "country",
+                required: ""
+              },
+              on: {
+                change: function($event) {
+                  var $$selectedVal = Array.prototype.filter
+                    .call($event.target.options, function(o) {
+                      return o.selected
+                    })
+                    .map(function(o) {
+                      var val = "_value" in o ? o._value : o.value
+                      return val
+                    })
+                  _vm.pais = $event.target.multiple
+                    ? $$selectedVal
+                    : $$selectedVal[0]
+                }
+              }
+            },
+            [
+              _c("option", { attrs: { value: "" } }, [
+                _vm._v(_vm._s(_vm.$trans("messages.Select Country")))
+              ]),
+              _vm._v(" "),
+              _vm._l(_vm.countries, function(countri) {
+                return _c("option", { domProps: { value: countri.id } }, [
+                  _vm._v(_vm._s(countri.name_knowing))
+                ])
+              })
+            ],
+            2
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "col-12" }, [
+          _c("div", { staticClass: "content-justify-center" }, [
+            _c(
+              "label",
+              { staticClass: "text-light", attrs: { for: "amount" } },
+              [_vm._v(_vm._s(_vm.$trans("messages.Amount")))]
+            ),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.amount,
+                  expression: "amount"
+                }
+              ],
+              staticClass: "form-control font-italic mb-2",
+              attrs: {
+                type: "number",
+                disabled: "true",
+                name: "amount",
+                min: "1",
+                step: "0.1"
+              },
+              domProps: { value: _vm.amount },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.amount = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn w-20 rounded btn-light btn-lg mt-5 reserva",
+                attrs: { type: "button" },
+                on: {
+                  click: function($event) {
+                    return _vm.book()
+                  }
+                }
+              },
+              [_vm._v(_vm._s(_vm.$trans("messages.Book")))]
+            )
+          ])
+        ])
+      ])
     ])
   ])
 }
@@ -79282,8 +79417,10 @@ module.exports = {
     "Check your email. Link password reset sent": "Check your email. Link password reset sent",
     "Close": "Close",
     "Code": "Code",
+    "Comunicate with our team by contact message way because we have a problem with your confirmation.": "Comunicate with our team by contact message way because we have a problem with your confirmation.",
     "Confirm": "Confirm",
     "Confirm Password": "Confirm Password",
+    "Confirm your pre-reservation: ": "Confirm your pre-reservation: ",
     "Contact": "Contact",
     "Content": "Content",
     "Continue reading": "Continue reading",
@@ -79313,6 +79450,7 @@ module.exports = {
     "Enable": "Enable",
     "Ensure your account is using a long, random password to stay secure.": "Ensure your account is using a long, random password to stay secure.",
     "Error": "Error",
+    "Excellent!!": "Excellent!!",
     "Excursions": "Excursions",
     "Facilities": "Facilities",
     "Foods": "Foods",
@@ -79328,9 +79466,11 @@ module.exports = {
     "Home": "Home",
     "Hostals": "Hostals",
     "I need your name": "I need your name",
+    "I'm very sorry but on this date we only have one room available": "I'm very sorry but on this date we only have one room available",
     "ID": "ID",
     "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.": "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.",
     "If you did not create an account, no further action is required.": "If you did not create an account, no further action is required.",
+    "If you did not make a pre-reservation, no further action is required.": "If you did not make a pre-reservation, no further action is required.",
     "If you did not receive the email": "If you did not receive the email",
     "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
     "If you did not subscribe link this url for unsubscribe": "If you did not subscribe link this url for unsubscribe",
@@ -79430,6 +79570,7 @@ module.exports = {
     "Remove Team Member": "Remove Team Member",
     "Request Contact ": "Request Contact ",
     "Resend Verification Email": "Resend Verification Email",
+    "Reservation Confirmed succefully. Thank you!": "Reservation Confirmed succefully. Thank you!",
     "Reset Password": "Reset Password",
     "Reset Password Notification": "Reset Password Notification",
     "Reset Password Notification- ": "Reset Password Notification- ",
@@ -79441,6 +79582,7 @@ module.exports = {
     "Searching hostal": "Searching hostal",
     "Select A New Photo": "Select A New Photo",
     "Select Country": "Select Country",
+    "Select first how many rooms do you need for see what days are available in calendar": "Select first how many rooms do you need for see what days are available in calendar",
     "Send": "Send",
     "Send Password Reset Link": "Send Password Reset Link",
     "Separate with (,) please": "Separate with (,) please",
@@ -79532,8 +79674,10 @@ module.exports = {
     "You are logged in!": "You are logged in!",
     "You are receiving a new contact email with content: ": "You are receiving a new contact email with content: ",
     "You are receiving this email because we received a password reset request for your account.": "You are receiving this email because we received a password reset request for your account.",
+    "You can not book because that dates has been booked by someone else. Sorry, try another dates": "You can not book, because that dates has been booked by someone else. Sorry, try another dates",
     "You cannot leave empty fields, please check": "You cannot leave empty fields, please check",
     "You have enabled two factor authentication.": "You have enabled two factor authentication.",
+    "You have made a pre-reservation at our hostel, we will be very happy to welcome you home. To continue with the missing details, please access the link below:": "You have made a pre-reservation at our hostel, we will be very happy to welcome you home. To continue with the missing details, please access the link below:",
     "You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment": "You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment",
     "You have not enabled two factor authentication.": "You have not enabled two factor authentication.",
     "You have successfully logged in": "You have successfully logged in",
@@ -79727,8 +79871,10 @@ module.exports = {
     "Check your email. Link password reset sent": "Revise su email. Link de reseteo de contrase\xF1a enviado",
     "Close": "Cerrar",
     "Code": "C\xF3digo",
+    "Comunicate with our team by contact message way because we have a problem with your confirmation.": "Comun\xEDquese con nuestro equipo por mensage de contacto porque tuvimos un problema confirmando su reserva.",
     "Confirm": "Confirmar",
     "Confirm Password": "Confirmar contrase\xF1a",
+    "Confirm your pre-reservation: ": "Confirme su pre-reservaci\xF3n: ",
     "Contact": "Contacto",
     "Content": "Contenido",
     "Continue reading": "Contin\xFAe leyendo",
@@ -79758,6 +79904,7 @@ module.exports = {
     "Enable": "Habilitar",
     "Ensure your account is using a long, random password to stay secure.": "Aseg\xFArese que su cuenta est\xE9 usando una contrase\xF1a larga y aleatoria para mantenerse seguro.",
     "Error": "Error",
+    "Excellent!!": "Excelente!!",
     "Excursions": "Excursiones",
     "Facilities": "Facilidades",
     "Foods": "Alimentos",
@@ -79773,9 +79920,11 @@ module.exports = {
     "Home": "Inicio",
     "Hostals": "Hostales",
     "I need your name": "Necesito su nombre",
+    "I'm very sorry but on this date we only have one room available": "Lo siento mucho pero en esta fecha solo tenemos una habitacion disponible",
     "ID": "ID",
     "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.": "Si es necesario, puede salir de todas las dem\xE1s sesiones de otros navegadores en todos sus dispositivos. Si cree que su cuenta se ha visto comprometida, tambi\xE9n deber\xEDa actualizar su contrase\xF1a.",
     "If you did not create an account, no further action is required.": "Si no ha creado una cuenta, no se requiere ninguna acci\xF3n adicional.",
+    "If you did not make a pre-reservation, no further action is required.": "Si no ha realizado una pre-reservaci\xF3n, omita este mensaje de correo electr\xF3nico.",
     "If you did not receive the email": "Si no ha recibido el correo electr\xF3nico",
     "If you did not request a password reset, no further action is required.": "Si no ha solicitado el restablecimiento de contrase\xF1a, omita este mensaje de correo electr\xF3nico.",
     "If you did not subscribe link this url for unsubscribe": "Si usted no se ha suscripto, por favor vaya al link que dejamos aqu\xED para notificar el error",
@@ -79875,6 +80024,7 @@ module.exports = {
     "Remove Team Member": "Retirar miembro del equipo",
     "Request Contact ": "Petici\xF3n de contacto ",
     "Resend Verification Email": "Reenviar correo de verificaci\xF3n",
+    "Reservation Confirmed succefully. Thank you!": "Reservaci\xF3n Confirmada satisfactoriamente. Gracias!",
     "Reset Password": "Restablecer Contrase\xF1a",
     "Reset Password Notification": "Notificaci\xF3n de restablecimiento de contrase\xF1a",
     "Reset Password Notification- ": "Notificaci\xF3n de restablecimiento de contrase\xF1a- ",
@@ -79886,6 +80036,7 @@ module.exports = {
     "Searching hostal": "En busca de un hostal",
     "Select A New Photo": "Seleccione una nueva foto",
     "Select Country": "Seleccione un pa\xEDs",
+    "Select first how many rooms do you need for see what days are available in calendar": "Seleccione primero cu\xE1ntas habitaciones necesitar\xE1 para saber la disponibilidad en el calendario",
     "Send": "Enviar",
     "Send Password Reset Link": "Enviar enlace para restablecer la contrase\xF1a",
     "Separate with (,) please": "Separado por (,) por favor",
@@ -79977,8 +80128,10 @@ module.exports = {
     "You are logged in!": "\xA1Ya iniciaste sesi\xF3n!",
     "You are receiving a new contact email with content: ": "Usted est\xE1 reciviendo un nuevo email de contacto con el contenido: ",
     "You are receiving this email because we received a password reset request for your account.": "Ha recibido este mensaje porque se solicit\xF3 un restablecimiento de contrase\xF1a para su cuenta.",
+    "You can not book because that dates has been booked by someone else. Sorry, try another dates": "Usted no puede reservar porque esa fecha ha sido reservada por otra persona. Lo siento, pruebe con otras fechas",
     "You cannot leave empty fields, please check": "No puede dejar campos vac\xEDos, revise por favor",
     "You have enabled two factor authentication.": "Has habilitado la autenticaci\xF3n de dos factores.",
+    "You have made a pre-reservation at our hostel, we will be very happy to welcome you home. To continue with the missing details, please access the link below:": "Usted ha efectuado una pre-reserva en nuestro hostal, estaremos muy felices de recibirlos en casa. Para continuar con los detalles que faltan, por favor acceda al link a continuci\xF3n:",
     "You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment": "Usted ha realizado una pre-reserva en nuestro hostal, recivir\xE1 un correo con un link de acceso para su confirmaci\xF3n y pasos a seguir sobre el pago",
     "You have not enabled two factor authentication.": "No has habilitado la autenticaci\xF3n de dos factores.",
     "You have successfully logged in": "Usted ha iniciado sesi\xF3n satisfactoriamente",
@@ -80056,8 +80209,10 @@ module.exports = {
     "Check your email. Link password reset sent": "Revise su email. Link de reseteo de contrase\xF1a enviado",
     "Close": "Cerrar",
     "Code": "C\xF3digo",
+    "Comunicate with our team by contact message way because we have a problem with your confirmation.": "Comun\xEDquese con nuestro equipo por mensage de contacto porque tuvimos un problema confirmando su reserva.",
     "Confirm": "Confirmar",
     "Confirm Password": "Confirmar contrase\xF1a",
+    "Confirm your pre-reservation: ": "Confirme su pre-reservaci\xF3n: ",
     "Contact": "Contacto",
     "Content": "Contenido",
     "Continue reading": "Contin\xFAe leyendo",
@@ -80089,6 +80244,7 @@ module.exports = {
     "Enable": "Habilitar",
     "Ensure your account is using a long, random password to stay secure.": "Aseg\xFArese que su cuenta est\xE9 usando una contrase\xF1a larga y aleatoria para mantenerse seguro.",
     "Error": "Error",
+    "Excellent!!": "Excelente!!",
     "For your security, please confirm your password to continue.": "Por su seguridad, confirme su contrase\xF1a para continuar.",
     "Forbidden": "Prohibido",
     "Forgot Your Password?": "\xBFOlvid\xF3 su Contrase\xF1a?",
@@ -80102,8 +80258,10 @@ module.exports = {
     "Home": "Inicio",
     "Hostals": "Hostales",
     "I need your name": "Necesito su nombre",
+    "I'm very sorry but on this date we only have one room available": "Lo siento mucho pero en esta fecha solo tenemos una habitacion disponible",
     "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.": "Si es necesario, puede salir de todas las dem\xE1s sesiones de otros navegadores en todos sus dispositivos. Si cree que su cuenta se ha visto comprometida, tambi\xE9n deber\xEDa actualizar su contrase\xF1a.",
     "If you did not create an account, no further action is required.": "Si no ha creado una cuenta, no se requiere ninguna acci\xF3n adicional.",
+    "If you did not make a pre-reservation, no further action is required.": "Si no ha realizado una pre-reservaci\xF3n, omita este mensaje de correo electr\xF3nico.",
     "If you did not receive the email": "Si no ha recibido el correo electr\xF3nico",
     "If you did not request a password reset, no further action is required.": "Si no ha solicitado el restablecimiento de contrase\xF1a, omita este mensaje de correo electr\xF3nico.",
     "If you did not subscribe link this url for unsubscribe": "Si usted no se ha suscripto, por favor vaya al link que dejamos aqu\xED para notificar el error",
@@ -80176,6 +80334,7 @@ module.exports = {
     "Remove Team Member": "Retirar miembro del equipo",
     "Request Contact ": "Petici\xF3n de contacto ",
     "Resend Verification Email": "Reenviar correo de verificaci\xF3n",
+    "Reservation Confirmed succefully. Thank you!": "Reservaci\xF3n Confirmada satisfactoriamente. Gracias!",
     "Reset Password": "Restablecer Contrase\xF1a",
     "Reset Password Notification": "Notificaci\xF3n de restablecimiento de contrase\xF1a",
     "Reset Password Notification- ": "Notificaci\xF3n de restablecimiento de contrase\xF1a- ",
@@ -80189,6 +80348,7 @@ module.exports = {
     "Searching hostal": "En busca de un hostal",
     "Select A New Photo": "Seleccione una nueva foto",
     "Select Country": "Seleccione un pa\xEDs",
+    "Select first how many rooms do you need for see what days are available in calendar": "Seleccione primero cu\xE1ntas habitaciones necesitar\xE1 para saber la disponibilidad en el calendario",
     "Send": "Enviar",
     "Send Password Reset Link": "Enviar enlace para restablecer la contrase\xF1a",
     "Separate with (,) please": "Separado por (,) por favor",
@@ -80277,7 +80437,9 @@ module.exports = {
     "You are logged in!": "\xA1Ya iniciaste sesi\xF3n!",
     "You are receiving a new contact email with content: ": "Usted est\xE1 reciviendo un nuevo email de contacto con el contenido: ",
     "You are receiving this email because we received a password reset request for your account.": "Ha recibido este mensaje porque se solicit\xF3 un restablecimiento de contrase\xF1a para su cuenta.",
+    "You can not book because that dates has been booked by someone else. Sorry, try another dates": "Usted no puede reservar porque esa fecha ha sido reservada por otra persona. Lo siento, pruebe con otras fechas",
     "You have enabled two factor authentication.": "Has habilitado la autenticaci\xF3n de dos factores.",
+    "You have made a pre-reservation at our hostel, we will be very happy to welcome you home. To continue with the missing details, please access the link below:": "Usted ha efectuado una pre-reserva en nuestro hostal, estaremos muy felices de recibirlos en casa. Para continuar con los detalles que faltan, por favor acceda al link a continuci\xF3n:",
     "You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment": "Usted ha realizado una pre-reserva en nuestro hostal, recivir\xE1 un correo con un link de acceso para su confirmaci\xF3n y pasos a seguir sobre el pago",
     "You have not enabled two factor authentication.": "No has habilitado la autenticaci\xF3n de dos factores.",
     "You have successfully logged in": "Usted ha iniciado sesi\xF3n satisfactoriamente",

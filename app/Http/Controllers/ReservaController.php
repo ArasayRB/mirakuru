@@ -58,6 +58,85 @@ class ReservaController extends Controller
       return $this->getAllCountries();
     }
 
+    public function getBlockedDates($hostal){
+      $hostalId=$this->getHostalByName($hostal);
+      $hostalRooms=$this->getHostalRoomsActive($hostalId[0]->id);
+      $blockedRooms=Reserva::select('rooms','date_in','date_out')->where('active',true)->get();
+      $blockedDates=array();
+      $cantHostalRooms=count($hostalRooms);
+
+      foreach($blockedRooms as $blockedRoom){
+    $roomsTotal=explode(',',$blockedRoom->rooms);
+      $newArray=$this->newBlockedArray($blockedRoom);
+      $blockedDates['together'][]=$newArray;
+    if(count($roomsTotal)==$cantHostalRooms){
+    $blockedDates['all'][]=$newArray;
+
+    }
+    else{
+          for($i=0;$i<$cantHostalRooms;$i++){
+        //return count($roomsTotal);
+         if(count($roomsTotal)>1){
+           if($cantHostalRooms!=count($roomsTotal)){
+        foreach($roomsTotal as $roomTotal){
+        if($hostalRooms[$i]->name===$roomTotal){
+        $blockedDates[''.$hostalRooms[$i]->name.''][]=$newArray;
+
+        }
+      }
+    }
+
+        }
+        else if(count($roomsTotal)===1){
+          if($hostalRooms[$i]->name===$blockedRoom->rooms){
+          $blockedDates[''.$hostalRooms[$i]->name.''][]=$newArray;
+
+          }
+
+        }
+      }
+    }
+      }
+
+      return $blockedDates;
+    }
+
+    public function newBlockedArray($blockedRoom){
+      $new_array=[];
+
+
+      $dateIn=Carbon::createFromDate($blockedRoom->date_in);
+      $dateOut=Carbon::createFromDate($blockedRoom->date_out);
+      $monthIn;
+      $dayIn=$dateIn->day;
+      $yearIn=$dateOut->year;
+      if($dateIn->month==01){
+        $monthIn=0;
+      }
+      else{
+        $monthIn=$dateIn->month-1;
+      }
+      $dayOut=$dateOut->day;
+      $yearOut=$dateOut->year;
+      $monthOut;
+      if($dateOut->month==01){
+        $monthOut=0;
+      }
+      else{
+        $monthOut=$dateOut->month-1;
+      }
+      //$blockedDates[$cont]['rooms']=$blockedRoom->rooms;
+      $new_array['day_in']=$dayIn;
+      $new_array['year_in']=$yearIn;
+      $new_array['month_in']=$monthIn;
+      $new_array['day_out']=$dayOut;
+      $new_array['year_out']=$yearOut;
+      $new_array['month_out']=$monthOut;
+      $new_array['start']=$dateIn;
+      $new_array['end']=$dateOut;
+      return $new_array;
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -77,9 +156,46 @@ class ReservaController extends Controller
     public function store(Request $request)
     {
         $this->validator($request->all())->validate();
-        $servicios = explode(",", request('service'));
-        $rooms = explode(",", request('rooms'));
         $hostalIdQuery=$this->getHostalByName(request('hostal_id'));
+        $cant_habitaciones_hostal=$this->getHostalRoomsActive($hostalIdQuery[0]->id);
+        $rooms = explode(",", request('rooms'));
+
+        $date_entrada=explode('-',request('date_in'));
+        $date_salida=explode('-',request('date_out'));
+        $newDateIn=Carbon::createFromDate($date_entrada[0],$date_entrada[1],$date_entrada[2]);
+        $newDateOut=Carbon::createFromDate($date_salida[0],$date_salida[1],$date_salida[2]);
+        $days_reserva=$newDateIn->diffInDays($newDateOut);
+        $msg=array('msg'=>'You can not book because that dates has been booked by someone else. Sorry, try another dates');
+        $booksExistentes=Reserva::where('active',true)
+                                 ->get();
+                                 $estamos=[];
+                                   for($r=0;$r<count($booksExistentes);$r++){
+                                   $rooms_bd=explode(',',$booksExistentes[$r]['rooms']);
+                                   $n=0;
+                                   $date_comp_in='';
+                                   foreach($rooms as $room){
+
+                                   while($n<$days_reserva){
+                                     $day=$date_entrada[2]+$n;
+                                     $whileDate=Carbon::createFromDate($date_entrada[0],$date_entrada[1],$day);
+
+                                     $esta=$whileDate->betweenIncluded($booksExistentes[$r]['date_in'],$booksExistentes[$r]['date_out']);
+                                     if($esta===true){
+                                       if(in_array($room,$rooms_bd)){
+
+                                           return $msg;
+                                         }
+                                     }
+$n++;
+
+                                                        }
+                                                        }
+                                                      }
+
+
+
+
+
         $reserva=new Reserva;
         $reserva->active=false;
         $reserva->name=request('name');
@@ -102,11 +218,14 @@ class ReservaController extends Controller
           $habiId=$this->getHabByName($rooms[$i]);
           $reserva->habitaciones()->attach($habiId[0]->id, array('active'=>false));
         }
-
+        $service=request('service');
+        if($service==!''){
+        $servicios = explode(",", request('service'));
         for($i=0;$i<count($servicios);$i++){
           $serviId=$this->findServicio($servicios[$i]);
           $reserva->servicios()->attach($serviId, array('active'=>false,'persons'=>request('cant_person')));
         }
+      }
         $datosTokenReserva=['email'=>request('email'),
                             'reserva'=>$reserva->id,
                             'user_id'=>$reserva->user_id,
@@ -115,7 +234,7 @@ class ReservaController extends Controller
                             'name'=>$reserva->name];
         $this->storeReservaToken($datosTokenReserva);
         $this->confirmReservationSend($datosTokenReserva);
-
+        return $reserva;
 
     }
 

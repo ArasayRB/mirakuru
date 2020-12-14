@@ -105,3 +105,4 @@ Route::get('/available-rooms/{hostal}', [App\Http\Controllers\ReservaController:
 Route::get('/countries-list', [App\Http\Controllers\ReservaController::class, 'getCountries']);
 Route::get('/temporadas-hostal/{hostal}', [App\Http\Controllers\TemporadaHostalController::class, 'getTemporadasAvailable']);
 Route::get('/confirm-reservation/{token}/{reservation}/{user}', [App\Http\Controllers\ReservaController::class, 'confirmReservation'])->name('confirm-reservation');
+Route::get('/blocked-dates/{hostal}', [App\Http\Controllers\ReservaController::class, 'getBlockedDates']);
