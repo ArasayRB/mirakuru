@@ -3124,7 +3124,7 @@ __webpack_require__.r(__webpack_exports__);
       axios.post(url, data).then(function (response) {
         swal({
           title: _this.$trans('messages.Correct data'),
-          text: _this.$trans('messages.Thank you for subscribe'),
+          text: _this.$trans('messages.Thank you for subscribe!'),
           icon: 'success',
           closeOnClickOutside: false,
           closeOnEsc: false
