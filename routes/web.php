@@ -99,3 +99,10 @@ Route::get('/available-keys', [App\Http\Controllers\PostController::class, 'avai
 Route::get('/welcome/{id}', [App\Http\Controllers\WelcomeController::class, 'showPost']);
 Route::post('/suscripcion', [App\Http\Controllers\SuscripcionController::class, 'store']);
 Route::get('/unsubscribe/{suscriptor}/{hostal}', [App\Http\Controllers\SuscripcionController::class, 'delete'])->middleware(['guest'])->name('unsubscribe');
+Route::resource('/reserva', App\Http\Controllers\ReservaController::class);
+Route::get('/available-services/{hostal}', [App\Http\Controllers\ReservaController::class, 'getHostalServices']);
+Route::get('/available-rooms/{hostal}', [App\Http\Controllers\ReservaController::class, 'getHostalRooms']);
+Route::get('/countries-list', [App\Http\Controllers\ReservaController::class, 'getCountries']);
+Route::get('/temporadas-hostal/{hostal}', [App\Http\Controllers\TemporadaHostalController::class, 'getTemporadasAvailable']);
+Route::get('/confirm-reservation/{token}/{reservation}/{user}', [App\Http\Controllers\ReservaController::class, 'confirmReservation'])->name('confirm-reservation');
+Route::get('/blocked-dates/{hostal}', [App\Http\Controllers\ReservaController::class, 'getBlockedDates']);

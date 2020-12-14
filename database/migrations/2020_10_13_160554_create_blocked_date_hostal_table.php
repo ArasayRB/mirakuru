@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateHabitacionsTable extends Migration
+class CreateBlockedDateHostalTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,16 @@ class CreateHabitacionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('habitacions', function (Blueprint $table) {
+        Schema::create('blocked_date_hostal', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->float('price_high',8,2);
-            $table->float('price_low',8,2);
-            $table->integer('capacity');
-            $table->boolean('active');
             $table->unsignedBigInteger('hostal_id');
-            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('blocked_day_id');
+            $table->boolean('active');
+            $table->date('active_date');
+            $table->date('inactive_date')->nullable();
             $table->timestamps();
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');
-            $table->foreign('category_id')->references('id')->on('categoria_habitacions')->onDelete('cascade');
+            $table->foreign('blocked_day_id')->references('id')->on('blocked_dates')->onDelete('cascade');
         });
     }
 
@@ -35,6 +33,6 @@ class CreateHabitacionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('habitacions');
+        Schema::dropIfExists('blocked_date_hostal');
     }
 }

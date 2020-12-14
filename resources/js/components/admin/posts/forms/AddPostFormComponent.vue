@@ -107,8 +107,6 @@ v-model="selectedKeys"
 
 <script>
   import VueCkeditor from 'vue-ckeditor2';
-  import VoerroTagsInput from '@voerro/vue-tagsinput';
-  Vue.component('tags-input', VoerroTagsInput);
     export default {
       components: { VueCkeditor},
       props:['locale'],

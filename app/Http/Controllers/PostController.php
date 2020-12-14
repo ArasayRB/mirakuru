@@ -8,6 +8,7 @@ use App\Traits\ImageTrait;
 use App\Traits\CategoryPostTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Validator;
 
 class PostController extends Controller
 {

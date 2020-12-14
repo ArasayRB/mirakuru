@@ -12,10 +12,27 @@ import swal from 'sweetalert';
 import VueLocalStorage from 'vue-localstorage';
 import VueCookies from 'vue-cookies';
 import VueLang from '@eli5/vue-lang-js';
+import moment from 'moment';
 // get the data source
 import translations from './vue-translations.js';
+import VoerroTagsInput from '@voerro/vue-tagsinput';
+import VCalendar from 'v-calendar';
 var Vue = require('vue');
 require('lang.js');
+
+Vue.use(VCalendar, {
+  componentPrefix: 'vc',  // Use <vc-calendar /> instead of <v-calendar />
+  locales: {
+   'pt-PT': {
+     firstDayOfWeek: 1,
+     masks: {
+       L: 'YYYY-MM-DD',
+       // ...optional `title`, `weekdays`, `navMonths`, etc
+     }
+   }
+ },
+                 // ...other defaults
+});
 
 Vue.use(VueLang, {
   messages: translations, // Provide locale file
@@ -36,6 +53,7 @@ Vue.use(VueLocalStorage);
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+Vue.component('tags-input', VoerroTagsInput);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('reservar-hostal-component', require('./components/forms/ReservarHostalComponent.vue').default);
 Vue.component('newsletter-component', require('./components/forms/NewsletterComponent.vue').default);

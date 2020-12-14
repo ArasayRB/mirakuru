@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Foto;
 use App\Models\Habitacion;
+use App\Models\BlockedDate;
 use App\Models\Keyword;
 use App\Models\Noticia;
 use App\Models\Oferta;
@@ -13,6 +14,7 @@ use App\Models\Reserva;
 use App\Models\Servicio;
 use App\Models\Suscripcion;
 use App\Models\User;
+use App\Models\Temporada;
 use Conner\Tagging\Taggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -38,12 +40,20 @@ class Hostal extends Model
       return $this->belongsTo(User::class)->withTimestamps();
     }
 
+    public function temporadas(){
+      return $this->belongsToMany(Temporada::class,'hostal_temporada','hostal_id','temporada_id')->withPivot('active','active_date','inactive_date')->withTimestamps();
+    }
+
     public function keywords(){
       return $this->hasMany(Keyword::class)->withTimestamps();
     }
 
     public function services(){
-      return $this->belongsToMany(Servicio::class)->withTimestamps();
+      return $this->belongsToMany(Servicio::class,'hostal_servicio','hostal_id','servicio_id')->withPivot('cant_personas','active','active_date','inactive_date')->withTimestamps();
+    }
+
+    public function blockedDates(){
+      return $this->belongsToMany(BlockedDate::class,'blocked_date_hostal','hostal_id','blocked_day_id')->withPivot('active','active_date','inactive_date')->withTimestamps();
     }
 
     public function habitaciones(){
