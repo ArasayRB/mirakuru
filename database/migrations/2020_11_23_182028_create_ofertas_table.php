@@ -17,7 +17,7 @@ class CreateOfertasTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->string('img_ppal_url');
+            $table->string('img_ppal_url')->default('offerFoto.jpg');
             $table->string('qr_img_web_url')->nullable();
             $table->boolean('active');
             $table->float('price',8,2);

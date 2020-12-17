@@ -30,7 +30,7 @@ class PostFactory extends Factory
           'content' => $this->faker->paragraph,
           'summary' => $this->faker->text($maxNbChars = 100),
           'publicate_state' => $this->faker->boolean,
-          'img_url' => $this->faker->url,
+          'img_url' => 'postDefault.jpg',
           'video_url' => $this->faker->url,
           'qr_img_url'=> $this->faker->url,
           'user_id' => $this->faker->numberBetween(1,$cantUser),

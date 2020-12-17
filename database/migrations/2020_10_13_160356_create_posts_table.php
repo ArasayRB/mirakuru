@@ -19,8 +19,8 @@ class CreatePostsTable extends Migration
             $table->longText('content');
             $table->text('summary');
             $table->boolean('publicate_state');
-            $table->string('img_url');
-            $table->string('video_url')->default('storage/img_web/posts_img/postFoto.jpg');
+            $table->string('img_url')->default('postDefault.jpg');
+            $table->string('video_url')->nullable();
             $table->string('qr_img_url')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('category_id');
@@ -29,7 +29,7 @@ class CreatePostsTable extends Migration
             $table->integer('cant_shares')->nullable();
             $table->text('tags');
             $table->text('slug');
-            $table->text('keywords');
+            $table->text('keywords')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('category_id')->references('id')->on('categoria_posts')->onDelete('cascade');

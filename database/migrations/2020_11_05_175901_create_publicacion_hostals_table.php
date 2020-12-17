@@ -17,7 +17,7 @@ class CreatePublicacionHostalsTable extends Migration
             $table->id();
             $table->string('title');
             $table->text('content');
-            $table->string('img_url')->default('storage/img_web/publicacions_img/publicaFoto.jpg');
+            $table->string('img_url')->default('publicaFoto.jpg');
             $table->string('video_url')->nullable();
             $table->string('qr_img_url')->nullable();
             $table->boolean('publicate_state');

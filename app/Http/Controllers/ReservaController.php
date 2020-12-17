@@ -18,6 +18,10 @@ class ReservaController extends Controller
 {
   use HostalTrait; use HabitacionTrait; use CountryTrait; use ServicioTrait; use ReservaTokenTrait;
   use MessageTrait;
+  public function __construct()
+  {
+      $this->middleware('auth');
+  }
     /**
      * Display a listing of the resource.
      *
@@ -56,6 +60,40 @@ class ReservaController extends Controller
 
     public function getCountries(){
       return $this->getAllCountries();
+    }
+
+    public function activeBooks(Request $request){
+
+                       return view('reservas');
+
+    }
+
+    public function activeBooksStore($id){
+      $reservas=Reserva::with('servicios')
+                       ->with('habitaciones')
+                       ->where('user_id',$id)
+                       ->where('active',true)
+                       ->get();
+                       return $reservas;
+    }
+
+    public function deleteBookByUser(int $book_id, string $email, string $name){
+      $reserva=Reserva::findOrFail($book_id);
+      $date_inactive=Carbon::now()->format('Y-m-d');
+
+      $reserva->active=false;
+      $reserva->updated_at=$date_inactive;
+      $reserva->update();
+      $reservas=$this->activeBooksStore($reserva->user_id);
+      $datosTokenReserva=['email'=>$email,
+                          'name'=>$name];
+      $this->discardReservationDelete($datosTokenReserva);
+      return ['data'=>['reservas'=>$reservas,'message'=>''.Lang::get('You have just deleted a reservation, a notification must be send to your email.')]];
+    }
+
+    public function listBooksByUser(Request $request){
+      $reservas=$this->activeBooksStore(request('user_id'));
+                       return $reservas;
     }
 
     public function getBlockedDates($hostal){

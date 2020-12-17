@@ -56,6 +56,7 @@ Vue.use(VueLocalStorage);
 Vue.component('tags-input', VoerroTagsInput);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('reservar-hostal-component', require('./components/forms/ReservarHostalComponent.vue').default);
+Vue.component('reservado-hostal-component', require('./components/forms/ReservadoHostalComponent.vue').default);
 Vue.component('newsletter-component', require('./components/forms/NewsletterComponent.vue').default);
 Vue.component('login-form-component', require('./components/forms/auth/LoginFormComponent.vue').default);
 Vue.component('register-form-component', require('./components/forms/auth/RegisterFormComponent.vue').default);
@@ -101,6 +102,15 @@ const app = new Vue({
         this.openLoginModal();
         $cookies.set('mostrarModalLogin', 'no', '6h');
       }
+
+      axios.get('/exist-post')
+           .then(response =>{
+             let cantPost=response.data;
+             if(cantPost===0){
+          $("#blog").hide(true);
+          $("#blog-menu").hide(true);
+             }
+           });
      /*Vue.localStorage.set('openLogin', 'no');
      if(Vue.localStorage.get('openLogin')==='no'){
      console.log(Vue.localStorage.get('openLogin'));

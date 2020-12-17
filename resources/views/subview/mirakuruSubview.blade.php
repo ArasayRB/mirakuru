@@ -1,23 +1,15 @@
 @auth
-  <div class="container">
-      <div class="row justify-content-center">
-          <div class="col-md-8">
-              <div class="card">
-                  <div class="card-header">{{ __('Dashboard') }}</div>
-
-                  <div class="card-body">
-                      @if (session('status'))
-                          <div class="alert alert-success" role="alert">
-                              {{ session('status') }}
-                          </div>
-                      @endif
-
-                      {{ __('You are logged in!') }}
-                  </div>
-              </div>
+  <div class="alert alert-primary" id='mensage'>
+    <ul>
+      @if (session('status'))
+          <div class="alert alert-success" role="alert">
+              {{ session('status') }}
           </div>
-      </div>
+      @endif
+      <li>{{ __('You are logged in!') }}</li>
+    </ul>
   </div>
+
 @endauth
 @if (isset($message))
   <div class="alert alert-success">
@@ -211,9 +203,10 @@
 </div>
 </div>
 </div><!--Fin SECTION TESTIMONIOS-->
+@if ( $posts ?? '')
 <section class="container-fluid col-12 pt-5" id="blog" name="blog"><h1 id="post" class="text-center pb-2 pt-5 text-uppercase animate__animated animate__zoomIn">{{ __('Posts') }}</h1><!--Section Blog-->
   <div class="row mb-2">
-    @if ( $posts ?? '')
+
       @foreach ($posts ?? '' as $post)
 
 
@@ -232,11 +225,11 @@
         </div>
       </div>
       @endforeach
-    @endif
+
 
   </div>
 </section><!--END Section Blog-->
-
+@endif
 <section class="mb-5 mt-5 pt-5 pb-5" id="contacto" name="contacto"><!--Section Contacto-->
   <div class="text-center container" id="containermap">
     <div id="map-mirak">

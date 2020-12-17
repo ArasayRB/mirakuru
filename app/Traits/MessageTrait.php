@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Lang;
 use Notification;
 use App\Notifications\NewsletterNotification;
 use App\Notifications\ConfirmReservaNotification;
+use App\Notifications\DeleteNotification;
 
 trait MessageTrait
 {
@@ -67,5 +68,18 @@ trait MessageTrait
          return Notification::route('mail', $datos['email'])
                        ->notify(new ConfirmReservaNotification($newsData));
 
+    }
+
+    public function discardReservationDelete($datos){
+      $newsData = [
+             'email'=>$datos['email'],
+             'body' => Lang::get('Notification'),
+             'thanks' => Lang::get('Greetings, '. config('app.name')),
+             'newsText' => Lang::get('You receive this email because you just deleted a reservation: '.$datos['name']),
+             'newsText1' => Lang::get('If you did not make this operation, no further action is required.'),
+             'newTextBye'=>Lang::get('Thank you for using our application!'),
+         ];
+         return Notification::route('mail', $datos['email'])
+                       ->notify(new DeleteNotification($newsData));
     }
 }

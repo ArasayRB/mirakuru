@@ -3149,6 +3149,643 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=script&lang=js&":
+/*!*****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=script&lang=js& ***!
+  \*****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    var month = new Date().getMonth();
+    var year = new Date().getFullYear();
+    return {
+      modelConfig: {
+        type: 'string',
+        mask: 'YYYY-MM-DD' // Uses 'iso' if missing
+
+      },
+      email: this.$attrs.email,
+      name: '',
+      adress: '',
+      pais: '',
+      reservas: [],
+      res: [],
+      ruta: this.$attrs.ruta,
+      phone: '',
+      blockedDays: [],
+      blockedAllDays: [],
+      rooms: [],
+      selectedRooms: [],
+      services: [],
+      selectedServices: [],
+      roomCapacityMax: 0,
+      childCapacityMax: 0,
+      countries: [],
+      cant_person: 0,
+      seasons: [],
+      tempor: '',
+      temporada_book: '',
+      dayhigh: 0,
+      daylow: 0,
+      reservation_days: 0,
+      mensage: '',
+      range: [],
+      childs: 0,
+      nuSortArr: [],
+      amount: 0,
+      is_betwen: 'no',
+      service_price: 0,
+      rooms_price: 0,
+      token: window.CSRF_TOKEN
+    };
+  },
+  methods: {
+    deleteReservation: function deleteReservation(index, reservation) {
+      var _this = this;
+
+      var reserva_id = reservation;
+      swal({
+        title: this.$trans('messages.Delete Reservation'),
+        text: this.$trans('messages.Are you completely sure you want to delete ') + this.$trans('messages.Book') + '?',
+        icon: 'warning',
+        closeOnClickOutside: false,
+        closeOnEsc: false,
+        buttons: true,
+        dangerMode: true,
+        showCancelButton: true,
+        confirmButtonText: this.$trans('messages.Yes, delete'),
+        cancelButtonText: this.$trans('messages.Cancel')
+      }).then(function (select) {
+        if (select) {
+          var url = '/delete-book-by-guest/' + reserva_id['id'] + '/' + _this.email + '/' + reserva_id['name'];
+          axios.post(url).then(function (response) {
+            swal({
+              title: _this.$trans('messages.Correct data'),
+              text: response.data.data.message,
+              icon: 'success',
+              closeOnClickOutside: false,
+              closeOnEsc: false
+            }).then(function (select) {
+              if (select) {
+                _this.reservas.splice(index, 1);
+              }
+            });
+          })["catch"](function (error) {
+            console.log(error.response.data.errors);
+            var wrong = error.response.data.errors;
+            var message = error.response.data.message;
+
+            if (message === 'Connection could not be established with host smtp.mailtrap.io :stream_socket_client(): php_network_getaddresses: getaddrinfo failed: Temporary failure in name resolution') {
+              var newMessage = _this.$trans('messages.You have just deleted a reservation, a notification must be send to your email. But in this moment we present this problem with the email send: ') + ' ' + message;
+
+              _this.reservas.splice(index, 1);
+
+              swal('Error', newMessage, 'error');
+            } else {
+              swal('Error', message, 'error');
+            }
+          });
+        }
+      });
+    },
+    esconderMensage: function esconderMensage() {
+      $("#mensage").hide(true);
+    },
+    totalAmount: function totalAmount(val, tipoIinput) {
+      if (tipoIinput == 'service') {
+        this.service_price = 0;
+        var price_baj = 0;
+        var price_alta = 0;
+
+        if (val.length > 0) {
+          for (var i = 0; i < val.length; i++) {
+            if (this.tempor == 'Alta') {
+              this.service_price += val[i].price_high * this.cant_person * this.reservation_days;
+            } else if (this.tempor == 'Baja') {
+              this.service_price += val[i].price_low * this.cant_person * this.reservation_days;
+            } else {
+              price_baj = val[i].price_low * this.daylow * this.cant_person;
+              price_alta = val[i].price_high * this.dayhigh * this.cant_person;
+              this.service_price += price_baj + price_alta;
+            }
+          }
+        }
+      } else if (tipoIinput == 'room') {
+        this.rooms_price = 0;
+        var price_baj = 0;
+        var price_alta = 0;
+
+        if (val.length > 0 && this.cant_person > 0) {
+          for (var i = 0; i < val.length; i++) {
+            if (this.tempor == 'Alta') {
+              this.rooms_price += val[i].price_high * this.reservation_days;
+            } else if (this.tempor == 'Baja') {
+              this.rooms_price += val[i].price_low * this.reservation_days;
+            } else {
+              price_baj = val[i].price_low * this.daylow;
+              price_alta = val[i].price_high * this.dayhigh;
+              this.rooms_price += price_baj + price_alta;
+            }
+          }
+        }
+      } else if (tipoIinput == 'range' || tipoIinput == 'cant_persons') {
+        this.service_price = 0;
+        this.rooms_price = 0;
+        var price_baj_room = 0;
+        var price_alta_room = 0;
+        var price_baj_serv = 0;
+        var price_alta_serv = 0;
+
+        if (this.selectedRooms.length > 0) {
+          for (var i = 0; i < this.selectedRooms.length; i++) {
+            if (this.tempor == 'Alta') {
+              this.rooms_price += this.selectedRooms[i].price_high * this.reservation_days;
+            } else if (this.tempor == 'Baja') {
+              this.rooms_price += this.selectedRooms[i].price_low * this.reservation_days;
+            } else {
+              price_baj_room = this.selectedRooms[i].price_low * this.daylow;
+              price_alta_room = this.selectedRooms[i].price_high * this.dayhigh;
+              this.rooms_price += price_baj_room + price_alta_room;
+            }
+          }
+        }
+
+        if (this.selectedServices.length > 0) {
+          for (var i = 0; i < this.selectedServices.length; i++) {
+            if (this.tempor == 'Alta') {
+              this.service_price += this.selectedServices[i].price_high * this.reservation_days * this.cant_person;
+            } else if (this.tempor == 'Baja') {
+              this.service_price += this.selectedServices[i].price_low * this.reservation_days * this.cant_person;
+            } else {
+              price_baj_serv = this.selectedServices[i].price_low * this.daylow * this.cant_person;
+              price_alta_serv = this.selectedServices[i].price_high * this.dayhigh * this.cant_person;
+              this.service_price += price_baj_serv + price_alta_serv;
+            }
+          }
+        }
+      }
+
+      this.amount = this.service_price + this.rooms_price;
+    },
+    sortArrayNum: function sortArrayNum(numeros) {
+      var temporal = 0;
+
+      for (var i = 0; i < numeros.length; i++) {
+        for (var j = 1; j < numeros.length - i; j++) {
+          if (numeros[j - 1]['num'] > numeros[j]['num']) {
+            temporal = numeros[j - 1];
+            numeros[j - 1] = numeros[j];
+            numeros[j] = temporal;
+          }
+        }
+      }
+
+      this.nuSortArr = numeros;
+    },
+    getCountryList: function getCountryList() {
+      var _this2 = this;
+
+      axios.get('/countries-list').then(function (response) {
+        _this2.countries = response.data;
+      })["catch"](function (error) {
+        return _this2.errors.push(error);
+      });
+    },
+    getTemporadasHostal: function getTemporadasHostal(name) {
+      var _this3 = this;
+
+      axios.get('/temporadas-hostal/' + name).then(function (response) {
+        _this3.seasons = response.data.temporadas;
+      })["catch"](function (error) {
+        return _this3.errors.push(error);
+      });
+    },
+    getBookedDatesBD: function getBookedDatesBD(name) {
+      var _this4 = this;
+
+      axios.get('/blocked-dates/' + name).then(function (response) {
+        var dates_block = response.data;
+        var temp;
+        _this4.blockedAllDays = dates_block;
+      })["catch"](function (error) {
+        return _this4.errors.push(error);
+      });
+    },
+    getAvailableRooms: function getAvailableRooms(name) {
+      var _this5 = this;
+
+      axios.get('/available-rooms/' + name).then(function (response) {
+        _this5.rooms = response.data;
+
+        for (var i = 0; i < _this5.rooms.length; i++) {
+          _this5.roomCapacityMax += _this5.rooms[i].capacity;
+        }
+
+        _this5.childCapacityMax = _this5.roomCapacityMax - 1;
+      })["catch"](function (error) {
+        return _this5.errors.push(error);
+      });
+    },
+    getBooks: function getBooks() {
+      var _this6 = this;
+
+      var url = this.ruta;
+      axios.get(url).then(function (response) {
+        _this6.reservas = response.data;
+
+        if (_this6.reservas.length === 0) {
+          _this6.mensage = _this6.$trans('messages.None reservation added yet');
+        }
+      })["catch"](function (error) {
+        return _this6.errors.push(error);
+      });
+    },
+    getAvailableServices: function getAvailableServices(name) {
+      var _this7 = this;
+
+      axios.get('/available-services/' + name).then(function (response) {
+        var hostalsServices = response.data;
+        var servicesHostal = hostalsServices[0].services;
+        _this7.services = servicesHostal;
+      })["catch"](function (error) {
+        return _this7.errors.push(error);
+      });
+    },
+    book: function book() {
+      var _this8 = this;
+
+      var url = "/reserva";
+      var mensaje = this.$trans('messages.Unidentified error');
+
+      if (this.email == '' || this.name == '' || this.adress == '' || this.pais == '' || this.phone == '' || this.selectedRooms == '' || this.cant_person == 0 || this.date_in == '' || this.date_out == '') {
+        mensaje = this.$trans('messages.You cannot leave empty fields, please check');
+      }
+
+      var roomsList = this.selectedRooms;
+      var roomTags = '';
+
+      if (this.selectedRooms.length > 0) {
+        for (var i = 0; i < roomsList.length; i = i + 1) {
+          if (i == roomsList.length - 1) {
+            roomTags = '' + roomTags + roomsList[i].name;
+          } else {
+            roomTags = '' + roomTags + roomsList[i].name + ',';
+          }
+        }
+      }
+
+      var serviceList = this.selectedServices;
+      var serviceTags = '';
+
+      if (this.selectedServices.length > 0) {
+        for (var i = 0; i < serviceList.length; i = i + 1) {
+          if (i == serviceList.length - 1) {
+            serviceTags = '' + serviceTags + serviceList[i].name;
+          } else {
+            serviceTags = '' + serviceTags + serviceList[i].name + ',';
+          }
+        }
+      }
+
+      var data = new FormData();
+      data.append("email", this.email);
+      data.append("name", this.name);
+      data.append("token", this.token);
+      data.append("adress", this.adress);
+      data.append("pais", this.pais);
+      data.append("phone", this.phone);
+      data.append("rooms", roomTags);
+      data.append("service", serviceTags);
+      data.append("cant_person", this.cant_person);
+      data.append("childs", this.childs);
+      data.append("amount", this.amount);
+      data.append("date_in", this.range['start']);
+      data.append("date_out", this.range['end']);
+      data.append("hostal_id", 'Hostal Mirakuru Gran Familia');
+      data.append("reservation_days", this.reservation_days);
+      axios.post(url, data).then(function (response) {
+        var valor = Object.keys(response.data);
+
+        if (valor.includes('msg')) {
+          swal({
+            title: _this8.$trans('messages.Whoops! Something went wrong.'),
+            text: _this8.$trans('messages.' + response.data['msg'] + ''),
+            icon: 'error',
+            closeOnClickOutside: false,
+            closeOnEsc: false
+          });
+        } else {
+          swal({
+            title: _this8.$trans('messages.Correct data'),
+            text: _this8.$trans('messages.You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment'),
+            icon: 'success',
+            closeOnClickOutside: false,
+            closeOnEsc: false
+          });
+          _this8.name = '';
+          _this8.adress = '';
+          _this8.pais = '';
+          _this8.phone = '';
+          _this8.cant_person = 0;
+          _this8.childs = 0;
+          _this8.amount = 0;
+          _this8.selectedRooms = [];
+          _this8.selectedServices = [];
+          _this8.range = [];
+
+          _this8.getAvailableServices(hostalName);
+
+          _this8.getAvailableRooms(hostalName);
+
+          _this8.getBookedDatesBD(hostalName);
+        } //console.log(response);
+
+      })["catch"](function (error) {
+        if (error.response.data.message) {
+          swal('Error', '' + error.response.data.message, 'error');
+        }
+
+        var wrong = error.response.data.errors;
+
+        if (wrong.hasOwnProperty('email')) {
+          mensaje += '-' + wrong.email[0];
+        }
+
+        swal('Error', mensaje, 'error'); //console.log(error.response.data);
+      }); //alert('Hola');
+    }
+  },
+  watch: {
+    selectedServices: function selectedServices(val) {
+      var tipoIinput = 'service';
+      this.totalAmount(val, tipoIinput);
+    },
+    selectedRooms: function selectedRooms(val) {
+      var tipoIinput = 'room';
+
+      if (val.length > 1) {
+        this.blockedDays = this.blockedAllDays['together'];
+        this.blockedDays.push({
+          'start': null,
+          'end': new Date()
+        });
+      } else if (val.length === 1) {
+        this.blockedDays = this.blockedAllDays[val[0].name];
+        this.blockedDays.push({
+          'start': null,
+          'end': new Date()
+        });
+      } else {
+        this.blockedDays = {
+          'start': null,
+          'end': new Date()
+        };
+      }
+
+      this.totalAmount(val, tipoIinput);
+    },
+    range: function range(val) {
+      //this.blockedAllDays
+      var date_satart = moment__WEBPACK_IMPORTED_MODULE_0___default()(val['start']);
+      var date_end = moment__WEBPACK_IMPORTED_MODULE_0___default()(val['end']);
+      var diff_min_start = [];
+      var diff_min_end = [];
+
+      for (var i = 0; i < this.seasons.length; i++) {
+        var start_seas = this.seasons[i].date_in;
+        var end_seas = this.seasons[i].date_out;
+        var is_same_after_start = date_satart.isSameOrAfter(this.seasons[i].date_in);
+        var is_same_before_end = date_end.isSameOrBefore(this.seasons[i].date_out);
+
+        if (is_same_after_start && is_same_before_end) {
+          this.is_betwen = 'yes';
+          this.tempor = this.seasons[i].name;
+        } else {
+          var season_start = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.seasons[i].date_in);
+          var season_end = moment__WEBPACK_IMPORTED_MODULE_0___default()(this.seasons[i].date_out);
+
+          if (season_end.diff(date_satart, 'days') >= 0) {
+            diff_min_start.push({
+              'num': season_end.diff(date_satart, 'days'),
+              'name_season': this.seasons[i].name
+            });
+          }
+
+          if (date_end.diff(season_end, 'days') >= 0) {
+            diff_min_end.push({
+              'num': date_end.diff(season_end, 'days'),
+              'name_season': this.seasons[i].name
+            });
+          }
+        }
+      }
+
+      if (this.is_betwen == 'yes') {
+        this.reservation_days = date_end.diff(date_satart, 'days');
+      } else {
+        this.sortArrayNum(diff_min_start);
+        diff_min_start = this.nuSortArr;
+        this.sortArrayNum(diff_min_end);
+        diff_min_end = this.nuSortArr;
+
+        if (diff_min_start[0]['name_season'] == 'Alta') {
+          this.dayhigh = diff_min_start[0]['num'];
+          this.daylow = diff_min_end[0]['num'];
+        } else if (diff_min_start[0]['name_season'] == 'Baja') {
+          this.daylow = diff_min_start[0]['num'];
+          this.dayhigh = diff_min_end[0]['num'];
+        }
+      }
+
+      var tipoIinput = 'range';
+      var valor = [];
+      this.totalAmount(valor, tipoIinput);
+    },
+    cant_person: function cant_person(val) {
+      this.childCapacityMax = val - 1;
+      var tipoIinput = 'cant_persons';
+      var valor = [];
+      this.totalAmount(valor, tipoIinput);
+    }
+  },
+  created: function created() {
+    var hostalName = 'Hostal Mirakuru Gran Familia';
+    this.getAvailableServices(hostalName);
+    this.getAvailableRooms(hostalName);
+    this.getCountryList();
+    this.getTemporadasHostal(hostalName);
+    this.getBookedDatesBD(hostalName);
+    this.getBooks();
+  },
+  mounted: function mounted() {
+    this.blockedDays = {
+      'start': null,
+      'end': new Date()
+    };
+
+    if (this.$attrs.locale) {
+      this.$lang.setLocale(this.$attrs.locale);
+    } else {
+      this.$lang.setLocale('en');
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ReservarHostalComponent.vue?vue&type=script&lang=js&":
 /*!****************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/ReservarHostalComponent.vue?vue&type=script&lang=js& ***!
@@ -64706,6 +65343,614 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=template&id=0fc4079c&":
+/*!*********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=template&id=0fc4079c& ***!
+  \*********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", {}, [
+    _c(
+      "form",
+      {
+        staticClass: "mt-5 pt-3 pb-5 bg-primary",
+        attrs: { id: "reservated", hidden: "true" }
+      },
+      [
+        _c("div", { staticClass: "container mt-5" }, [
+          _c("h1", { staticClass: "text-center text-light mt-5 mb-5" }, [
+            _vm._v(_vm._s(_vm.$trans("messages.Book Now!")))
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "row justify-content-center" }, [
+            _c("div", { staticClass: "col-3" }),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass:
+                  "col-6 col-sm-12 col-xs-12 col-md-8 pb-2 justify-content-center"
+              },
+              [
+                _c("vc-date-picker", {
+                  staticClass: "pb-2",
+                  attrs: {
+                    "is-range": "",
+                    "model-config": _vm.modelConfig,
+                    "disabled-dates": _vm.blockedDays
+                  },
+                  scopedSlots: _vm._u([
+                    {
+                      key: "default",
+                      fn: function(ref) {
+                        var inputValue = ref.inputValue
+                        var inputEvents = ref.inputEvents
+                        return [
+                          _c(
+                            "div",
+                            {
+                              staticClass:
+                                "flex justify-center items-center col-12"
+                            },
+                            [
+                              _c("i", {
+                                staticClass: "fas fa-calendar-alt pb-2"
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "input",
+                                _vm._g(
+                                  {
+                                    staticClass:
+                                      "border px-2 py-1 pb-2 w-32 rounded focus:outline-none focus:border-indigo-300",
+                                    attrs: { placeholder: " Entrada/ Date in" },
+                                    domProps: { value: inputValue.start }
+                                  },
+                                  inputEvents.start
+                                )
+                              ),
+                              _vm._v(" "),
+                              _c("br"),
+                              _vm._v(" "),
+                              _c("i", {
+                                staticClass: "fas fa-calendar-alt pb-2"
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "input",
+                                _vm._g(
+                                  {
+                                    staticClass:
+                                      "border px-2 py-1 pb-2 w-32 rounded focus:outline-none focus:border-indigo-300",
+                                    attrs: { placeholder: "Salida/ Date out" },
+                                    domProps: { value: inputValue.end }
+                                  },
+                                  inputEvents.end
+                                )
+                              )
+                            ]
+                          )
+                        ]
+                      }
+                    }
+                  ]),
+                  model: {
+                    value: _vm.range,
+                    callback: function($$v) {
+                      _vm.range = $$v
+                    },
+                    expression: "range"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("div", {
+              staticClass: "col-3 col-sm-12 col-xs-12 col-md-8 pb-2"
+            }),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-6" },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.name,
+                      expression: "name"
+                    }
+                  ],
+                  staticClass: "form-control font-italic mb-2",
+                  attrs: {
+                    type: "text",
+                    id: "nombre",
+                    name: "nombre",
+                    pattern: "[a-zA-Z]",
+                    placeholder: "Nombre Completo/Full Name...",
+                    required: ""
+                  },
+                  domProps: { value: _vm.name },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.name = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.adress,
+                      expression: "adress"
+                    }
+                  ],
+                  staticClass: "form-control font-italic mb-2",
+                  attrs: {
+                    type: "text",
+                    id: "dir",
+                    name: "dir",
+                    placeholder: "Dirección/Adress...",
+                    required: ""
+                  },
+                  domProps: { value: _vm.adress },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.adress = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.phone,
+                      expression: "phone"
+                    }
+                  ],
+                  staticClass: "form-control font-italic mb-2",
+                  attrs: {
+                    type: "tel",
+                    id: "tel",
+                    name: "tel",
+                    placeholder: "Teléfono/Phone...",
+                    pattern: "\\x2b[0-9]+",
+                    size: "15",
+                    required: ""
+                  },
+                  domProps: { value: _vm.phone },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.phone = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "label",
+                  { staticClass: "text-light", attrs: { for: "services" } },
+                  [
+                    _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(
+                        _vm._s(_vm.$trans("messages.Separate with (,) please"))
+                      )
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("tags-input", {
+                  attrs: {
+                    id: "services",
+                    "element-id": "services",
+                    "add-tags-on-comma": true,
+                    placeholder: "Servicios/Services...",
+                    "existing-tags": _vm.services,
+                    "id-field": "id",
+                    "text-field": "name",
+                    typeahead: true
+                  },
+                  model: {
+                    value: _vm.selectedServices,
+                    callback: function($$v) {
+                      _vm.selectedServices = $$v
+                    },
+                    expression: "selectedServices"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "col-6" },
+              [
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.cant_person,
+                      expression: "cant_person"
+                    }
+                  ],
+                  staticClass: "form-control font-italic mb-2",
+                  attrs: {
+                    type: "number",
+                    id: "personas",
+                    required: "",
+                    name: "personas",
+                    min: "1",
+                    max: _vm.roomCapacityMax,
+                    step: "1",
+                    placeholder: "Huéspedes/Guests..."
+                  },
+                  domProps: { value: _vm.cant_person },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.cant_person = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.childs,
+                      expression: "childs"
+                    }
+                  ],
+                  staticClass: "form-control font-italic mb-2",
+                  attrs: {
+                    type: "number",
+                    id: "ninos",
+                    nrequired: "",
+                    ame: "ninos",
+                    min: "1",
+                    step: "1",
+                    max: _vm.childCapacityMax,
+                    placeholder: "#Niños de Huéspedes/#Childs of Guests..."
+                  },
+                  domProps: { value: _vm.childs },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.childs = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.email,
+                      expression: "email"
+                    }
+                  ],
+                  staticClass: "form-control font-italic mb-2",
+                  attrs: {
+                    type: "email",
+                    disabled: "true",
+                    name: "email",
+                    placeholder: "Correo/Email..."
+                  },
+                  domProps: { value: _vm.email },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.email = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "label",
+                  { staticClass: "text-light", attrs: { for: "rooms" } },
+                  [
+                    _c("span", { staticClass: "text-danger" }, [
+                      _vm._v(
+                        _vm._s(_vm.$trans("messages.Separate with (,) please"))
+                      )
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
+                _c("br"),
+                _vm._v(" "),
+                _c("tags-input", {
+                  attrs: {
+                    required: "",
+                    id: "rooms_input",
+                    "element-id": "rooms",
+                    "add-tags-on-comma": true,
+                    placeholder: "Habitación(s)/Room(s)...",
+                    "existing-tags": _vm.rooms,
+                    "id-field": "id",
+                    "text-field": "name",
+                    typeahead: true
+                  },
+                  model: {
+                    value: _vm.selectedRooms,
+                    callback: function($$v) {
+                      _vm.selectedRooms = $$v
+                    },
+                    expression: "selectedRooms"
+                  }
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-12 form-group pt-2" }, [
+              _c(
+                "label",
+                { staticClass: "text-light", attrs: { for: "country" } },
+                [_vm._v(_vm._s(_vm.$trans("messages.Select Country")))]
+              ),
+              _vm._v(" "),
+              _c(
+                "select",
+                {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.pais,
+                      expression: "pais"
+                    }
+                  ],
+                  staticClass: "form-control pt-2",
+                  attrs: {
+                    required: "",
+                    id: "country",
+                    name: "country",
+                    required: ""
+                  },
+                  on: {
+                    change: function($event) {
+                      var $$selectedVal = Array.prototype.filter
+                        .call($event.target.options, function(o) {
+                          return o.selected
+                        })
+                        .map(function(o) {
+                          var val = "_value" in o ? o._value : o.value
+                          return val
+                        })
+                      _vm.pais = $event.target.multiple
+                        ? $$selectedVal
+                        : $$selectedVal[0]
+                    }
+                  }
+                },
+                [
+                  _c("option", { attrs: { value: "" } }, [
+                    _vm._v(_vm._s(_vm.$trans("messages.Select Country")))
+                  ]),
+                  _vm._v(" "),
+                  _vm._l(_vm.countries, function(countri) {
+                    return _c("option", { domProps: { value: countri.id } }, [
+                      _vm._v(_vm._s(countri.name_knowing))
+                    ])
+                  })
+                ],
+                2
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-12" }, [
+              _c("div", { staticClass: "content-justify-center" }, [
+                _c(
+                  "label",
+                  { staticClass: "text-light", attrs: { for: "amount" } },
+                  [_vm._v(_vm._s(_vm.$trans("messages.Amount")))]
+                ),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.amount,
+                      expression: "amount"
+                    }
+                  ],
+                  staticClass: "form-control font-italic mb-2",
+                  attrs: {
+                    type: "number",
+                    disabled: "true",
+                    name: "amount",
+                    min: "1",
+                    step: "0.1"
+                  },
+                  domProps: { value: _vm.amount },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.amount = $event.target.value
+                    }
+                  }
+                }),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass:
+                      "btn w-20 rounded btn-light btn-lg mt-5 reserva",
+                    attrs: { type: "button" },
+                    on: {
+                      click: function($event) {
+                        return _vm.book()
+                      }
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.$trans("messages.Book")))]
+                )
+              ])
+            ])
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "container mt-5" },
+      [
+        _c(
+          "h1",
+          {
+            staticClass: "text-center text-primary font-weight-bold mt-5 mb-5"
+          },
+          [_vm._v(_vm._s(_vm.$trans("messages.Books")))]
+        ),
+        _vm._v(" "),
+        _vm.mensage != ""
+          ? _c("div", { staticClass: "alert alert-info" }, [
+              _c("ul", [_c("li", [_vm._v(_vm._s(_vm.mensage))])])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm._l(_vm.reservas, function(res, index) {
+          return _c(
+            "div",
+            {
+              key: res.id,
+              staticClass: "card shadow mb-4 mt-3",
+              attrs: { res: res }
+            },
+            [
+              _c("div", { staticClass: "card-header py-3 row" }, [
+                _c("div", { staticClass: "col-11" }, [
+                  _c(
+                    "h6",
+                    { staticClass: "m-0 font-weight-bold text-primary" },
+                    [_vm._v(_vm._s(res.name))]
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-1" }, [
+                  _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          return _vm.deleteReservation(index, res)
+                        }
+                      }
+                    },
+                    [_c("i", { staticClass: "fa fa-trash-alt" })]
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-body row" }, [
+                _c(
+                  "div",
+                  { staticClass: "col-2" },
+                  [
+                    _c("h5", [_vm._v(_vm._s(_vm.$trans("messages.Services")))]),
+                    _vm._v(" "),
+                    _vm._l(res.servicios, function(serv) {
+                      return _c("p", [_vm._v(_vm._s(serv.name))])
+                    })
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col-3" },
+                  [
+                    _c("h5", [_vm._v(_vm._s(_vm.$trans("messages.Rooms")))]),
+                    _vm._v(" "),
+                    _vm._l(res.habitaciones, function(roo) {
+                      return _c("p", [_vm._v(_vm._s(roo.name))])
+                    })
+                  ],
+                  2
+                ),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-2" }, [
+                  _c("h5", [_vm._v(_vm._s(_vm.$trans("messages.Persons")))]),
+                  _vm._v(" "),
+                  _c("p", [_vm._v(_vm._s(res.totally_persons))])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-2" }, [
+                  _c("h5", [_vm._v(_vm._s(_vm.$trans("messages.Childs")))]),
+                  _vm._v(" "),
+                  _c("p", [_vm._v(_vm._s(res.child))])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-footer row" }, [
+                _c("div", { staticClass: "col-6" }, [
+                  _c("h4", [_vm._v(_vm._s(_vm.$trans("messages.Date In")))]),
+                  _vm._v(" "),
+                  _c("p", [_vm._v(_vm._s(res.date_in))])
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "col-6" }, [
+                  _c("h4", [_vm._v(_vm._s(_vm.$trans("messages.Date Out")))]),
+                  _vm._v(" "),
+                  _c("p", [_vm._v(_vm._s(res.date_out))])
+                ])
+              ])
+            ]
+          )
+        })
+      ],
+      2
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ReservarHostalComponent.vue?vue&type=template&id=77064015&":
 /*!********************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/ReservarHostalComponent.vue?vue&type=template&id=77064015& ***!
@@ -78637,6 +79882,7 @@ Vue.use(vue_localstorage__WEBPACK_IMPORTED_MODULE_1___default.a);
 Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_6__["default"]);
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('reservar-hostal-component', __webpack_require__(/*! ./components/forms/ReservarHostalComponent.vue */ "./resources/js/components/forms/ReservarHostalComponent.vue")["default"]);
+Vue.component('reservado-hostal-component', __webpack_require__(/*! ./components/forms/ReservadoHostalComponent.vue */ "./resources/js/components/forms/ReservadoHostalComponent.vue")["default"]);
 Vue.component('newsletter-component', __webpack_require__(/*! ./components/forms/NewsletterComponent.vue */ "./resources/js/components/forms/NewsletterComponent.vue")["default"]);
 Vue.component('login-form-component', __webpack_require__(/*! ./components/forms/auth/LoginFormComponent.vue */ "./resources/js/components/forms/auth/LoginFormComponent.vue")["default"]);
 Vue.component('register-form-component', __webpack_require__(/*! ./components/forms/auth/RegisterFormComponent.vue */ "./resources/js/components/forms/auth/RegisterFormComponent.vue")["default"]);
@@ -78681,11 +79927,19 @@ var app = new Vue({
       this.openLoginModal();
       $cookies.set('mostrarModalLogin', 'no', '6h');
     }
+
+    axios.get('/exist-post').then(function (response) {
+      var cantPost = response.data;
+
+      if (cantPost === 0) {
+        $("#blog").hide(true);
+        $("#blog-menu").hide(true);
+      }
+    });
     /*Vue.localStorage.set('openLogin', 'no');
     if(Vue.localStorage.get('openLogin')==='no'){
     console.log(Vue.localStorage.get('openLogin'));
     }*/
-
   }
 });
 
@@ -79081,6 +80335,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/forms/ReservadoHostalComponent.vue":
+/*!********************************************************************!*\
+  !*** ./resources/js/components/forms/ReservadoHostalComponent.vue ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ReservadoHostalComponent_vue_vue_type_template_id_0fc4079c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ReservadoHostalComponent.vue?vue&type=template&id=0fc4079c& */ "./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=template&id=0fc4079c&");
+/* harmony import */ var _ReservadoHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ReservadoHostalComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ReservadoHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ReservadoHostalComponent_vue_vue_type_template_id_0fc4079c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ReservadoHostalComponent_vue_vue_type_template_id_0fc4079c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/forms/ReservadoHostalComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservadoHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ReservadoHostalComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservadoHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=template&id=0fc4079c&":
+/*!***************************************************************************************************!*\
+  !*** ./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=template&id=0fc4079c& ***!
+  \***************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservadoHostalComponent_vue_vue_type_template_id_0fc4079c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ReservadoHostalComponent.vue?vue&type=template&id=0fc4079c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ReservadoHostalComponent.vue?vue&type=template&id=0fc4079c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservadoHostalComponent_vue_vue_type_template_id_0fc4079c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ReservadoHostalComponent_vue_vue_type_template_id_0fc4079c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/forms/ReservarHostalComponent.vue":
 /*!*******************************************************************!*\
   !*** ./resources/js/components/forms/ReservarHostalComponent.vue ***!
@@ -79380,6 +80703,7 @@ module.exports = {
     "About us": "About us",
     "Account User": "Account User",
     "Accounts": "Accounts",
+    "Actives": "Actives",
     "Add": "Add",
     "Add Team Member": "Add Team Member",
     "Add a new Tag": "Add a new Tag",
@@ -79392,10 +80716,12 @@ module.exports = {
     "Administrator": "Administrator",
     "Administrator users can perform any action.": "Administrator users can perform any action.",
     "Adress": "Address",
+    "All": "All",
     "All of the people that are part of this team.": "All of the people that are part of this team.",
     "All rights reserved.": "All rights reserved.",
     "Already registered?": "Already registered?",
     "Amount": "Amount",
+    "Are you completely sure you want to delete ": "Are you completely sure you want to delete ",
     "Are you completely sure you want to delete the post": "You are completely sure you want to delete the post",
     "Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be permanently deleted.": "Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be permanently deleted.",
     "Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.",
@@ -79409,12 +80735,14 @@ module.exports = {
     "Book": "Book",
     "Book Now!": "Book Now!",
     "Bookers": "Bookers",
+    "Books": "Books",
     "Browser Sessions": "Browser Sessions",
     "CLose Places": "Close Places",
     "Cancel": "Cancel",
     "Cash": "Cash",
     "Category": "Category",
     "Check your email. Link password reset sent": "Check your email. Link password reset sent",
+    "Childs": "Childs",
     "Close": "Close",
     "Code": "Code",
     "Comunicate with our team by contact message way because we have a problem with your confirmation.": "Comunicate with our team by contact message way because we have a problem with your confirmation.",
@@ -79435,11 +80763,15 @@ module.exports = {
     "Current Password": "Current Password",
     "Dashboard": "Dashboard",
     "Date": "Date",
+    "Date In": "Date In",
+    "Date Out": "Date Out",
     "Delete": "Delete",
     "Delete API Token": "Delete API Token",
     "Delete Account": "Delete Account",
     "Delete Post": "Delete Post",
+    "Delete Reservation": "Delete Reservation",
     "Delete Team": "Delete Team",
+    "Delete notification- ": "Delete notification- ",
     "Disable": "Disable",
     "Done.": "Done.",
     "E-Mail Address": "E-Mail Address",
@@ -79471,6 +80803,7 @@ module.exports = {
     "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.": "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.",
     "If you did not create an account, no further action is required.": "If you did not create an account, no further action is required.",
     "If you did not make a pre-reservation, no further action is required.": "If you did not make a pre-reservation, no further action is required.",
+    "If you did not make this operation, no further action is required.": "If you did not make this operation, no further action is required.",
     "If you did not receive the email": "If you did not receive the email",
     "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
     "If you did not subscribe link this url for unsubscribe": "If you did not subscribe link this url for unsubscribe",
@@ -79506,7 +80839,9 @@ module.exports = {
     "New Post": "New Post",
     "Newsletter ": "Newsletter ",
     "None Post added yet": "None Post added yet",
+    "None reservation added yet": "None reservation added yet",
     "Not Found": "Not Found",
+    "Notification": "Notification",
     "Oh no": "Oh no",
     "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.": "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.",
     "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.": "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.",
@@ -79518,6 +80853,7 @@ module.exports = {
     "Permanently delete this team.": "Permanently delete this team.",
     "Permanently delete your account.": "Permanently delete your account.",
     "Permissions": "Permissions",
+    "Persons": "Persons",
     "Photo": "Photo",
     "Please click the button below to verify your email address.": "Please click the button below to verify your email address.",
     "Please confirm access to your account by entering one of your emergency recovery codes.": "Please confirm access to your account by entering one of your emergency recovery codes.",
@@ -79571,6 +80907,7 @@ module.exports = {
     "Request Contact ": "Request Contact ",
     "Resend Verification Email": "Resend Verification Email",
     "Reservation Confirmed succefully. Thank you!": "Reservation Confirmed succefully. Thank you!",
+    "Reserve": "Reserve",
     "Reset Password": "Reset Password",
     "Reset Password Notification": "Reset Password Notification",
     "Reset Password Notification- ": "Reset Password Notification- ",
@@ -79677,6 +81014,8 @@ module.exports = {
     "You can not book because that dates has been booked by someone else. Sorry, try another dates": "You can not book, because that dates has been booked by someone else. Sorry, try another dates",
     "You cannot leave empty fields, please check": "You cannot leave empty fields, please check",
     "You have enabled two factor authentication.": "You have enabled two factor authentication.",
+    "You have just deleted a reservation, a notification must be send to your email.": "You have just deleted a reservation, a notification must be send to your email.",
+    "You have just deleted a reservation, a notification must be send to your email. But in this moment we present this problem with the email send: ": "You have just deleted a reservation, a notification must be send to your email. But in this moment we present this problem with the email send: ",
     "You have made a pre-reservation at our hostel, we will be very happy to welcome you home. To continue with the missing details, please access the link below:": "You have made a pre-reservation at our hostel, we will be very happy to welcome you home. To continue with the missing details, please access the link below:",
     "You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment": "You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment",
     "You have not enabled two factor authentication.": "You have not enabled two factor authentication.",
@@ -79687,6 +81026,7 @@ module.exports = {
     "You may not leave a team that you created.": "You may not leave a team that you created.",
     "You must receive in your email a link that you must access to continue with the password change": "You must receive in your email a link that you must access to continue with the password change",
     "You must receive in your email a link that you must access to continue with the user register": "You must receive in your email a link that you must access to continue with the user register",
+    "You receive this email because you just deleted a reservation: ": "You receive this email because you just deleted a reservation: ",
     "Your email address is not verified.": "Your email address is not verified.",
     "Your message": "Your message",
     "Your register is almost ready": "Your register is almost ready",
@@ -79834,6 +81174,7 @@ module.exports = {
     "About us": "Nosotros",
     "Account User": "Cuenta de Usuario",
     "Accounts": "Cuentas",
+    "Actives": "Activas",
     "Add": "Agregar",
     "Add Team Member": "Agregar miembro al equipo",
     "Add a new Tag": "A\xF1ada nueva etiqueta",
@@ -79846,10 +81187,12 @@ module.exports = {
     "Administrator": "Administrador",
     "Administrator users can perform any action.": "Los administradores pueden realizar cualquier acci\xF3n.",
     "Adress": "Direcci\xF3n",
+    "All": "Todas",
     "All of the people that are part of this team.": "Todas las personas que forman parte de este equipo.",
     "All rights reserved.": "Todos los derechos reservados.",
     "Already registered?": "Ya se registr\xF3?",
     "Amount": "Precio",
+    "Are you completely sure you want to delete ": "Est\xE1 completamente seguro que desea borrar ",
     "Are you completely sure you want to delete the post": "Est\xE1 completamente seguro que desea borrar el post",
     "Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be permanently deleted.": "\xBFEst\xE1 seguro que desea eliminar este equipo? Una vez que se elimina un equipo, todos sus recursos y datos se eliminar\xE1n de forma permanente.",
     "Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "\xBFEst\xE1 seguro que desea eliminar su cuenta? Una vez que se elimine su cuenta, todos sus recursos y datos se eliminar\xE1n de forma permanente. Ingrese su contrase\xF1a para confirmar que desea eliminar su cuenta de forma permanente.",
@@ -79863,12 +81206,14 @@ module.exports = {
     "Book": "Reservar",
     "Book Now!": "Haga su reserva AHORA!",
     "Bookers": "Reservas",
+    "Books": "Reservas",
     "Browser Sessions": "Sesiones del navegador",
     "CLose Places": "Lugares Cerca",
     "Cancel": "Cancelar",
     "Cash": "Moneda",
     "Category": "Categor\xEDa",
     "Check your email. Link password reset sent": "Revise su email. Link de reseteo de contrase\xF1a enviado",
+    "Childs": "Ni\xF1os",
     "Close": "Cerrar",
     "Code": "C\xF3digo",
     "Comunicate with our team by contact message way because we have a problem with your confirmation.": "Comun\xEDquese con nuestro equipo por mensage de contacto porque tuvimos un problema confirmando su reserva.",
@@ -79889,11 +81234,15 @@ module.exports = {
     "Current Password": "Contrase\xF1a actual",
     "Dashboard": "Panel",
     "Date": "Fecha",
+    "Date In": "Fecha de Entrada",
+    "Date Out": "Fecha de Salida",
     "Delete": "Eliminar",
     "Delete API Token": "Borrar token API",
     "Delete Account": "Borrar cuenta",
     "Delete Post": "Eliminar Post",
+    "Delete Reservation": "Eliminar Reservaci\xF3n",
     "Delete Team": "Borrar equipo",
+    "Delete notification- ": "Notificaci\xF3n de eliminaci\xF3n- ",
     "Disable": "Inhabilitar",
     "Done.": "Hecho.",
     "E-Mail Address": "Correo Electr\xF3nico",
@@ -79925,6 +81274,7 @@ module.exports = {
     "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.": "Si es necesario, puede salir de todas las dem\xE1s sesiones de otros navegadores en todos sus dispositivos. Si cree que su cuenta se ha visto comprometida, tambi\xE9n deber\xEDa actualizar su contrase\xF1a.",
     "If you did not create an account, no further action is required.": "Si no ha creado una cuenta, no se requiere ninguna acci\xF3n adicional.",
     "If you did not make a pre-reservation, no further action is required.": "Si no ha realizado una pre-reservaci\xF3n, omita este mensaje de correo electr\xF3nico.",
+    "If you did not make this operation, no further action is required.": "Si usted no realiz\xF3 esta operaci\xF3n, no se requiere ninguna otra acci\xF3n.",
     "If you did not receive the email": "Si no ha recibido el correo electr\xF3nico",
     "If you did not request a password reset, no further action is required.": "Si no ha solicitado el restablecimiento de contrase\xF1a, omita este mensaje de correo electr\xF3nico.",
     "If you did not subscribe link this url for unsubscribe": "Si usted no se ha suscripto, por favor vaya al link que dejamos aqu\xED para notificar el error",
@@ -79960,7 +81310,9 @@ module.exports = {
     "New Post": "Crear Post",
     "Newsletter ": "Noticias ",
     "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
+    "None reservation added yet": "Ninguna reserva a\xF1adida a\xFAn",
     "Not Found": "No encontrado",
+    "Notification": "Notificaci\xF3n",
     "Oh no": "Ay no",
     "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.": "Una vez que se elimina un equipo, todos sus recursos y datos se eliminar\xE1n de forma permanente. Antes de eliminar este equipo, descargue cualquier dato o informaci\xF3n sobre este equipo que desee conservar.",
     "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.": "Una vez su cuenta sea borrada, todos sus recursos y datos se eliminar\xE1n de forma permanente. Antes de borrar su cuenta, por favor descargue cualquier dato o informaci\xF3n que desee conservar.",
@@ -79972,6 +81324,7 @@ module.exports = {
     "Permanently delete this team.": "Borrar este equipo de forma permanente",
     "Permanently delete your account.": "Borre su cuenta de forma permanente.",
     "Permissions": "Permisos",
+    "Persons": "Personas",
     "Photo": "Foto",
     "Please click the button below to verify your email address.": "Por favor, haga clic en el bot\xF3n de abajo para verificar su direcci\xF3n de correo electr\xF3nico.",
     "Please confirm access to your account by entering one of your emergency recovery codes.": "Por favor confirme el acceso a su cuenta ingresando uno de sus c\xF3digos de recuperaci\xF3n de emergencia.",
@@ -80025,6 +81378,7 @@ module.exports = {
     "Request Contact ": "Petici\xF3n de contacto ",
     "Resend Verification Email": "Reenviar correo de verificaci\xF3n",
     "Reservation Confirmed succefully. Thank you!": "Reservaci\xF3n Confirmada satisfactoriamente. Gracias!",
+    "Reserve": "Reservar",
     "Reset Password": "Restablecer Contrase\xF1a",
     "Reset Password Notification": "Notificaci\xF3n de restablecimiento de contrase\xF1a",
     "Reset Password Notification- ": "Notificaci\xF3n de restablecimiento de contrase\xF1a- ",
@@ -80131,6 +81485,8 @@ module.exports = {
     "You can not book because that dates has been booked by someone else. Sorry, try another dates": "Usted no puede reservar porque esa fecha ha sido reservada por otra persona. Lo siento, pruebe con otras fechas",
     "You cannot leave empty fields, please check": "No puede dejar campos vac\xEDos, revise por favor",
     "You have enabled two factor authentication.": "Has habilitado la autenticaci\xF3n de dos factores.",
+    "You have just deleted a reservation, a notification must be send to your email.": "Usted acaba de eliminar una reserva, una notificaci\xF3n debe ser enviada a su email.",
+    "You have just deleted a reservation, a notification must be send to your email. But in this moment we present this problem with the email send: ": "Usted acaba de eliminar una reserva, una notificaci\xF3n debe ser enviada a su email.Pero en este momento estamos presentando este problema con el env\xEDo del correo: ",
     "You have made a pre-reservation at our hostel, we will be very happy to welcome you home. To continue with the missing details, please access the link below:": "Usted ha efectuado una pre-reserva en nuestro hostal, estaremos muy felices de recibirlos en casa. Para continuar con los detalles que faltan, por favor acceda al link a continuci\xF3n:",
     "You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment": "Usted ha realizado una pre-reserva en nuestro hostal, recivir\xE1 un correo con un link de acceso para su confirmaci\xF3n y pasos a seguir sobre el pago",
     "You have not enabled two factor authentication.": "No has habilitado la autenticaci\xF3n de dos factores.",
@@ -80141,6 +81497,7 @@ module.exports = {
     "You may not leave a team that you created.": "No se puede abandonar un equipo que usted cre\xF3.",
     "You must receive in your email a link that you must access to continue with the password change": "Usted ha de recibir en su email un link al que debe acceder para continuar con el cambio de contrase\xF1a",
     "You must receive in your email a link that you must access to continue with the user register": "Usted ha de recibir en su email un link al que debe acceder para continuar con el registro de usuario",
+    "You receive this email because you just deleted a reservation: ": "Usted recibe este email porque acaba de eliminar una reserva: ",
     "Your email address is not verified.": "Su direcci\xF3n de correo electr\xF3nico no est\xE1 verificada.",
     "Your message": "Su mensaje",
     "Your register is almost ready": "Su cuenta est\xE1 casi lista",
@@ -80172,6 +81529,7 @@ module.exports = {
     "About us": "Nosotros",
     "Account User": "Cuenta de Usuario",
     "Accounts": "Cuentas",
+    "Actives": "Activas",
     "Add": "Agregar",
     "Add Team Member": "Agregar miembro al equipo",
     "Add a new Tag": "A\xF1ada nueva etiqueta",
@@ -80184,10 +81542,12 @@ module.exports = {
     "Administrator": "Administrador",
     "Administrator users can perform any action.": "Los administradores pueden realizar cualquier acci\xF3n.",
     "Adress": "Direcci\xF3n",
+    "All": "Todas",
     "All of the people that are part of this team.": "Todas las personas que forman parte de este equipo.",
     "All rights reserved.": "Todos los derechos reservados.",
     "Already registered?": "Ya se registr\xF3?",
     "Amount": "Precio",
+    "Are you completely sure you want to delete ": "Est\xE1 completamente seguro que desea borrar ",
     "Are you completely sure you want to delete the post": "Est\xE1 completamente seguro que desea borrar el post",
     "Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be permanently deleted.": "\xBFEst\xE1 seguro que desea eliminar este equipo? Una vez que se elimina un equipo, todos sus recursos y datos se eliminar\xE1n de forma permanente.",
     "Are you sure you want to delete your account? Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.": "\xBFEst\xE1 seguro que desea eliminar su cuenta? Una vez que se elimine su cuenta, todos sus recursos y datos se eliminar\xE1n de forma permanente. Ingrese su contrase\xF1a para confirmar que desea eliminar su cuenta de forma permanente.",
@@ -80202,11 +81562,13 @@ module.exports = {
     "Book": "Reservar",
     "Book Now!": "Haga su reserva AHORA!",
     "Bookers": "Reservas",
+    "Books": "Reservas",
     "Browser Sessions": "Sesiones del navegador",
     "CONTACT US": "CONTACTE",
     "Cancel": "Cancelar",
     "Cash": "Moneda",
     "Check your email. Link password reset sent": "Revise su email. Link de reseteo de contrase\xF1a enviado",
+    "Childs": "Ni\xF1os",
     "Close": "Cerrar",
     "Code": "C\xF3digo",
     "Comunicate with our team by contact message way because we have a problem with your confirmation.": "Comun\xEDquese con nuestro equipo por mensage de contacto porque tuvimos un problema confirmando su reserva.",
@@ -80227,11 +81589,15 @@ module.exports = {
     "Current Password": "Contrase\xF1a actual",
     "Dashboard": "Panel",
     "Date": "Fecha",
+    "Date In": "Fecha de Entrada",
+    "Date Out": "Fecha de Salida",
     "Delete": "Eliminar",
     "Delete API Token": "Borrar token API",
     "Delete Account": "Borrar cuenta",
     "Delete Post": "Eliminar Post",
+    "Delete Reservation": "Eliminar Reservaci\xF3n",
     "Delete Team": "Borrar equipo",
+    "Delete notification- ": "Notificaci\xF3n de eliminaci\xF3n- ",
     "Disable": "Inhabilitar",
     "Do you know what differentiates us from the rest of the great community of hostels that exist in Trinidad? Surely you will think that there we go with new old women that everyone says": "Sabe qu\xE9 nos diferencia del resto de la gran comunidad de hostales que existen en Trinidad? Seguro pensar\xE1s que all\xE1 vamos con nuevas viejas que todos dicen",
     "Don't forget the": "No olvide la",
@@ -80262,6 +81628,7 @@ module.exports = {
     "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.": "Si es necesario, puede salir de todas las dem\xE1s sesiones de otros navegadores en todos sus dispositivos. Si cree que su cuenta se ha visto comprometida, tambi\xE9n deber\xEDa actualizar su contrase\xF1a.",
     "If you did not create an account, no further action is required.": "Si no ha creado una cuenta, no se requiere ninguna acci\xF3n adicional.",
     "If you did not make a pre-reservation, no further action is required.": "Si no ha realizado una pre-reservaci\xF3n, omita este mensaje de correo electr\xF3nico.",
+    "If you did not make this operation, no further action is required.": "Si usted no realiz\xF3 esta operaci\xF3n, no se requiere ninguna otra acci\xF3n.",
     "If you did not receive the email": "Si no ha recibido el correo electr\xF3nico",
     "If you did not request a password reset, no further action is required.": "Si no ha solicitado el restablecimiento de contrase\xF1a, omita este mensaje de correo electr\xF3nico.",
     "If you did not subscribe link this url for unsubscribe": "Si usted no se ha suscripto, por favor vaya al link que dejamos aqu\xED para notificar el error",
@@ -80293,7 +81660,9 @@ module.exports = {
     "New Password": "Nueva contrase\xF1a",
     "Newsletter ": "Noticias ",
     "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
+    "None reservation added yet": "Ninguna reserva a\xF1adida a\xFAn",
     "Not Found": "No encontrado",
+    "Notification": "Notificaci\xF3n",
     "Oh no": "Ay no",
     "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.": "Una vez que se elimina un equipo, todos sus recursos y datos se eliminar\xE1n de forma permanente. Antes de eliminar este equipo, descargue cualquier dato o informaci\xF3n sobre este equipo que desee conservar.",
     "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.": "Una vez su cuenta sea borrada, todos sus recursos y datos se eliminar\xE1n de forma permanente. Antes de borrar su cuenta, por favor descargue cualquier dato o informaci\xF3n que desee conservar.",
@@ -80305,6 +81674,7 @@ module.exports = {
     "Permanently delete this team.": "Borrar este equipo de forma permanente",
     "Permanently delete your account.": "Borre su cuenta de forma permanente.",
     "Permissions": "Permisos",
+    "Persons": "Personas",
     "Photo": "Foto",
     "Please click the button below to verify your email address.": "Por favor, haga clic en el bot\xF3n de abajo para verificar su direcci\xF3n de correo electr\xF3nico.",
     "Please confirm access to your account by entering one of your emergency recovery codes.": "Por favor confirme el acceso a su cuenta ingresando uno de sus c\xF3digos de recuperaci\xF3n de emergencia.",
@@ -80335,6 +81705,7 @@ module.exports = {
     "Request Contact ": "Petici\xF3n de contacto ",
     "Resend Verification Email": "Reenviar correo de verificaci\xF3n",
     "Reservation Confirmed succefully. Thank you!": "Reservaci\xF3n Confirmada satisfactoriamente. Gracias!",
+    "Reserve": "Reservar",
     "Reset Password": "Restablecer Contrase\xF1a",
     "Reset Password Notification": "Notificaci\xF3n de restablecimiento de contrase\xF1a",
     "Reset Password Notification- ": "Notificaci\xF3n de restablecimiento de contrase\xF1a- ",
@@ -80439,6 +81810,8 @@ module.exports = {
     "You are receiving this email because we received a password reset request for your account.": "Ha recibido este mensaje porque se solicit\xF3 un restablecimiento de contrase\xF1a para su cuenta.",
     "You can not book because that dates has been booked by someone else. Sorry, try another dates": "Usted no puede reservar porque esa fecha ha sido reservada por otra persona. Lo siento, pruebe con otras fechas",
     "You have enabled two factor authentication.": "Has habilitado la autenticaci\xF3n de dos factores.",
+    "You have just deleted a reservation, a notification must be send to your email.": "Usted acaba de eliminar una reserva, una notificaci\xF3n debe ser enviada a su email.",
+    "You have just deleted a reservation, a notification must be send to your email. But in this moment we present this problem with the email send: ": "Usted acaba de eliminar una reserva, una notificaci\xF3n debe ser enviada a su email.Pero en este momento estamos presentando este problema con el env\xEDo del correo: ",
     "You have made a pre-reservation at our hostel, we will be very happy to welcome you home. To continue with the missing details, please access the link below:": "Usted ha efectuado una pre-reserva en nuestro hostal, estaremos muy felices de recibirlos en casa. Para continuar con los detalles que faltan, por favor acceda al link a continuci\xF3n:",
     "You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment": "Usted ha realizado una pre-reserva en nuestro hostal, recivir\xE1 un correo con un link de acceso para su confirmaci\xF3n y pasos a seguir sobre el pago",
     "You have not enabled two factor authentication.": "No has habilitado la autenticaci\xF3n de dos factores.",
@@ -80449,6 +81822,7 @@ module.exports = {
     "You may not leave a team that you created.": "No se puede abandonar un equipo que usted cre\xF3.",
     "You must receive in your email a link that you must access to continue with the password change": "Usted ha de recibir en su email un link al que debe acceder para continuar con el cambio de contrase\xF1a",
     "You must receive in your email a link that you must access to continue with the user register": "Usted ha de recibir en su email un link al que debe acceder para continuar con el registro de usuario",
+    "You receive this email because you just deleted a reservation": "Usted recibe este email porque acaba de eliminar una reserva",
     "Your email address is not verified.": "Su direcci\xF3n de correo electr\xF3nico no est\xE1 verificada.",
     "Your message": "Su mensaje",
     "Your register is almost ready": "Su cuenta est\xE1 casi lista",

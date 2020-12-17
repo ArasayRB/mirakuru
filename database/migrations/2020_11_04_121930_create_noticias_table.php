@@ -21,7 +21,7 @@ class CreateNoticiasTable extends Migration
             $table->integer('cant_access_read')->nullable();
             $table->integer('cant_likes')->nullable();
             $table->integer('cant_shares')->nullable();
-            $table->string('img_url')->default('storage/img_web/news_img/newFoto.jpg');
+            $table->string('img_url')->default('newFoto.jpg');
             $table->string('video_url')->nullable();
             $table->string('qr_img_url')->nullable();
             $table->unsignedBigInteger('tema_id');

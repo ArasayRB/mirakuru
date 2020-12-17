@@ -1,5 +1,5 @@
 <header>
-  <img src="{{ asset('/storage/img_web/posts_img/'.$post->img_url) }}" class="img-fluid mx-auto d-block">
+  <img src="{{ asset('images/img/topeheader.jpg') }}" class="img-fluid mx-auto d-block">
 </header>
 <nav class="navbar sticky-top navbar-expand-md bg-primary navbar-dark">
 <a href="#" class="navbar-brand"><img src="/images/img/favicon_white.ico" alt=""></a>
@@ -32,7 +32,7 @@
           </a>
 
           <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="#reserva">
+            <a class="dropdown-item" href="/#reserva">
                 {{ __('Reserve') }}
             </a>
               <a class="dropdown-item" href="{{ route('active-books',['user_id'=>Auth::user()->id]) }}">
@@ -63,6 +63,7 @@
             </a>
         </div>
     </li>
+
                     @if ((Auth::user()->hasRole('admin')==true)||(Auth::user()->hasRole('review-content')==true)||(Auth::user()->hasRole('writer-content')==true)||(Auth::user()->hasRole('public-content')==true))
                         <li class="nav-item"><a href="/admin" class="nav-link text-light">{{__('Dashboard')}}</a></li>
 
