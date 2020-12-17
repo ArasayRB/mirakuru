@@ -140,6 +140,7 @@ return [
   "Manage Role"=> "Manage Role",
   "Manage User"=> "Manage User",
   "Manage Team"=> "Manage Team",
+  "Message sended"=>"Message sended",
   "Mirakuru Gran Familia Hostal. Reset Password Notification"=>"Mirakuru Gran Familia Hostal. Reset Password Notification",
   "Mobile Phone"=> "Mobile Phone",
   "Name"=> "Name",
@@ -320,6 +321,7 @@ return [
   "Welcome to our hostal web"=>"Welcome to our hostal web",
   "Yes, delete"=>"Yes, delete",
   "You are logged in!"=> "You are logged in!",
+  "You go to receive an answare as soon like be possible!"=>"You go to receive an answare as soon like be possible!",
   "You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment"=>"You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment",
   "You have successfully logged in"=>"You have successfully logged in",
   "You have successfully registered"=>"You have successfully registered",
@@ -340,5 +342,7 @@ return [
   "You must receive in your email a link that you must access to continue with the password change"=>"You must receive in your email a link that you must access to continue with the password change",
   "You must receive in your email a link that you must access to continue with the user register"=>"You must receive in your email a link that you must access to continue with the user register",
   "Your message"=>"Your message",
+  "You sended succefully this contact message to hoster: "=>"You sended succefully this contact message to hoster: ",
+  "You go to receive very soon an answare."=>"You go to receive very soon an answare.",
   "You receive this email because you just deleted a reservation: "=>"You receive this email because you just deleted a reservation: ",
 ];

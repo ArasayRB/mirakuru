@@ -3071,6 +3071,136 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      email: this.$attrs.email,
+      name: '',
+      mensage: '',
+      ventanaContact: false,
+      token: window.CSRF_TOKEN
+    };
+  },
+  methods: {
+    contact: function contact() {
+      var _this = this;
+
+      var url = "/contact";
+      var mensaje = this.$trans('messages.Unidentified error');
+
+      if (this.email == '' || this.name == '' || this.mensage == '') {
+        mensaje = this.$trans('messages.You cannot leave empty fields, please check');
+      }
+
+      var data = new FormData();
+      data.append("email", this.email);
+      data.append("name", this.name);
+      data.append("token", this.token);
+      data.append("mensage", this.mensage);
+      data.append("hostal_id", 'Hostal Mirakuru Gran Familia');
+      axios.post(url, data).then(function (response) {
+        var contact = response.data;
+        _this.ventanaContact = false;
+        swal({
+          title: _this.$trans('messages.Message sended'),
+          text: _this.$trans('messages.You go to receive an answare as soon like be possible!'),
+          icon: 'success',
+          closeOnClickOutside: false,
+          closeOnEsc: false
+        }); //console.log(response);
+      })["catch"](function (error) {
+        if (error.response.data.message) {
+          swal('Error', '' + error.response.data.message, 'error');
+        }
+
+        var wrong = error.response.data.errors;
+
+        if (wrong.hasOwnProperty('email')) {
+          mensaje += '-' + wrong.email[0];
+        }
+
+        swal('Error', mensaje, 'error'); //console.log(error.response.data);
+      }); //alert('Hola');
+    }
+  },
+  mounted: function mounted() {
+    this.blockedDays = {
+      'start': null,
+      'end': new Date()
+    };
+
+    if (this.$attrs.locale) {
+      this.$lang.setLocale(this.$attrs.locale);
+    } else {
+      this.$lang.setLocale('en');
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/NewsletterComponent.vue?vue&type=script&lang=js&":
 /*!************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/NewsletterComponent.vue?vue&type=script&lang=js& ***!
@@ -65262,6 +65392,273 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=template&id=a7b3df40&":
+/*!********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=template&id=a7b3df40& ***!
+  \********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "transition",
+    { staticClass: "modal fade pt-5", attrs: { id: "contactoModal" } },
+    [
+      _c("div", { staticClass: "modal-mask" }, [
+        _c("div", { staticClass: "modal-wrapper" }, [
+          _c("div", { staticClass: "modal-container" }, [
+            _c(
+              "div",
+              { staticClass: "modal-header" },
+              [
+                _vm._t("default", [
+                  _c("div", { staticClass: "col justify-content-center" }, [
+                    _c("div", {}, [
+                      _c("h1", { staticClass: "text-center text-dark" }, [
+                        _vm._v(_vm._s(_vm.$trans("messages.Contact")))
+                      ])
+                    ])
+                  ])
+                ])
+              ],
+              2
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "modal-body" },
+              [
+                _vm._t("default", [
+                  _c("div", { staticClass: "row justify-content-center" }, [
+                    _c("div", { staticClass: "col-6" }, [
+                      _c("form", { attrs: { id: "form-contacto" } }, [
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.email,
+                              expression: "email"
+                            }
+                          ],
+                          staticClass: "form-control font-italic mt-5",
+                          attrs: {
+                            type: "text",
+                            placeholder: "Email/Correo..."
+                          },
+                          domProps: { value: _vm.email },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.email = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.name,
+                              expression: "name"
+                            }
+                          ],
+                          staticClass: "form-control font-italic mt-2",
+                          attrs: {
+                            type: "text",
+                            placeholder: "Name/Nombre..."
+                          },
+                          domProps: { value: _vm.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.name = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("textarea", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.mensage,
+                              expression: "mensage"
+                            }
+                          ],
+                          staticClass: "form-control font-italic mt-2",
+                          attrs: {
+                            name: "mensaje",
+                            id: "",
+                            cols: "33",
+                            rows: "2",
+                            placeholder: "Your message/Su mensaje..."
+                          },
+                          domProps: { value: _vm.mensage },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.mensage = $event.target.value
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-primary rounded btn-lg mt-3",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.contact()
+                              }
+                            }
+                          },
+                          [_vm._v(_vm._s(_vm.$trans("messages.Send")))]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn btn-danger rounded btn-lg mt-3",
+                            attrs: { type: "button" },
+                            on: {
+                              click: function($event) {
+                                return _vm.$emit("close")
+                              }
+                            }
+                          },
+                          [_vm._v(_vm._s(_vm.$trans("messages.Close")))]
+                        )
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-6" }, [
+                      _c("section", { staticClass: "info-contact" }, [
+                        _c("div", { staticClass: "container mt-5" }, [
+                          _c("div", { staticClass: "tel-fijo" }, [
+                            _c("p", [
+                              _c(
+                                "mark",
+                                { staticClass: "bg-dark text-light" },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.$trans("messages.Landline")) +
+                                      ": "
+                                  ),
+                                  _c("br")
+                                ]
+                              ),
+                              _vm._v("+53-41993797")
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "movil" }, [
+                            _c("p", [
+                              _c(
+                                "mark",
+                                { staticClass: "bg-dark text-light" },
+                                [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.$trans("messages.Mobile Phone")
+                                    ) + " Arasay: "
+                                  ),
+                                  _c("br")
+                                ]
+                              ),
+                              _vm._v("+53-53419001")
+                            ]),
+                            _vm._v(" "),
+                            _c("p", [
+                              _c(
+                                "mark",
+                                { staticClass: "bg-dark text-light" },
+                                [
+                                  _vm._v(
+                                    _vm._s(
+                                      _vm.$trans("messages.Mobile Phone")
+                                    ) + " Youblián: "
+                                  ),
+                                  _c("br")
+                                ]
+                              ),
+                              _vm._v("+53-52474269")
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "email" }, [
+                            _c("p", [
+                              _c(
+                                "mark",
+                                { staticClass: "bg-dark text-light" },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.$trans("messages.Email")) + ": "
+                                  ),
+                                  _c("br")
+                                ]
+                              ),
+                              _vm._v("hostalgranfamilia@gmail.com")
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "direc" }, [
+                            _c("p", [
+                              _c(
+                                "mark",
+                                { staticClass: "bg-dark text-light" },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.$trans("messages.Adress")) + ": "
+                                  ),
+                                  _c("br")
+                                ]
+                              ),
+                              _vm._v(
+                                _vm._s(
+                                  _vm.$trans(
+                                    "messages.At 180A Camilo Cienfuegos, between José Martí and Miguel Calzada street. Trinidad, Sancti Spíritus, Cuba. PC: 62600"
+                                  )
+                                )
+                              )
+                            ])
+                          ])
+                        ])
+                      ])
+                    ])
+                  ])
+                ])
+              ],
+              2
+            )
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/NewsletterComponent.vue?vue&type=template&id=59360eee&":
 /*!****************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/NewsletterComponent.vue?vue&type=template&id=59360eee& ***!
@@ -79882,6 +80279,7 @@ Vue.use(vue_localstorage__WEBPACK_IMPORTED_MODULE_1___default.a);
 Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_6__["default"]);
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('reservar-hostal-component', __webpack_require__(/*! ./components/forms/ReservarHostalComponent.vue */ "./resources/js/components/forms/ReservarHostalComponent.vue")["default"]);
+Vue.component('contacto-hostal-component', __webpack_require__(/*! ./components/forms/ContactoHostalComponent.vue */ "./resources/js/components/forms/ContactoHostalComponent.vue")["default"]);
 Vue.component('reservado-hostal-component', __webpack_require__(/*! ./components/forms/ReservadoHostalComponent.vue */ "./resources/js/components/forms/ReservadoHostalComponent.vue")["default"]);
 Vue.component('newsletter-component', __webpack_require__(/*! ./components/forms/NewsletterComponent.vue */ "./resources/js/components/forms/NewsletterComponent.vue")["default"]);
 Vue.component('login-form-component', __webpack_require__(/*! ./components/forms/auth/LoginFormComponent.vue */ "./resources/js/components/forms/auth/LoginFormComponent.vue")["default"]);
@@ -79903,6 +80301,7 @@ var app = new Vue({
       email: '',
       password: '',
       ventanaLogin: '',
+      ventanaContact: '',
       ventanaRegister: '',
       ventanaResetEmail: '',
       ventanaCreatPost: '',
@@ -80261,6 +80660,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_indexPostComponent_vue_vue_type_template_id_40227edc___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_indexPostComponent_vue_vue_type_template_id_40227edc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/ContactoHostalComponent.vue":
+/*!*******************************************************************!*\
+  !*** ./resources/js/components/forms/ContactoHostalComponent.vue ***!
+  \*******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ContactoHostalComponent_vue_vue_type_template_id_a7b3df40___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ContactoHostalComponent.vue?vue&type=template&id=a7b3df40& */ "./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=template&id=a7b3df40&");
+/* harmony import */ var _ContactoHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ContactoHostalComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ContactoHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ContactoHostalComponent_vue_vue_type_template_id_a7b3df40___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ContactoHostalComponent_vue_vue_type_template_id_a7b3df40___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/forms/ContactoHostalComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************!*\
+  !*** ./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactoHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactoHostalComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactoHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=template&id=a7b3df40&":
+/*!**************************************************************************************************!*\
+  !*** ./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=template&id=a7b3df40& ***!
+  \**************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactoHostalComponent_vue_vue_type_template_id_a7b3df40___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContactoHostalComponent.vue?vue&type=template&id=a7b3df40& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=template&id=a7b3df40&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactoHostalComponent_vue_vue_type_template_id_a7b3df40___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContactoHostalComponent_vue_vue_type_template_id_a7b3df40___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -80831,6 +81299,7 @@ module.exports = {
     "Manage Team": "Manage Team",
     "Manage User": "Manage User",
     "Manage and logout your active sessions on other browsers and devices.": "Manage and logout your active sessions on other browsers and devices.",
+    "Message sended": "Message sended",
     "Mirakuru Gran Familia Hostal. Reset Password Notification": "Mirakuru Gran Familia Hostal. Reset Password Notification",
     "Mobile Phone": "Mobile Phone",
     "Name": "Name",
@@ -81013,6 +81482,8 @@ module.exports = {
     "You are receiving this email because we received a password reset request for your account.": "You are receiving this email because we received a password reset request for your account.",
     "You can not book because that dates has been booked by someone else. Sorry, try another dates": "You can not book, because that dates has been booked by someone else. Sorry, try another dates",
     "You cannot leave empty fields, please check": "You cannot leave empty fields, please check",
+    "You go to receive an answare as soon like be possible!": "You go to receive an answare as soon like be possible!",
+    "You go to receive very soon an answare.": "You go to receive very soon an answare.",
     "You have enabled two factor authentication.": "You have enabled two factor authentication.",
     "You have just deleted a reservation, a notification must be send to your email.": "You have just deleted a reservation, a notification must be send to your email.",
     "You have just deleted a reservation, a notification must be send to your email. But in this moment we present this problem with the email send: ": "You have just deleted a reservation, a notification must be send to your email. But in this moment we present this problem with the email send: ",
@@ -81027,6 +81498,7 @@ module.exports = {
     "You must receive in your email a link that you must access to continue with the password change": "You must receive in your email a link that you must access to continue with the password change",
     "You must receive in your email a link that you must access to continue with the user register": "You must receive in your email a link that you must access to continue with the user register",
     "You receive this email because you just deleted a reservation: ": "You receive this email because you just deleted a reservation: ",
+    "You sended succefully this contact message to hoster: ": "You sended succefully this contact message to hoster: ",
     "Your email address is not verified.": "Your email address is not verified.",
     "Your message": "Your message",
     "Your register is almost ready": "Your register is almost ready",
@@ -81302,6 +81774,7 @@ module.exports = {
     "Manage Team": "Administrar equipo",
     "Manage User": "Administrar usuario",
     "Manage and logout your active sessions on other browsers and devices.": "Administre y cierre sus sesiones activas en otros navegadores y dispositivos.",
+    "Message sended": "Mensage enviado",
     "Mirakuru Gran Familia Hostal. Reset Password Notification": "Hostal Mirakuru Gran Familia. Notificaci\xF3n de cambio de contrase\xF1a",
     "Mobile Phone": "Tel\xE9fono M\xF3vil",
     "Name": "Nombre",
@@ -81484,6 +81957,8 @@ module.exports = {
     "You are receiving this email because we received a password reset request for your account.": "Ha recibido este mensaje porque se solicit\xF3 un restablecimiento de contrase\xF1a para su cuenta.",
     "You can not book because that dates has been booked by someone else. Sorry, try another dates": "Usted no puede reservar porque esa fecha ha sido reservada por otra persona. Lo siento, pruebe con otras fechas",
     "You cannot leave empty fields, please check": "No puede dejar campos vac\xEDos, revise por favor",
+    "You go to receive an answare as soon like be possible!": "Usted recibir\xE1 una respuesta tan pronto como sea posible!",
+    "You go to receive very soon an answare.": "Usted recibir\xE1 muy pronto una respuesta.",
     "You have enabled two factor authentication.": "Has habilitado la autenticaci\xF3n de dos factores.",
     "You have just deleted a reservation, a notification must be send to your email.": "Usted acaba de eliminar una reserva, una notificaci\xF3n debe ser enviada a su email.",
     "You have just deleted a reservation, a notification must be send to your email. But in this moment we present this problem with the email send: ": "Usted acaba de eliminar una reserva, una notificaci\xF3n debe ser enviada a su email.Pero en este momento estamos presentando este problema con el env\xEDo del correo: ",
@@ -81498,6 +81973,7 @@ module.exports = {
     "You must receive in your email a link that you must access to continue with the password change": "Usted ha de recibir en su email un link al que debe acceder para continuar con el cambio de contrase\xF1a",
     "You must receive in your email a link that you must access to continue with the user register": "Usted ha de recibir en su email un link al que debe acceder para continuar con el registro de usuario",
     "You receive this email because you just deleted a reservation: ": "Usted recibe este email porque acaba de eliminar una reserva: ",
+    "You sended succefully this contact message to hoster: ": "Usted envi\xF3 satisfactoriamente este email de contacto al anfitr\xF3n: ",
     "Your email address is not verified.": "Su direcci\xF3n de correo electr\xF3nico no est\xE1 verificada.",
     "Your message": "Su mensaje",
     "Your register is almost ready": "Su cuenta est\xE1 casi lista",
@@ -81654,6 +82130,7 @@ module.exports = {
     "Manage Team": "Administrar equipo",
     "Manage User": "Administrar usuario",
     "Manage and logout your active sessions on other browsers and devices.": "Administre y cierre sus sesiones activas en otros navegadores y dispositivos.",
+    "Message sended": "Mensage enviado",
     "Mirakuru Gran Familia Hostal. Reset Password Notification": "Hostal Mirakuru Gran Familia. Notificaci\xF3n de cambio de contrase\xF1a",
     "Name": "Nombre",
     "Nevermind": "Olvidar",
@@ -81809,6 +82286,8 @@ module.exports = {
     "You are receiving a new contact email with content: ": "Usted est\xE1 reciviendo un nuevo email de contacto con el contenido: ",
     "You are receiving this email because we received a password reset request for your account.": "Ha recibido este mensaje porque se solicit\xF3 un restablecimiento de contrase\xF1a para su cuenta.",
     "You can not book because that dates has been booked by someone else. Sorry, try another dates": "Usted no puede reservar porque esa fecha ha sido reservada por otra persona. Lo siento, pruebe con otras fechas",
+    "You go to receive an answare as soon like be possible!": "Usted recibir\xE1 una respuesta tan pronto como sea posible!",
+    "You go to receive very soon an answare.": "Usted recibir\xE1 muy pronto una respuesta.",
     "You have enabled two factor authentication.": "Has habilitado la autenticaci\xF3n de dos factores.",
     "You have just deleted a reservation, a notification must be send to your email.": "Usted acaba de eliminar una reserva, una notificaci\xF3n debe ser enviada a su email.",
     "You have just deleted a reservation, a notification must be send to your email. But in this moment we present this problem with the email send: ": "Usted acaba de eliminar una reserva, una notificaci\xF3n debe ser enviada a su email.Pero en este momento estamos presentando este problema con el env\xEDo del correo: ",
@@ -81823,6 +82302,7 @@ module.exports = {
     "You must receive in your email a link that you must access to continue with the password change": "Usted ha de recibir en su email un link al que debe acceder para continuar con el cambio de contrase\xF1a",
     "You must receive in your email a link that you must access to continue with the user register": "Usted ha de recibir en su email un link al que debe acceder para continuar con el registro de usuario",
     "You receive this email because you just deleted a reservation": "Usted recibe este email porque acaba de eliminar una reserva",
+    "You sended succefully this contact message to hoster: ": "Usted envi\xF3 satisfactoriamente este email de contacto al anfitr\xF3n: ",
     "Your email address is not verified.": "Su direcci\xF3n de correo electr\xF3nico no est\xE1 verificada.",
     "Your message": "Su mensaje",
     "Your register is almost ready": "Su cuenta est\xE1 casi lista",

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Foto;
 use App\Models\Habitacion;
+use App\Models\Contacto;
 use App\Models\BlockedDate;
 use App\Models\Keyword;
 use App\Models\Noticia;
@@ -50,6 +51,10 @@ class Hostal extends Model
 
     public function services(){
       return $this->belongsToMany(Servicio::class,'hostal_servicio','hostal_id','servicio_id')->withPivot('cant_personas','active','active_date','inactive_date')->withTimestamps();
+    }
+
+    public function contactos(){
+      return $this->hasMany(Contacto::class)->withTimestamps();
     }
 
     public function blockedDates(){

@@ -140,6 +140,7 @@ return [
   "Manage Role"=> "Administrar rol",
   "Manage User"=> "Administrar usuario",
   "Manage Team"=> "Administrar equipo",
+  "Message sended"=>"Mensage enviado",
   "Mirakuru Gran Familia Hostal. Reset Password Notification"=>"Hostal Mirakuru Gran Familia. Notificación de cambio de contraseña",
   "Mobile Phone"=> "Teléfono Móvil",
   "Name"=> "Nombre",
@@ -320,6 +321,7 @@ return [
   "Welcome to our hostal web"=>"Bienvenido a la web de nuestro hostal",
   "Yes, delete"=>"Sí, elimiinar",
   "You are logged in!"=> "¡Ya iniciaste sesión!",
+  "You go to receive an answare as soon like be possible!"=>"Usted recibirá una respuesta tan pronto como sea posible!",
   "You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment"=>"Usted ha realizado una pre-reserva en nuestro hostal, recivirá un correo con un link de acceso para su confirmación y pasos a seguir sobre el pago",
   "You have successfully logged in"=>"Usted ha iniciado sesión satisfactoriamente",
   "You have successfully registered"=>"Usted se ha registrado satisfactoriamente",
@@ -340,5 +342,7 @@ return [
   "You must receive in your email a link that you must access to continue with the user register"=>"Usted ha de recibir en su email un link al que debe acceder para continuar con el registro de usuario",
   "Your email address is not verified."=> "Su dirección de correo electrónico no está verificada.",
   "Your message"=>"Su mensaje",
+  "You sended succefully this contact message to hoster: "=>"Usted envió satisfactoriamente este email de contacto al anfitrón: ",
+  "You go to receive very soon an answare."=>"Usted recibirá muy pronto una respuesta.",
   "You receive this email because you just deleted a reservation: "=>"Usted recibe este email porque acaba de eliminar una reserva: ",
 ];

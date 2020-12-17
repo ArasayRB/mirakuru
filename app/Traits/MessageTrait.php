@@ -9,20 +9,42 @@ use Notification;
 use App\Notifications\NewsletterNotification;
 use App\Notifications\ConfirmReservaNotification;
 use App\Notifications\DeleteNotification;
+use App\Notifications\ContactoNotification;
 
 trait MessageTrait
 {
     public function contactSend($datos){
+      $email=$datos->email;
+      $contact_id=$datos->id;
 
+                $newsData = [
+                       'name' => Lang::get('Request Contact '.$datos['name'].' ,email: '.$datos['email']),
+                       'email'=>$email,
+                       'body' => Lang::get('You sended succefully this contact message to hoster: '),
+                       'thanks' => Lang::get('Greetings, '. config('app.name')),
+                       'newsText' => Lang::get($datos['mensage']),
+                       'newsText1' => Lang::get('You go to receive very soon an answare.')
+                   ];
 
-      return (new MailMessage)
-         ->subject(Lang::get('Request Contact '.$datos['name'].' ,email: '.$datos['email']))
-         ->to('hostalgranfamilia@gmail.com','Arasay Rodriguez Bastida')
-         ->from($datos['email'],$datos['name'])
-         ->line(Lang::get('You are receiving a new contact email with content: '))
-         ->line(Lang::get($datos['content']))
-         ->line(Lang::get('Please, send an answare as soon like is possible for you.'))
-         ->salutation(Lang::get('Greetings, '. config('app.name')));
+                   Notification::route('mail', $email)
+                                 ->notify(new ContactoNotification($newsData));
+    }
+
+    public function contactHosterSend($datos, $hostal){
+      $email=$hostal[0]->email;
+      $contact_id=$datos->id;
+
+                $newsData = [
+                       'name' => Lang::get('Request Contact '.$datos['name'].' ,email: '.$datos['email']),
+                       'email'=>$email,
+                       'body' => Lang::get('You are receiving a new contact email with content: '),
+                       'thanks' => Lang::get('Greetings, '. config('app.name')),
+                       'newsText' => Lang::get($datos['mensage']),
+                       'newsText1' => Lang::get('Please, send an answare as soon like is possible for you.')
+                   ];
+
+                   Notification::route('mail', $email)
+                                 ->notify(new ContactoNotification($newsData));
     }
 
     public function newsletterSend($suscripcion,$hostal){

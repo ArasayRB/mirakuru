@@ -56,6 +56,7 @@ Vue.use(VueLocalStorage);
 Vue.component('tags-input', VoerroTagsInput);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('reservar-hostal-component', require('./components/forms/ReservarHostalComponent.vue').default);
+Vue.component('contacto-hostal-component', require('./components/forms/ContactoHostalComponent.vue').default);
 Vue.component('reservado-hostal-component', require('./components/forms/ReservadoHostalComponent.vue').default);
 Vue.component('newsletter-component', require('./components/forms/NewsletterComponent.vue').default);
 Vue.component('login-form-component', require('./components/forms/auth/LoginFormComponent.vue').default);
@@ -78,6 +79,7 @@ const app = new Vue({
         email    : '',
         password:'',
         ventanaLogin:'',
+        ventanaContact:'',
         ventanaRegister:'',
         ventanaResetEmail:'',
         ventanaCreatPost:'',

@@ -238,44 +238,13 @@
     <div id="form-contact" class="container">
       <div class="row align-items-center">
         <div class="col d-block w-30"></div>
-        <div class="col w-30"><img src="/images/img/contact1.png" alt="" type="button" class="btn bg-danger rounded-circle px-5 py-5 wow animate__animated animate__heartBeat animate__infinite" data-toggle="modal" data-target="#miModal"></div>
+        <div class="col w-30"><img src="/images/img/contact1.png" alt="" type="button" class="btn bg-danger rounded-circle px-5 py-5 wow animate__animated animate__heartBeat animate__infinite" @click="ventanaContact = true"></div>
         <div class="col d-block w-40"></div>
       </div>
     </div>
   </div>
-  <div class="modal fade" id="miModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-<div class="modal-dialog" role="document">
-<div class="modal-content">
-<div class="modal-header">
- <h4 class="modal-title">{{ __('Contact') }}</h4>
- <button type="button" class="close" data-dismiss="modal">&times;</button>
-</div>
-<div class="modal-body">
- <div class="row justify-content-center">
-   <div class="col-6">
- <form action="" class="">
-     <input type="text" class="form-control font-italic mt-5" placeholder="{{ __('Email') }}...">
-     <input type="text" class="form-control font-italic mt-2" placeholder="{{ __('Name') }}...">
-     <textarea name="mensaje" class="form-control font-italic mt-2" id="" cols="33" rows="2" placeholder="{{ __('Your message') }}..."></textarea>
-    <button type="button" class="btn btn-primary rounded btn-lg mt-3">{{ __('Send') }}</button>
- </form>
- </div>
- <div class="col-6">
- <section class="info-contact">
-   <div class="container mt-5">
-       <div class="tel-fijo"><p><mark class="bg-dark text-light">{{ __('Landline') }}: <br></mark>+53-41993797</p></div>
-       <div class="movil"><p><mark class="bg-dark text-light">{{ __('Mobile Phone') }} Arasay: <br></mark>+53-53419001</p>
-       <p><mark class="bg-dark text-light">{{ __('Mobile Phone') }} Youblián: <br></mark>+53-52474269</p></div>
-       <div class="email"> <p><mark class="bg-dark text-light">{{ __('Email') }}: <br></mark>hostalgranfamilia@gmail.com</p></div>
-       <div class="direc"><p><mark class="bg-dark text-light">{{ __('Adress') }}: <br></mark>{{ __('At 180A Camilo Cienfuegos, between José Martí and Miguel Calzada street. Trinidad, Sancti Spíritus, Cuba. PC: 62600') }}</p></div>
-     </div>
- </section>
- </div>
- </div>
-</div>
-</div>
-</div>
-</div>
+  <contacto-hostal-component v-if="ventanaContact" @close="ventanaContact = false">
+  </contacto-hostal-component>
 </section><!--END Section Contacto-->
 @include('forms.loginForm')
 @include('forms.registerForm')
