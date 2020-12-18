@@ -14,7 +14,9 @@ use App\Models\PublicacionHostal;
 use App\Models\Reserva;
 use App\Models\Servicio;
 use App\Models\Suscripcion;
+use App\Models\ClosePlace;
 use App\Models\User;
+use App\Models\Facility;
 use App\Models\Temporada;
 use Conner\Tagging\Taggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -51,6 +53,14 @@ class Hostal extends Model
 
     public function services(){
       return $this->belongsToMany(Servicio::class,'hostal_servicio','hostal_id','servicio_id')->withPivot('cant_personas','active','active_date','inactive_date')->withTimestamps();
+    }
+
+    public function closePlaces(){
+      return $this->belongsToMany(ClosePlace::class,'close_place_hostal','hostal_id','close_place_id')->withTimestamps();
+    }
+
+    public function facilities(){
+      return $this->belongsToMany(Hostal::class,'facility_hostal','hostal_id','facility_id')->withTimestamps();
     }
 
     public function contactos(){

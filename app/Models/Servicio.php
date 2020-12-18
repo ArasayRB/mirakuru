@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+
+use App\Models\ServiceType;
 use App\Models\File;
 use App\Models\Hostal;
 use App\Models\Reserva;
@@ -23,6 +25,10 @@ class Servicio extends Model
 
     public function hostales(){
       return $this->belongsToMany(Hostal::class,'hostal_servicio','servicio_id','hostal_id')->withPivot('cant_personas','active','active_date','inactive_date')->withTimestamps();
+    }
+
+    public function servicioTypes(){
+      return $this->belongsToMany(ServiceType::class,'servicio_service_type','servicio_id','service_type_id')->withTimestamps();
     }
 
     public function reservas(){
