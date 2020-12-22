@@ -143,6 +143,7 @@ return [
   "Message sended"=>"Mensage enviado",
   "Mirakuru Gran Familia Hostal. Reset Password Notification"=>"Hostal Mirakuru Gran Familia. Notificación de cambio de contraseña",
   "Mobile Phone"=> "Teléfono Móvil",
+  "More Pictures"=>"Más Fotos",
   "Name"=> "Nombre",
   "Nevermind"=> "Olvidar",
   "New Password"=> "Nueva contraseña",

@@ -143,6 +143,7 @@ return [
   "Message sended"=>"Message sended",
   "Mirakuru Gran Familia Hostal. Reset Password Notification"=>"Mirakuru Gran Familia Hostal. Reset Password Notification",
   "Mobile Phone"=> "Mobile Phone",
+  "More Pictures"=>"More Pictures",
   "Name"=> "Name",
   "Nevermind"=> "Nevermind",
   "New Password"=> "New Password",

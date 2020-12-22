@@ -41,3 +41,6 @@ Route::get('/active-books-list', [App\Http\Controllers\ReservaController::class,
 Route::post('/delete-book-by-guest/{book}/{email}/{name}', [App\Http\Controllers\ReservaController::class, 'deleteBookByUser'])->name('delete-book-by-guest');
 Route::get('/exist-post', [App\Http\Controllers\PostController::class, 'existPost']);
 Route::post('/contact', [App\Http\Controllers\ContactoController::class, 'store']);
+Route::get('/gallery', function(){
+  return view('galeria');
+});

@@ -40,6 +40,7 @@
 <div class="row" id="galeria" name="galeria"><!--Section Galeria-->
 <section class="galeria pt-5">
   <h1 id="galer" class="text-center text-uppercase text-light pt-5 animate__animated animate__slideInRight">{{ __('Know our places') }}</h1>
+
   <div class="gallery-container">
     <div class="gallery-card">
       <a href="/images/images_galery/Amanecer Terraza.jpg" data-lightbox="roadtrip">
@@ -70,6 +71,11 @@
       <a href="/images/images_galery/Terraza.jpg" data-lightbox="roadtrip">
         <img src="/images/images_galery/Terraza.jpg" alt="">
       </a>
+    </div>
+  </br>
+</br>
+    <div class="">
+      <a href="/gallery" class="btn w-20 rounded btn-warning btn-lg mt-5 text-dark">{{__('More Pictures')}}</a>
     </div>
   </div>
 </section>
