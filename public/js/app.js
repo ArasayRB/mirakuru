@@ -65515,7 +65515,10 @@ var render = function() {
   return _c("div", { staticClass: "position-fixed" }, [
     _c("div", { staticClass: "row ml-1" }, [
       _c("p", { staticClass: "text-info" }, [
-        _c("i", { staticClass: "fa fa-eye" }),
+        _c("i", {
+          staticClass: "fa fa-eye",
+          attrs: { title: "Reads/ Lecturas" }
+        }),
         _vm._v(" " + _vm._s(_vm.cant_read) + " | ")
       ]),
       _vm._v(" "),
@@ -65531,7 +65534,10 @@ var render = function() {
         },
         [
           _c("p", { staticClass: "text-info" }, [
-            _c("i", { staticClass: "fa fa-heart" }),
+            _c("i", {
+              staticClass: "fa fa-heart",
+              attrs: { title: "Show your love/ Muestra tu amor" }
+            }),
             _vm._v(" " + _vm._s(_vm.likes) + " ")
           ])
         ]
@@ -65550,7 +65556,12 @@ var render = function() {
             }
           }
         },
-        [_c("i", { staticClass: "fab fa-facebook " })]
+        [
+          _c("i", {
+            staticClass: "fab fa-facebook ",
+            attrs: { title: "Share/ Compartir" }
+          })
+        ]
       ),
       _vm._v(" "),
       _c(
@@ -65564,7 +65575,12 @@ var render = function() {
             }
           }
         },
-        [_c("i", { staticClass: "fab fa-twitter-square " })]
+        [
+          _c("i", {
+            staticClass: "fab fa-twitter-square ",
+            attrs: { title: "Share/ Compartir" }
+          })
+        ]
       )
     ]),
     _vm._v(" "),

@@ -2,13 +2,13 @@
 
   <div class="position-fixed">
     <div class="row ml-1">
-     <p class="text-info"><i class="fa fa-eye"></i> {{cant_read}} | </p>
-     <a href="#" @click="addLove()"> <p class="text-info"><i class="fa fa-heart"></i> {{likes}} </p></a>
+     <p class="text-info"><i title="Reads/ Lecturas"  class="fa fa-eye"></i> {{cant_read}} | </p>
+     <a href="#" @click="addLove()"> <p class="text-info"><i title="Show your love/ Muestra tu amor" class="fa fa-heart"></i> {{likes}} </p></a>
     </div>
 
         <div class="row ml-1">
-        <a href="#" class="social-button ml-1" @click="shareSocialMedia('facebook')"><i class="fab fa-facebook "></i></a>
-        <a href="#" class="social-button ml-1" @click="shareSocialMedia('twitter')"><i class="fab fa-twitter-square "></i></a>
+        <a href="#" class="social-button ml-1" @click="shareSocialMedia('facebook')"><i title="Share/ Compartir" class="fab fa-facebook "></i></a>
+        <a href="#" class="social-button ml-1" @click="shareSocialMedia('twitter')"><i title="Share/ Compartir" class="fab fa-twitter-square "></i></a>
         </div>
         <p class="row ml-1 text-info">{{sharess}}</p>
 
@@ -56,7 +56,7 @@
         .then(response=>{
           let shar=response.data;
           this.sharess=shar.cant_shares;
-        
+
         })
              .catch(error => this.errors.push(error));
 
