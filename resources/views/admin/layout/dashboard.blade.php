@@ -185,7 +185,7 @@
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">{{__('Utilities User')}}:</h6>
-            <a class="collapse-item" href="#" data-toggle="modal" data-target="#loginModal">{{__('Account User')}}</a>
+            <a class="collapse-item" href="/user-perfil" >{{__('Account User')}}</a>
             <a class="collapse-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                           document.getElementById('logout-form').submit();">{{__('Logout')}}</a>
                           <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
