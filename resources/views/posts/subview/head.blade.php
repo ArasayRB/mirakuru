@@ -8,7 +8,7 @@
 
   <meta name="apple-mobile-web-app-capable" content="yes" />
 
-  <meta http-equiv=""X-UA-Compatible" content="IE=edge, chrome=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
 
   <!--Author-->
   <meta name="author" content="{{$post->users->name}}, {{$post->users->email}}" />
@@ -38,6 +38,7 @@
   <link href="{{ asset('css/app.css') }}" rel="stylesheet">
   <!--CSS-->
   <link rel="stylesheet" href="{{ asset('vendor/css/fontawesome.min.css') }}"><!--Galeria CSS Page-->
+  <link href="{{ asset('vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
   <link rel="stylesheet" href="{{ asset('vendor/lightbox2-dev/css/lightbox.min.css') }}"><!--Galeria CSS Page-->
   <link rel="stylesheet" href="{{ asset('vendor/css/animate.min.css') }}"><!--Animate CSS Page-->
   <link rel="stylesheet" href="{{ asset('css/all.css') }}">

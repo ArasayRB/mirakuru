@@ -36,7 +36,7 @@ class Handler extends ExceptionHandler
         //
     }
 
-    public function report(Exception $e)
+    /*public function report(Exception $e)
 {
     if ($e instanceof \Exception) {
         // Fetch the error information we would like to
@@ -63,5 +63,5 @@ class Handler extends ExceptionHandler
 
     // Pass the error on to continue processing
     return parent::report($e);
-}
+}*/
 }

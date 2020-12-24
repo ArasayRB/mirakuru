@@ -47,7 +47,7 @@
   <body class="bg-light">
 <div id="app">
 <div id="container-fluid" class="container-fluid col-12 pb-5">
-  <div class="row" id="home" name="home">
+  <div  id="home" name="home">
     <div class="col-12">
       @section('sidebar')
     <header>

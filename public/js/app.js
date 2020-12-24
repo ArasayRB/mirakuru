@@ -2994,8 +2994,8 @@ __webpack_require__.r(__webpack_exports__);
           var url = '/posts/' + post_id;
           axios["delete"](url).then(function (response) {
             swal({
-              title: 'Operación correcta',
-              text: 'Post eliminado satisfactoriamente',
+              title: _this.$trans('messages.Correct data'),
+              text: _this.$trans('messages.Post deleted successfully'),
               icon: 'success',
               closeOnClickOutside: false,
               closeOnEsc: false
@@ -3061,6 +3061,111 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   mounted: function mounted() {
+    if (this.$attrs.locale) {
+      this.$lang.setLocale(this.$attrs.locale);
+    } else {
+      this.$lang.setLocale('en');
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['id_post', 'cant_read', 'cant_shares', 'cant_likes', 'title', 'url_post'],
+  data: function data() {
+    return {
+      model: this.$attrs.model,
+      likes: '',
+      sharess: '',
+      token: window.CSRF_TOKEN
+    };
+  },
+  methods: {
+    shareSocialMedia: function shareSocialMedia(media) {
+      var _this = this;
+
+      var url = '/share/' + this.id_post + '/' + media;
+      var urlSocial;
+
+      if (media === 'facebook') {
+        urlSocial = 'http://www.facebook.com/sharer.php?u=' + this.url_post + '&t=' + this.title;
+      } else if (media === 'twitter') {
+        urlSocial = 'https://twitter.com/share?url=' + this.url_post + '&text=' + this.title;
+      }
+
+      var lba = document.getElementsByClassName("social-button");
+
+      function myPopup() {
+        window.open(urlSocial, 'mywin', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0');
+        event.preventDefault();
+        return false;
+      }
+
+      for (var i = 0; i < lba.length; i++) {
+        lba[i].addEventListener("click", myPopup, false);
+      }
+
+      axios.post(url).then(function (response) {
+        var shar = response.data;
+        _this.sharess = shar.cant_shares;
+      })["catch"](function (error) {
+        return _this.errors.push(error);
+      });
+    },
+    addLove: function addLove() {
+      var _this2 = this;
+
+      var url = '/post-love/' + this.id_post;
+      axios.post(url).then(function (response) {
+        var lik = response.data;
+        swal({
+          title: _this2.$trans('messages.Thanks!'),
+          text: _this2.$trans('messages.Thank you, we love you to!'),
+          icon: 'success',
+          closeOnClickOutside: false,
+          closeOnEsc: false
+        }).then(function (select) {
+          if (select) {
+            _this2.likes = lik.cant_likes;
+          }
+        });
+      })["catch"](function (error) {
+        return _this2.errors.push(error);
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.likes = this.cant_likes;
+    this.sharess = this.cant_shares;
+
     if (this.$attrs.locale) {
       this.$lang.setLocale(this.$attrs.locale);
     } else {
@@ -65392,6 +65497,89 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=template&id=9a3efbae&":
+/*!***********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=template&id=9a3efbae& ***!
+  \***********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "position-fixed" }, [
+    _c("div", { staticClass: "row ml-1" }, [
+      _c("p", { staticClass: "text-info" }, [
+        _c("i", { staticClass: "fa fa-eye" }),
+        _vm._v(" " + _vm._s(_vm.cant_read) + " | ")
+      ]),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          attrs: { href: "#" },
+          on: {
+            click: function($event) {
+              return _vm.addLove()
+            }
+          }
+        },
+        [
+          _c("p", { staticClass: "text-info" }, [
+            _c("i", { staticClass: "fa fa-heart" }),
+            _vm._v(" " + _vm._s(_vm.likes) + " ")
+          ])
+        ]
+      )
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "row ml-1" }, [
+      _c(
+        "a",
+        {
+          staticClass: "social-button ml-1",
+          attrs: { href: "#" },
+          on: {
+            click: function($event) {
+              return _vm.shareSocialMedia("facebook")
+            }
+          }
+        },
+        [_c("i", { staticClass: "fab fa-facebook " })]
+      ),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          staticClass: "social-button ml-1",
+          attrs: { href: "#" },
+          on: {
+            click: function($event) {
+              return _vm.shareSocialMedia("twitter")
+            }
+          }
+        },
+        [_c("i", { staticClass: "fab fa-twitter-square " })]
+      )
+    ]),
+    _vm._v(" "),
+    _c("p", { staticClass: "row ml-1 text-info" }, [
+      _vm._v(_vm._s(_vm.sharess))
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=template&id=a7b3df40&":
 /*!********************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/ContactoHostalComponent.vue?vue&type=template&id=a7b3df40& ***!
@@ -80278,6 +80466,7 @@ Vue.use(vue_localstorage__WEBPACK_IMPORTED_MODULE_1___default.a);
 
 Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_6__["default"]);
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
+Vue.component('cont-view-share-like-component', __webpack_require__(/*! ./components/forms/ContViewShareLikeComponent.vue */ "./resources/js/components/forms/ContViewShareLikeComponent.vue")["default"]);
 Vue.component('reservar-hostal-component', __webpack_require__(/*! ./components/forms/ReservarHostalComponent.vue */ "./resources/js/components/forms/ReservarHostalComponent.vue")["default"]);
 Vue.component('contacto-hostal-component', __webpack_require__(/*! ./components/forms/ContactoHostalComponent.vue */ "./resources/js/components/forms/ContactoHostalComponent.vue")["default"]);
 Vue.component('reservado-hostal-component', __webpack_require__(/*! ./components/forms/ReservadoHostalComponent.vue */ "./resources/js/components/forms/ReservadoHostalComponent.vue")["default"]);
@@ -80296,6 +80485,7 @@ Vue.component('index-post-component', __webpack_require__(/*! ./components/admin
 
 var app = new Vue({
   el: '#app',
+  props: ['id_post', 'cant_read', 'cant_shares', 'cant_likes'],
   data: function data() {
     return {
       email: '',
@@ -80308,7 +80498,6 @@ var app = new Vue({
       locale: 'en',
       ventanaEditPost: '',
       categories: '',
-      post: '',
       token: window.CSRF_TOKEN
     };
   },
@@ -80660,6 +80849,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_indexPostComponent_vue_vue_type_template_id_40227edc___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_indexPostComponent_vue_vue_type_template_id_40227edc___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/ContViewShareLikeComponent.vue":
+/*!**********************************************************************!*\
+  !*** ./resources/js/components/forms/ContViewShareLikeComponent.vue ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _ContViewShareLikeComponent_vue_vue_type_template_id_9a3efbae___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ContViewShareLikeComponent.vue?vue&type=template&id=9a3efbae& */ "./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=template&id=9a3efbae&");
+/* harmony import */ var _ContViewShareLikeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ContViewShareLikeComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _ContViewShareLikeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _ContViewShareLikeComponent_vue_vue_type_template_id_9a3efbae___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _ContViewShareLikeComponent_vue_vue_type_template_id_9a3efbae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/forms/ContViewShareLikeComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContViewShareLikeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContViewShareLikeComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_ContViewShareLikeComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=template&id=9a3efbae&":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=template&id=9a3efbae& ***!
+  \*****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContViewShareLikeComponent_vue_vue_type_template_id_9a3efbae___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./ContViewShareLikeComponent.vue?vue&type=template&id=9a3efbae& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ContViewShareLikeComponent.vue?vue&type=template&id=9a3efbae&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContViewShareLikeComponent_vue_vue_type_template_id_9a3efbae___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ContViewShareLikeComponent_vue_vue_type_template_id_9a3efbae___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -81302,6 +81560,7 @@ module.exports = {
     "Message sended": "Message sended",
     "Mirakuru Gran Familia Hostal. Reset Password Notification": "Mirakuru Gran Familia Hostal. Reset Password Notification",
     "Mobile Phone": "Mobile Phone",
+    "More Pictures": "More Pictures",
     "Name": "Name",
     "Nevermind": "Nevermind",
     "New Password": "New Password",
@@ -81335,6 +81594,7 @@ module.exports = {
     "Please, send an answare as soon like is possible for you.": "Please, send an answare as soon like is possible for you.",
     "Post": "Post",
     "Post created successfully": "Post created successfully",
+    "Post deleted successfully": "Post deleted successfully",
     "Posted by: ": "Posted by: ",
     "Posts": "Posts",
     "Posts Category": "Posts Category",
@@ -81422,7 +81682,9 @@ module.exports = {
     "Testimonials Calification": "Testimonials Calification",
     "Thank you for subscribe!": "Thank you for subscribe!",
     "Thank you for using our application!": "Thank you for using our application!",
+    "Thank you, we love you to!": "Thank you, we love you to!",
     "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.": "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.",
+    "Thanks!": "Thanks!",
     "The :attribute must be a valid role.": "The :attribute must be a valid role.",
     "The :attribute must be at least :length characters and contain at least one number.": "The :attribute must be at least :length characters and contain at least one number.",
     "The :attribute must be at least :length characters and contain at least one special character.": "The :attribute must be at least :length characters and contain at least one special character.",
@@ -81777,6 +82039,7 @@ module.exports = {
     "Message sended": "Mensage enviado",
     "Mirakuru Gran Familia Hostal. Reset Password Notification": "Hostal Mirakuru Gran Familia. Notificaci\xF3n de cambio de contrase\xF1a",
     "Mobile Phone": "Tel\xE9fono M\xF3vil",
+    "More Pictures": "M\xE1s Fotos",
     "Name": "Nombre",
     "Nevermind": "Olvidar",
     "New Password": "Nueva contrase\xF1a",
@@ -81810,6 +82073,7 @@ module.exports = {
     "Please, send an answare as soon like is possible for you.": "Por favor, env\xEDe una respuesta tan pronto como le sea posible.",
     "Post": "Post",
     "Post created successfully": "Post creado satisfactoriamente",
+    "Post deleted successfully": "Post eliminado satisfactoriamente",
     "Posted by: ": "Posteado por: ",
     "Posts": "Posts",
     "Posts Category": "Categoria de Posts",
@@ -81897,7 +82161,9 @@ module.exports = {
     "Testimonials Calification": "Calificacion de comentarios",
     "Thank you for subscribe!": "Gracias por suscribirse!",
     "Thank you for using our application!": "Gracias por usar nuestra aplicaci\xF3n!",
+    "Thank you, we love you to!": "Gracias, nosotros tambi\xE9n te amamos!",
     "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.": "\xA1Gracias por registrarse! Antes de comenzar, \xBFpodr\xEDa verificar su direcci\xF3n de correo electr\xF3nico haciendo clic en el enlace que le acabamos de enviar? Si no recibi\xF3 el correo electr\xF3nico, con gusto le enviaremos otro.",
+    "Thanks!": "Gracias!",
     "The :attribute must be a valid role.": ":Attribute debe ser un rol v\xE1lido.",
     "The :attribute must be at least :length characters and contain at least one number.": "La :attribute debe tener al menos :length caracteres y contener por lo menos un n\xFAmero.",
     "The :attribute must be at least :length characters and contain at least one special character.": "La :attribute debe tener al menos :length caracteres y contener por lo menos un car\xE1cter especial.",
@@ -82132,6 +82398,7 @@ module.exports = {
     "Manage and logout your active sessions on other browsers and devices.": "Administre y cierre sus sesiones activas en otros navegadores y dispositivos.",
     "Message sended": "Mensage enviado",
     "Mirakuru Gran Familia Hostal. Reset Password Notification": "Hostal Mirakuru Gran Familia. Notificaci\xF3n de cambio de contrase\xF1a",
+    "More Pictures": "M\xE1s Fotos",
     "Name": "Nombre",
     "Nevermind": "Olvidar",
     "New Password": "Nueva contrase\xF1a",
@@ -82164,6 +82431,7 @@ module.exports = {
     "Please, send an answare as soon like is possible for you.": "Por favor, env\xEDe una respuesta tan pronto como le sea posible.",
     "Post": "Post",
     "Post created successfully": "Post creado satisfactoriamente",
+    "Post deleted successfully": "Post eliminado satisfactoriamente",
     "Posted by: ": "Posteado por: ",
     "Posts": "Posts",
     "Posts Category": "Categoria de Posts",
@@ -82228,7 +82496,9 @@ module.exports = {
     "Testimonials Calification": "Calificacion de comentarios",
     "Thank you for subscribe!": "Gracias por suscribirse!",
     "Thank you for using our application!": "Gracias por usar nuestra aplicaci\xF3n!",
+    "Thank you, we love you to!": "Gracias, nosotros tambi\xE9n te amamos!",
     "Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.": "\xA1Gracias por registrarse! Antes de comenzar, \xBFpodr\xEDa verificar su direcci\xF3n de correo electr\xF3nico haciendo clic en el enlace que le acabamos de enviar? Si no recibi\xF3 el correo electr\xF3nico, con gusto le enviaremos otro.",
+    "Thanks!": "Gracias!",
     "The :attribute must be a valid role.": ":Attribute debe ser un rol v\xE1lido.",
     "The :attribute must be at least :length characters and contain at least one number.": "La :attribute debe tener al menos :length caracteres y contener por lo menos un n\xFAmero.",
     "The :attribute must be at least :length characters and contain at least one special character.": "La :attribute debe tener al menos :length caracteres y contener por lo menos un car\xE1cter especial.",

@@ -33,4 +33,12 @@ class WelcomeController extends Controller
     public function showPost($id){
       return $this->show($id);
     }
+
+    public function addLove($id){
+      return $this->addLovePost($id);
+    }
+
+    public function sharePostMedia($id,$media){
+      return $this->sharePostMediaSocial($id,$media);
+    }
 }

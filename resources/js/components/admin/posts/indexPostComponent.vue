@@ -198,8 +198,8 @@
                     let  url='/posts/'+post_id;
                     axios.delete(url)
                          .then(response=>{
-                           swal({title:'Operación correcta',
-                                 text:'Post eliminado satisfactoriamente',
+                           swal({title:this.$trans('messages.Correct data'),
+                                 text:this.$trans('messages.Post deleted successfully'),
                                  icon:'success',
                                  closeOnClickOutside:false,
                                  closeOnEsc:false

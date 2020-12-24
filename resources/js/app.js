@@ -55,6 +55,7 @@ Vue.use(VueLocalStorage);
 
 Vue.component('tags-input', VoerroTagsInput);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('cont-view-share-like-component', require('./components/forms/ContViewShareLikeComponent.vue').default);
 Vue.component('reservar-hostal-component', require('./components/forms/ReservarHostalComponent.vue').default);
 Vue.component('contacto-hostal-component', require('./components/forms/ContactoHostalComponent.vue').default);
 Vue.component('reservado-hostal-component', require('./components/forms/ReservadoHostalComponent.vue').default);
@@ -74,6 +75,7 @@ Vue.component('index-post-component', require('./components/admin/posts/indexPos
 
 const app = new Vue({
     el: '#app',
+    props:['id_post','cant_read', 'cant_shares', 'cant_likes'],
     data(){
       return {
         email    : '',
@@ -86,7 +88,6 @@ const app = new Vue({
         locale:'en',
         ventanaEditPost:'',
         categories:'',
-        post:'',
         token   : window.CSRF_TOKEN,
       }
     },
@@ -98,6 +99,7 @@ const app = new Vue({
       openLoginModal:function(){
         this.ventanaLogin=true;
       },
+
     },
     mounted(){
       if($cookies.isKey('mostrarModalLogin')===false){

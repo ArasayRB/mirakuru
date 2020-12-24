@@ -218,16 +218,18 @@
 
       <div class="col-md-6">
         <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+          <div class="col-auto d-none d-lg-block w-25 h-25">
+            <img src="{{ asset('/storage/img_web/posts_img/'.$post->img_url) }}" class="mx-auto d-block rounded-circle w-100 h-1010">
+          </div>
           <div class="col p-4 d-flex flex-column position-static">
             <strong class="d-inline-block mb-2 text-primary">{{__('Posted by: ')}}{{$post->users->name}}</strong>
             <h3 class="mb-0">{{$post->title}}</h3>
             <div class="mb-1 text-muted">{{$post->created_at}}</div>
             <p class="card-text mb-auto">{{$post->summary}}</p>
             <a href="/welcome/{{$post->id}}" class="stretched-link">{{__('Continue reading')}}</a>
+
           </div>
-          <div class="col-auto d-none d-lg-block">
-            <img src="{{ asset('/storage/img_web/posts_img/'.$post->img_url) }}" class="mx-auto d-block rounded-circle w-200 h-300">
-          </div>
+
         </div>
       </div>
       @endforeach
