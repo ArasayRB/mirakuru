@@ -18,7 +18,7 @@
         "laravel/ui": "^3.1",
         "mariuzzo/laravel-js-localization": "^1.7",
         "rtconner/laravel-tagging": "^4.1",
-        "unisharp/laravel-ckeditor": "^4.7",
+        "simplesoftwareio/simple-qrcode": "^4.1",
         "uxweb/sweet-alert": "^2.0"
     },
     "require-dev": {
