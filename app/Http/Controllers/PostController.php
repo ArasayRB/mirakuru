@@ -9,6 +9,8 @@ use App\Traits\CategoryPostTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Illuminate\Support\Facades\File;
 
 class PostController extends Controller
 {
@@ -103,7 +105,6 @@ class PostController extends Controller
         $tags = explode(",", request('tags'));
         $keywords = explode(",", request('keywords'));
         $post= new Post();
-        $slug = Str::slug($post->title, '-');
         $post->title=request('title');
         $post->content=request('checkEditContent');
         $post->publicate_state=false;
@@ -115,9 +116,12 @@ class PostController extends Controller
         $post->cant_likes=0;
         $post->cant_shares=0;
         $post->tags=request('tags');
-        $post->slug=$slug;
+        $post->slug=Str::slug($post->title, '-');
         $post->keywords=request('keywords');
         $post->save();
+        $post->qr_img_url='qrcode_'.$post->id.'_'.$post->slug.'.svg';
+        $post->update();
+        QrCode::format('svg')->color(33, 56, 175)->generate(url('/post-list/'.$post->id),public_path('qrcodes/posts/qrcode_'.$post->id.'_'.$post->slug.'.svg'));
         $post->tag($tags);
         foreach($keywords as $keyword){
           $existKey=$this->getKeywordIf($keyword);
@@ -209,8 +213,10 @@ class PostController extends Controller
         $post->cant_likes=0;
         $post->cant_shares=0;
         $post->tags=request('tags');
-        $post->slug=$slug;
+        $post->slug=Str::slug($post->title, '-');
+        $post->qr_img_url='qrcode_'.$post->id.'_'.$post->slug.'.svg';
         $post->update();
+        QrCode::format('svg')->color(33, 56, 175)->generate(url('/post-list/'.$post->id),public_path('qrcodes/posts/qrcode_'.$post->id.'_'.$post->slug.'.svg'));
         $post->retag($tags);
         $post->keywords()->detach();
         foreach($keywords as $keyword){
@@ -238,6 +244,9 @@ class PostController extends Controller
         $post->delete();
         $post->untag();
         $post->keywords()->detach();
+        $file_path = public_path("qrcodes/posts/$post->qr_img_url");
+
+       if(File::exists($file_path)) File::delete($file_path);
         return response()->json('Post deleted');
     }
 }

@@ -85,7 +85,7 @@
                   <td>{{post.publicate_state}}</td>
                   <td><img :src="src+post.img_url"  width="100"></td>
                   <td></td>
-                  <td></td>
+                  <td><img :src="src_qr+post.qr_img_url"  width="100"></td>
                   <td>{{user}}</td>
                   <td>{{post.categoria_posts.category_post}}</td>
                   <td>{{post.cant_access_read}}</td>
@@ -138,6 +138,7 @@
           user:this.$attrs.user,
           imagenPost:'',
           src:'storage/img_web/posts_img/',
+          src_qr:asset('qrcodes/posts/'),
           categoria:'',
           categories:'',
           categori:'',

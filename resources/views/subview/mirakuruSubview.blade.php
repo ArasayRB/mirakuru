@@ -226,7 +226,7 @@
             <h3 class="mb-0">{{$post->title}}</h3>
             <div class="mb-1 text-muted">{{$post->created_at}}</div>
             <p class="card-text mb-auto">{{$post->summary}}</p>
-            <a href="/welcome/{{$post->id}}" class="stretched-link">{{__('Continue reading')}}</a>
+            <a href="/post-list/{{$post->id}}" class="stretched-link">{{__('Continue reading')}}</a>
 
           </div>
 

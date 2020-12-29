@@ -2931,6 +2931,7 @@ __webpack_require__.r(__webpack_exports__);
       user: this.$attrs.user,
       imagenPost: '',
       src: 'storage/img_web/posts_img/',
+      src_qr: asset('qrcodes/posts/'),
       categoria: '',
       categories: '',
       categori: '',
@@ -65464,7 +65465,14 @@ var render = function() {
                       _vm._v(" "),
                       _c("td"),
                       _vm._v(" "),
-                      _c("td"),
+                      _c("td", [
+                        _c("img", {
+                          attrs: {
+                            src: _vm.src_qr + post.qr_img_url,
+                            width: "100"
+                          }
+                        })
+                      ]),
                       _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(_vm.user))]),
                       _vm._v(" "),
