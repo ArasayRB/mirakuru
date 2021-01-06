@@ -17,10 +17,11 @@ class CreateTranslatesTable extends Migration
             $table->id();
             $table->longText('content');
             $table->unsignedBigInteger('tipo_content');
-            $table->string('trans_lang');
+            $table->unsignedBigInteger('trans_lang');
             $table->longText('content_trans');
             $table->timestamps();
             $table->foreign('tipo_content')->references('id')->on('content_types')->onDelete('cascade');
+            $table->foreign('trans_lang')->references('id')->on('languages')->onDelete('cascade');
         });
     }
 
