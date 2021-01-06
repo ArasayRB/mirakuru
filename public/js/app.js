@@ -2931,7 +2931,7 @@ __webpack_require__.r(__webpack_exports__);
       user: this.$attrs.user,
       imagenPost: '',
       src: 'storage/img_web/posts_img/',
-      src_qr: asset('qrcodes/posts/'),
+      src_qr: 'storage/qrcodes/posts/',
       categoria: '',
       categories: '',
       categori: '',

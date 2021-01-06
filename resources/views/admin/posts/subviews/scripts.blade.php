@@ -16,7 +16,3 @@
 <script src="{{ asset('js/admin/demo/datatables-demo.js') }}"></script>
 <script src="{{ asset('vendor/ckeditor/ckeditor.js') }}"></script>
 <script src="{{ asset('vendor/ckeditor/adapters/jquery.js') }}"></script>
-<script type="text/javascript">
-CKEDITOR.replace( 'check-edit-content' );
-
-</script>
