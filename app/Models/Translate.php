@@ -14,6 +14,7 @@ class Translate extends Model
         'content',
         'tipo_content',
         'trans_lang',
+        'indice_content',
         'content_trans',
     ];
 

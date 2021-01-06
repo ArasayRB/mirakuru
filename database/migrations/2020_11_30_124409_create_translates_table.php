@@ -18,6 +18,7 @@ class CreateTranslatesTable extends Migration
             $table->longText('content');
             $table->unsignedBigInteger('tipo_content');
             $table->unsignedBigInteger('trans_lang');
+            $table->string('indice_content');
             $table->longText('content_trans');
             $table->timestamps();
             $table->foreign('tipo_content')->references('id')->on('content_types')->onDelete('cascade');
