@@ -92,6 +92,7 @@ return [
   "Excursions"=> "Excursions",
   "Excellent!!"=>"Excellent!!",
   "Facilities"=> "Facilities",
+  "Find us with QR"=>"Find us with QR",
   "Foods"=>"Foods",
   "For your security, please confirm your password to continue."=> "For your security, please confirm your password to continue.",
   "Forbidden"=> "Forbidden",

@@ -121,7 +121,7 @@ class PostController extends Controller
         $post->save();
         $post->qr_img_url='qrcode_'.$post->id.'_'.$post->slug.'.svg';
         $post->update();
-        QrCode::format('svg')->color(33, 56, 175)->generate(url('/post-list/'.$post->id),public_path('qrcodes/posts/qrcode_'.$post->id.'_'.$post->slug.'.svg'));
+        QrCode::format('svg')->color(33, 56, 175)->generate(url('/post-list/'.$post->id),public_path('storage/qrcodes/posts/qrcode_'.$post->id.'_'.$post->slug.'.svg'));
         $post->tag($tags);
         foreach($keywords as $keyword){
           $existKey=$this->getKeywordIf($keyword);
@@ -216,7 +216,7 @@ class PostController extends Controller
         $post->slug=Str::slug($post->title, '-');
         $post->qr_img_url='qrcode_'.$post->id.'_'.$post->slug.'.svg';
         $post->update();
-        QrCode::format('svg')->color(33, 56, 175)->generate(url('/post-list/'.$post->id),public_path('qrcodes/posts/qrcode_'.$post->id.'_'.$post->slug.'.svg'));
+        QrCode::format('svg')->color(33, 56, 175)->generate(url('/post-list/'.$post->id),public_path('storage/qrcodes/posts/qrcode_'.$post->id.'_'.$post->slug.'.svg'));
         $post->retag($tags);
         $post->keywords()->detach();
         foreach($keywords as $keyword){
@@ -244,7 +244,7 @@ class PostController extends Controller
         $post->delete();
         $post->untag();
         $post->keywords()->detach();
-        $file_path = public_path("qrcodes/posts/$post->qr_img_url");
+        $file_path = public_path("storage/qrcodes/posts/$post->qr_img_url");
 
        if(File::exists($file_path)) File::delete($file_path);
         return response()->json('Post deleted');

@@ -92,6 +92,7 @@ return [
   "Excursions"=> "Excursiones",
   "Excellent!!"=>"Excelente!!",
   "Facilities"=> "Facilidades",
+  "Find us with QR"=>"Encuéntranos con el QR",
   "Foods"=>"Alimentos",
   "For your security, please confirm your password to continue."=> "Por su seguridad, confirme su contraseña para continuar.",
   "Forbidden"=> "Prohibido",

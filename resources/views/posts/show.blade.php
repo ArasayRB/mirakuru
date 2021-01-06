@@ -21,7 +21,7 @@
     <h1 id="us_ttle" class="text-uppercase text-center pt-5 animate__animated animate__zoomIn">{{ __('Searching hostal') }}</h1>
   </div>
     <p class="text-justify mx-2 my-2">{!!$post->content!!}</p>
-      <div class="box"><img src="{{ asset('/qrcodes/posts/'.$post->qr_img_url) }}" title="Qr: {{$post->title}} Post" class="img-fluid mx-auto d-block mt-5">
+      <div class="box"> <h3 class="text-center">{{ __('Find us with QR') }}:</h3> <img src="{{ asset('/storage/qrcodes/posts/'.$post->qr_img_url) }}" title="Qr: {{$post->title}} Post" class="img-fluid mx-auto d-block mt-5">
   </div>
   <aside class="col-3 pl-3">
     <div class="position-fixed">
