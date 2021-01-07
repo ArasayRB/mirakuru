@@ -6,6 +6,9 @@ use App\Models\Post;
 use App\Traits\KeywordTrait;
 use App\Traits\ImageTrait;
 use App\Traits\CategoryPostTrait;
+use App\Traits\ContentTypeTrait;
+use App\Traits\TranslateTrait;
+use App\Traits\LanguageTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +17,7 @@ use Illuminate\Support\Facades\File;
 
 class PostController extends Controller
 {
-  use KeywordTrait; use CategoryPostTrait; use ImageTrait;
+  use KeywordTrait; use CategoryPostTrait; use ImageTrait; use ContentTypeTrait; use TranslateTrait; use LanguageTrait;
   public function __construct()
   {
       $this->middleware('auth');
@@ -129,8 +132,54 @@ class PostController extends Controller
           $post->keywords()->attach($existKey->id);
         }
 
+
         $postToAdd=$this->getPost($post->id);
         return $postToAdd;
+    }
+
+    public function addTranslate(Request $request){
+      $dataPost=request()->validate([
+        'title'=> 'required|max:255',
+        'lang'=> 'required',
+        'checkEditSummary'=> 'required',
+        'checkEditContent'=> 'required',
+      ]);
+
+      $post=Post::find(request('post_id'));
+
+      $contentType='Post';
+      $tipo_content=$this->findContentId($contentType);
+
+      $lang=$this->findLanguageName(request('lang'));
+
+
+      $data_trans=array(
+        ['id_content_trans'=>'Post-'.$post->id.'-'.request('lang'),
+        'content'=>$post['content'],
+        'tipo_content'=>$tipo_content,
+        'trans_lang'=>request('lang'),
+        'indice_content'=>'content',
+        'content_trans'=>request('checkEditContent')],
+        ['id_content_trans'=>'Post-'.$post->id.'-'.request('lang'),
+        'content'=>$post['summary'],
+        'tipo_content'=>$tipo_content,
+        'trans_lang'=>request('lang'),
+        'indice_content'=>'summary',
+        'content_trans'=>request('checkEditSummary')],
+        ['id_content_trans'=>'Post-'.$post->id.'-'.request('lang'),
+        'content'=>$post['title'],
+        'tipo_content'=>$tipo_content,
+        'trans_lang'=>request('lang'),
+        'indice_content'=>'title',
+        'content_trans'=>request('title')]
+      );
+      $this->storeTranslate($data_trans);
+
+      $postToAdd=$this->getPost($post->id);
+      return $postToAdd;
+
+
+
     }
 
     /**

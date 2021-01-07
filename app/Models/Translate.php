@@ -11,6 +11,7 @@ class Translate extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'id_content_trans',
         'content',
         'tipo_content',
         'trans_lang',

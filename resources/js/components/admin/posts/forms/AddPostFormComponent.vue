@@ -7,7 +7,8 @@
     <div class="modal-container">
       <div class="modal-header">
         <slot>
-        <h1 class="text-center text-dark">{{ $trans('messages.New Post') }}</h1>
+        <h1 class="text-center text-dark" v-if="show_lang_div===false">{{post.title}}</h1>
+        <h1 class="text-center text-dark" v-else>{{ $trans('messages.New Post') }}</h1>
         <button type="button" class="modal-default-button btn btn-lg" @click="$emit('close')"><span aria-hidden="true">&times;</span></button>
 
         </slot>
@@ -18,63 +19,74 @@
         <div class="container mt-5">
           <div class="row justify-content-center">
             <div class="col-12">
-              <div class="form-group">
-                <label for="title">{{ $trans('messages.Title') }}</label>
-                <input type="text" name="title" v-model="title" class="form-control font-italic mb-2">
-              </div>
 
-              <div class="form-group">
-
-                <label for="image">{{ $trans('messages.Image') }}</label>
-              <input type="file" name="image" v-on:change="image" class="form-control-file font-italic mb-2">
-              </div>
-              <div class="form-group">
-                <label for="category">{{ $trans('messages.Category') }}</label>
-                <select class="form-control" v-model="categoria" name="category" required>
-                 <option value=''>Seleccionar Actividad</option>
-                   <option v-for="categori in categories" :value="categori.id">{{categori.category_post}}</option>
+              <div class="form-group" id="language_div" :hidden=show_lang_div>
+                <label for="lang_trans">{{ $trans('messages.Language') }}</label>
+                <select class="form-control" v-model="lang_trans" name="lang_trans" required>
+                 <option value=''>{{ $trans('messages.Select Language') }}</option>
+                   <option v-for="language in languages" :value="language.id">{{language.language}}</option>
                 </select>
               </div>
-              <div class="form-group">
-                <label for="check-edit-summary">{{ $trans('messages.Summary') }}</label>
-                <textarea name="check-edit-summary" v-model="checkEditSummary" id="check-edit-summary" cols="10" rows="8" class="form-control font-italic mb-2"></textarea>
-              </div>
-              <div class="form-group">
-                <label for="check-edit-content">{{ $trans('messages.Content') }}</label>
-                <vue-ckeditor
-                 v-model="checkEditContent"
-                 :config="config"
-                 @blur="onBlur($event)"
-                 @focus="onFocus($event)"
-                 @contentDom="onContentDom($event)"
-                 @dialogDefinition="onDialogDefinition($event)"
-                 @fileUploadRequest="onFileUploadRequest($event)"
-                 @fileUploadResponse="onFileUploadResponse($event)" />
-                </div>
 
-                <div class="form-group">
-                           <label>{{ $trans('messages.Tags') }} : <span class="text-danger">*</span></label>
-                           <br>
-                           <tags-input element-id="tags" :add-tags-on-comma=true	class=""
-    v-model="selectedTags"
+<div class="form-group">
+      <label for="title">{{ $trans('messages.Title') }}</label>
+      <input type="text" name="title" v-model="title" class="form-control font-italic mb-2">
+    </div>
 
-    :typeahead="true"></tags-input>
+    <div class="form-group" v-if="show_lang_div===true">
+
+      <label for="image">{{ $trans('messages.Image') }}</label>
+    <input type="file" name="image" v-on:change="image" class="form-control-file font-italic mb-2">
+    </div>
+    <div class="form-group" v-if="show_lang_div===true">
+      <label for="category">{{ $trans('messages.Category') }}</label>
+      <select class="form-control" v-model="categoria" name="category" required>
+       <option value=''>{{ $trans('messages.Select Category') }}</option>
+         <option v-for="categori in categories" :value="categori.id">{{categori.category_post}}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="check-edit-summary">{{ $trans('messages.Summary') }}</label>
+      <textarea name="check-edit-summary" v-model="checkEditSummary" id="check-edit-summary" cols="10" rows="8" class="form-control font-italic mb-2"></textarea>
+    </div>
+    <div class="form-group">
+      <label for="check-edit-content">{{ $trans('messages.Content') }}</label>
+      <vue-ckeditor
+       v-model="checkEditContent"
+       :config="config"
+       @blur="onBlur($event)"
+       @focus="onFocus($event)"
+       @contentDom="onContentDom($event)"
+       @dialogDefinition="onDialogDefinition($event)"
+       @fileUploadRequest="onFileUploadRequest($event)"
+       @fileUploadResponse="onFileUploadResponse($event)" />
+      </div>
+
+      <div class="form-group" v-if="show_lang_div===true">
+                 <label>{{ $trans('messages.Tags') }} : <span class="text-danger">*</span></label>
+                 <br>
+                 <tags-input element-id="tags" :add-tags-on-comma=true	class=""
+v-model="selectedTags"
+
+:typeahead="true"></tags-input>
 
 
-                </div>
+      </div>
 
-                <div class="form-group">
-                  <label for="title">{{ $trans('messages.Keywords') }}: <span class="text-danger">{{ $trans('messages.Separate with (,) please') }}</span></label></label>
+      <div class="form-group" v-if="show_lang_div===true">
+        <label for="title">{{ $trans('messages.Keywords') }}: <span class="text-danger">{{ $trans('messages.Separate with (,) please') }}</span></label></label>
 
-                  <tags-input element-id="keys" :add-tags-on-comma=true	class=""
+        <tags-input element-id="keys" :add-tags-on-comma=true	class=""
 v-model="selectedKeys"
-  placeholder="Add a keyword"
+placeholder="Add a keyword"
 
 
 :typeahead="true"></tags-input>
 
 
-                </div>
+      </div>
+
+
 
 
             </div>
@@ -88,7 +100,8 @@ v-model="selectedKeys"
         <div class="col justify-content-center">
       <div class="form-group row mb-0">
           <div class="col-md-5 offset-md-4">
-            <button type="button" class="btn rounded btn-primary reserva" @click=createPost()>{{ $trans('messages.Create') }}</button>
+            <button type="button" class="btn rounded btn-primary reserva" @click="createPost()" v-if="show_lang_div===true">{{ $trans('messages.Create') }}</button>
+            <button type="button" class="btn rounded btn-primary reserva" @click="createPost()" v-else>{{ $trans('messages.Translate') }}</button>
 
               <button type="button" class="modal-default-button btn btn-danger" @click="$emit('close')">{{ $trans('messages.Close') }}</button>
 
@@ -109,7 +122,7 @@ v-model="selectedKeys"
   import VueCkeditor from 'vue-ckeditor2';
     export default {
       components: { VueCkeditor},
-      props:['locale'],
+      props:['locale','show_lang_div','post'],
       data(){
         return {
           tags: [],
@@ -138,14 +151,21 @@ v-model="selectedKeys"
      },
           categories:'',
           categori:'',
+          languages:[],
+          language:'',
+          activeClass:'active',
+          showClass:'show',
           post:'',
           value:'',
           title:'',
           imagenPost:'',
           categoria:'',
+          src:'images/lang/',
+          lang_trans:'',
           checkEditSummary:'',
           checkEditContent:'',
           ventanaCreatPost:false,
+          error:'',
           token   : window.CSRF_TOKEN,
 
         }
@@ -176,7 +196,27 @@ v-model="selectedKeys"
         },
         createPost:function(){
 
-            let url="/posts";
+            let url;
+            let msg_succ;
+            let data;
+           if(this.show_lang_div===false){
+              url="/addTranslate";
+              msg_succ=this.$trans('messages.Post translated successfully');
+              let mensaje=this.$trans('messages.Unidentified error');
+              if (this.title==''||this.checkEditSummary==''||this.checkEditContent==''||this.lang_trans=='') {
+                mensaje=this.$trans('messages.You cannot leave empty fields, please check');
+              }
+              data = new FormData();
+                data.append("title", this.title);
+                data.append("title_old", this.post.title);
+                data.append("post_id", this.post.id);
+                data.append("lang", this.lang_trans);
+                data.append("checkEditSummary", this.checkEditSummary);
+                data.append("checkEditContent", this.checkEditContent);
+           }
+           else{
+            url="/posts";
+            msg_succ=this.$trans('messages.Post created successfully');
             let mensaje=this.$trans('messages.Unidentified error');
             if (this.title==''||this.imagenPost==''||this.categoria==''||this.checkEditSummary==''||this.checkEditContent==''||this.selectedTags==''||this.keywords=='') {
               mensaje=this.$trans('messages.You cannot leave empty fields, please check');
@@ -202,25 +242,34 @@ v-model="selectedKeys"
               postKeys= ''+postKeys+keysList[i].value+',';
             }
             }
-            let data = new FormData();
+            data = new FormData();
               data.append("title", this.title);
               data.append("image", this.imagenPost);
               data.append("category", this.categoria);
+              data.append("lang", this.lang_trans);
               data.append("checkEditSummary", this.checkEditSummary);
               data.append("checkEditContent", this.checkEditContent);
               data.append("tags", postTags);
               data.append("keywords", postKeys);
+           }
+
+
             axios.post(url,data)
                  .then(response=>{
                    swal({title:this.$trans('messages.Correct data'),
-                         text:this.$trans('messages.Post created successfully'),
+                         text:msg_succ,
                          icon:'success',
                          closeOnClickOutside:false,
                          closeOnEsc:false
                        }).then(select=>{
                          if (select){
                            let postAdd=response.data;
+                           if(this.show_lang_div===true){
                           this.$emit('postnew',postAdd);
+                        }
+                        else{
+                        this.ventanaCreatPost=false;
+                      }
                            //location.reload();
                          }
                        });
@@ -258,9 +307,15 @@ v-model="selectedKeys"
                    swal('Error',mensaje,'error');
                    //console.log(error.response.data);
                  });
+
         },
       },
       created: function () {
+
+        axios.get('/languagesList')
+              .then(response=> this.languages=response.data)
+              .catch(error=>this.error.push(error));
+
          axios.get('/categoriesList')
               .then(response => this.categories = response.data)
               .catch(error => this.errors.push(error));

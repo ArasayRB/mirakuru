@@ -26,5 +26,7 @@ class DatabaseSeeder extends Seeder
       $this->call(ServicioTableSeeder::class);
       $this->call(HostalTableSeeder::class);
       $this->call(HabitacionTableSeeder::class);
+      $this->call(ContentTypeTableSeeder::class);
+      $this->call(LanguageTableSeeder::class);
     }
 }

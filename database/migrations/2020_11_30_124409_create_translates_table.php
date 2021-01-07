@@ -15,6 +15,7 @@ class CreateTranslatesTable extends Migration
     {
         Schema::create('translates', function (Blueprint $table) {
             $table->id();
+            $table->string('id_content_trans');
             $table->longText('content');
             $table->unsignedBigInteger('tipo_content');
             $table->unsignedBigInteger('trans_lang');

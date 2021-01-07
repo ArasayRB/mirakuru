@@ -2216,12 +2216,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     VueCkeditor: vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['locale'],
+  props: ['locale', 'show_lang_div', 'post'],
   data: function data() {
     return {
       tags: [],
@@ -2268,14 +2281,21 @@ __webpack_require__.r(__webpack_exports__);
       },
       categories: '',
       categori: '',
+      languages: [],
+      language: '',
+      activeClass: 'active',
+      showClass: 'show',
       post: '',
       value: '',
       title: '',
       imagenPost: '',
       categoria: '',
+      src: 'images/lang/',
+      lang_trans: '',
       checkEditSummary: '',
       checkEditContent: '',
       ventanaCreatPost: false,
+      error: '',
       token: window.CSRF_TOKEN
     };
   },
@@ -2305,47 +2325,74 @@ __webpack_require__.r(__webpack_exports__);
     createPost: function createPost() {
       var _this = this;
 
-      var url = "/posts";
-      var mensaje = this.$trans('messages.Unidentified error');
+      var url;
+      var msg_succ;
+      var data;
 
-      if (this.title == '' || this.imagenPost == '' || this.categoria == '' || this.checkEditSummary == '' || this.checkEditContent == '' || this.selectedTags == '' || this.keywords == '') {
-        mensaje = this.$trans('messages.You cannot leave empty fields, please check');
-      }
+      if (this.show_lang_div === false) {
+        url = "/addTranslate";
+        msg_succ = this.$trans('messages.Post translated successfully');
 
-      var tagsList = this.selectedTags;
-      var postTags = "";
+        var _mensaje = this.$trans('messages.Unidentified error');
 
-      for (var i = 0; i < tagsList.length; i = i + 1) {
-        if (i == tagsList.length - 1) {
-          postTags = '' + postTags + tagsList[i].value;
-        } else {
-          postTags = '' + postTags + tagsList[i].value + ',';
+        if (this.title == '' || this.checkEditSummary == '' || this.checkEditContent == '' || this.lang_trans == '') {
+          _mensaje = this.$trans('messages.You cannot leave empty fields, please check');
         }
-      }
 
-      var keysList = this.selectedKeys;
-      var postKeys = "";
+        data = new FormData();
+        data.append("title", this.title);
+        data.append("title_old", this.post.title);
+        data.append("post_id", this.post.id);
+        data.append("lang", this.lang_trans);
+        data.append("checkEditSummary", this.checkEditSummary);
+        data.append("checkEditContent", this.checkEditContent);
+      } else {
+        url = "/posts";
+        msg_succ = this.$trans('messages.Post created successfully');
 
-      for (var i = 0; i < keysList.length; i = i + 1) {
-        if (i == keysList.length - 1) {
-          postKeys = '' + postKeys + keysList[i].value;
-        } else {
-          postKeys = '' + postKeys + keysList[i].value + ',';
+        var _mensaje2 = this.$trans('messages.Unidentified error');
+
+        if (this.title == '' || this.imagenPost == '' || this.categoria == '' || this.checkEditSummary == '' || this.checkEditContent == '' || this.selectedTags == '' || this.keywords == '') {
+          _mensaje2 = this.$trans('messages.You cannot leave empty fields, please check');
         }
+
+        var tagsList = this.selectedTags;
+        var postTags = "";
+
+        for (var i = 0; i < tagsList.length; i = i + 1) {
+          if (i == tagsList.length - 1) {
+            postTags = '' + postTags + tagsList[i].value;
+          } else {
+            postTags = '' + postTags + tagsList[i].value + ',';
+          }
+        }
+
+        var keysList = this.selectedKeys;
+        var postKeys = "";
+
+        for (var i = 0; i < keysList.length; i = i + 1) {
+          if (i == keysList.length - 1) {
+            postKeys = '' + postKeys + keysList[i].value;
+          } else {
+            postKeys = '' + postKeys + keysList[i].value + ',';
+          }
+        }
+
+        data = new FormData();
+        data.append("title", this.title);
+        data.append("image", this.imagenPost);
+        data.append("category", this.categoria);
+        data.append("lang", this.lang_trans);
+        data.append("checkEditSummary", this.checkEditSummary);
+        data.append("checkEditContent", this.checkEditContent);
+        data.append("tags", postTags);
+        data.append("keywords", postKeys);
       }
 
-      var data = new FormData();
-      data.append("title", this.title);
-      data.append("image", this.imagenPost);
-      data.append("category", this.categoria);
-      data.append("checkEditSummary", this.checkEditSummary);
-      data.append("checkEditContent", this.checkEditContent);
-      data.append("tags", postTags);
-      data.append("keywords", postKeys);
       axios.post(url, data).then(function (response) {
         swal({
           title: _this.$trans('messages.Correct data'),
-          text: _this.$trans('messages.Post created successfully'),
+          text: msg_succ,
           icon: 'success',
           closeOnClickOutside: false,
           closeOnEsc: false
@@ -2353,7 +2400,11 @@ __webpack_require__.r(__webpack_exports__);
           if (select) {
             var postAdd = response.data;
 
-            _this.$emit('postnew', postAdd); //location.reload();
+            if (_this.show_lang_div === true) {
+              _this.$emit('postnew', postAdd);
+            } else {
+              _this.ventanaCreatPost = false;
+            } //location.reload();
 
           }
         }); //console.log(response);
@@ -2401,6 +2452,11 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this2 = this;
 
+    axios.get('/languagesList').then(function (response) {
+      return _this2.languages = response.data;
+    })["catch"](function (error) {
+      return _this2.error.push(error);
+    });
     axios.get('/categoriesList').then(function (response) {
       return _this2.categories = response.data;
     })["catch"](function (error) {
@@ -2874,6 +2930,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2920,6 +2977,7 @@ __webpack_require__.r(__webpack_exports__);
       },
       posts: [],
       post: [],
+      show_lang_div: false,
       postActualizar: false,
       idPostActualizar: -1,
       value: '',
@@ -3035,6 +3093,15 @@ __webpack_require__.r(__webpack_exports__);
           });
         }
       });
+    },
+    openAddTranslate: function openAddTranslate(index, post) {
+      this.post = post;
+      this.show_lang_div = false;
+      this.ventanaCreatPost = true;
+    },
+    openAddPost: function openAddPost() {
+      this.show_lang_div = true;
+      this.ventanaCreatPost = true;
     },
     openEditPost: function openEditPost(index, post) {
       this.post = post;
@@ -64300,9 +64367,21 @@ var render = function() {
                       { staticClass: "modal-header" },
                       [
                         _vm._t("default", [
-                          _c("h1", { staticClass: "text-center text-dark" }, [
-                            _vm._v(_vm._s(_vm.$trans("messages.New Post")))
-                          ]),
+                          _vm.show_lang_div === false
+                            ? _c(
+                                "h1",
+                                { staticClass: "text-center text-dark" },
+                                [_vm._v(_vm._s(_vm.post.title))]
+                              )
+                            : _c(
+                                "h1",
+                                { staticClass: "text-center text-dark" },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.$trans("messages.New Post"))
+                                  )
+                                ]
+                              ),
                           _vm._v(" "),
                           _c(
                             "button",
@@ -64337,6 +64416,103 @@ var render = function() {
                               { staticClass: "row justify-content-center" },
                               [
                                 _c("div", { staticClass: "col-12" }, [
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass: "form-group",
+                                      attrs: {
+                                        id: "language_div",
+                                        hidden: _vm.show_lang_div
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "label",
+                                        { attrs: { for: "lang_trans" } },
+                                        [
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm.$trans("messages.Language")
+                                            )
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c(
+                                        "select",
+                                        {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.lang_trans,
+                                              expression: "lang_trans"
+                                            }
+                                          ],
+                                          staticClass: "form-control",
+                                          attrs: {
+                                            name: "lang_trans",
+                                            required: ""
+                                          },
+                                          on: {
+                                            change: function($event) {
+                                              var $$selectedVal = Array.prototype.filter
+                                                .call(
+                                                  $event.target.options,
+                                                  function(o) {
+                                                    return o.selected
+                                                  }
+                                                )
+                                                .map(function(o) {
+                                                  var val =
+                                                    "_value" in o
+                                                      ? o._value
+                                                      : o.value
+                                                  return val
+                                                })
+                                              _vm.lang_trans = $event.target
+                                                .multiple
+                                                ? $$selectedVal
+                                                : $$selectedVal[0]
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _c(
+                                            "option",
+                                            { attrs: { value: "" } },
+                                            [
+                                              _vm._v(
+                                                _vm._s(
+                                                  _vm.$trans(
+                                                    "messages.Select Language"
+                                                  )
+                                                )
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _vm._l(_vm.languages, function(
+                                            language
+                                          ) {
+                                            return _c(
+                                              "option",
+                                              {
+                                                domProps: { value: language.id }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(language.language)
+                                                )
+                                              ]
+                                            )
+                                          })
+                                        ],
+                                        2
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
                                   _c("div", { staticClass: "form-group" }, [
                                     _c("label", { attrs: { for: "title" } }, [
                                       _vm._v(
@@ -64368,97 +64544,124 @@ var render = function() {
                                     })
                                   ]),
                                   _vm._v(" "),
-                                  _c("div", { staticClass: "form-group" }, [
-                                    _c("label", { attrs: { for: "image" } }, [
-                                      _vm._v(
-                                        _vm._s(_vm.$trans("messages.Image"))
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      staticClass:
-                                        "form-control-file font-italic mb-2",
-                                      attrs: { type: "file", name: "image" },
-                                      on: { change: _vm.image }
-                                    })
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "form-group" }, [
-                                    _c(
-                                      "label",
-                                      { attrs: { for: "category" } },
-                                      [
-                                        _vm._v(
-                                          _vm._s(
-                                            _vm.$trans("messages.Category")
-                                          )
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "select",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "model",
-                                            rawName: "v-model",
-                                            value: _vm.categoria,
-                                            expression: "categoria"
-                                          }
-                                        ],
-                                        staticClass: "form-control",
-                                        attrs: {
-                                          name: "category",
-                                          required: ""
-                                        },
-                                        on: {
-                                          change: function($event) {
-                                            var $$selectedVal = Array.prototype.filter
-                                              .call(
-                                                $event.target.options,
-                                                function(o) {
-                                                  return o.selected
-                                                }
+                                  _vm.show_lang_div === true
+                                    ? _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "image" } },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.$trans("messages.Image")
                                               )
-                                              .map(function(o) {
-                                                var val =
-                                                  "_value" in o
-                                                    ? o._value
-                                                    : o.value
-                                                return val
-                                              })
-                                            _vm.categoria = $event.target
-                                              .multiple
-                                              ? $$selectedVal
-                                              : $$selectedVal[0]
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c("option", { attrs: { value: "" } }, [
-                                          _vm._v("Seleccionar Actividad")
-                                        ]),
+                                            )
+                                          ]
+                                        ),
                                         _vm._v(" "),
-                                        _vm._l(_vm.categories, function(
-                                          categori
-                                        ) {
-                                          return _c(
-                                            "option",
-                                            {
-                                              domProps: { value: categori.id }
-                                            },
-                                            [
-                                              _vm._v(
-                                                _vm._s(categori.category_post)
-                                              )
-                                            ]
-                                          )
+                                        _c("input", {
+                                          staticClass:
+                                            "form-control-file font-italic mb-2",
+                                          attrs: {
+                                            type: "file",
+                                            name: "image"
+                                          },
+                                          on: { change: _vm.image }
                                         })
-                                      ],
-                                      2
-                                    )
-                                  ]),
+                                      ])
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _vm.show_lang_div === true
+                                    ? _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "category" } },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.$trans("messages.Category")
+                                              )
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "select",
+                                          {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value: _vm.categoria,
+                                                expression: "categoria"
+                                              }
+                                            ],
+                                            staticClass: "form-control",
+                                            attrs: {
+                                              name: "category",
+                                              required: ""
+                                            },
+                                            on: {
+                                              change: function($event) {
+                                                var $$selectedVal = Array.prototype.filter
+                                                  .call(
+                                                    $event.target.options,
+                                                    function(o) {
+                                                      return o.selected
+                                                    }
+                                                  )
+                                                  .map(function(o) {
+                                                    var val =
+                                                      "_value" in o
+                                                        ? o._value
+                                                        : o.value
+                                                    return val
+                                                  })
+                                                _vm.categoria = $event.target
+                                                  .multiple
+                                                  ? $$selectedVal
+                                                  : $$selectedVal[0]
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "option",
+                                              { attrs: { value: "" } },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    _vm.$trans(
+                                                      "messages.Select Category"
+                                                    )
+                                                  )
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _vm._l(_vm.categories, function(
+                                              categori
+                                            ) {
+                                              return _c(
+                                                "option",
+                                                {
+                                                  domProps: {
+                                                    value: categori.id
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    _vm._s(
+                                                      categori.category_post
+                                                    )
+                                                  )
+                                                ]
+                                              )
+                                            })
+                                          ],
+                                          2
+                                        )
+                                      ])
+                                    : _vm._e(),
                                   _vm._v(" "),
                                   _c("div", { staticClass: "form-group" }, [
                                     _c(
@@ -64559,85 +64762,96 @@ var render = function() {
                                     1
                                   ),
                                   _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    { staticClass: "form-group" },
-                                    [
-                                      _c("label", [
-                                        _vm._v(
-                                          _vm._s(_vm.$trans("messages.Tags")) +
-                                            " : "
-                                        ),
-                                        _c(
-                                          "span",
-                                          { staticClass: "text-danger" },
-                                          [_vm._v("*")]
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("br"),
-                                      _vm._v(" "),
-                                      _c("tags-input", {
-                                        attrs: {
-                                          "element-id": "tags",
-                                          "add-tags-on-comma": true,
-                                          typeahead: true
-                                        },
-                                        model: {
-                                          value: _vm.selectedTags,
-                                          callback: function($$v) {
-                                            _vm.selectedTags = $$v
-                                          },
-                                          expression: "selectedTags"
-                                        }
-                                      })
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "div",
-                                    { staticClass: "form-group" },
-                                    [
-                                      _c("label", { attrs: { for: "title" } }, [
-                                        _vm._v(
-                                          _vm._s(
-                                            _vm.$trans("messages.Keywords")
-                                          ) + ": "
-                                        ),
-                                        _c(
-                                          "span",
-                                          { staticClass: "text-danger" },
-                                          [
+                                  _vm.show_lang_div === true
+                                    ? _c(
+                                        "div",
+                                        { staticClass: "form-group" },
+                                        [
+                                          _c("label", [
                                             _vm._v(
                                               _vm._s(
-                                                _vm.$trans(
-                                                  "messages.Separate with (,) please"
-                                                )
-                                              )
+                                                _vm.$trans("messages.Tags")
+                                              ) + " : "
+                                            ),
+                                            _c(
+                                              "span",
+                                              { staticClass: "text-danger" },
+                                              [_vm._v("*")]
                                             )
-                                          ]
-                                        )
-                                      ]),
-                                      _vm._v(" "),
-                                      _c("tags-input", {
-                                        attrs: {
-                                          "element-id": "keys",
-                                          "add-tags-on-comma": true,
-                                          placeholder: "Add a keyword",
-                                          typeahead: true
-                                        },
-                                        model: {
-                                          value: _vm.selectedKeys,
-                                          callback: function($$v) {
-                                            _vm.selectedKeys = $$v
-                                          },
-                                          expression: "selectedKeys"
-                                        }
-                                      })
-                                    ],
-                                    1
-                                  )
+                                          ]),
+                                          _vm._v(" "),
+                                          _c("br"),
+                                          _vm._v(" "),
+                                          _c("tags-input", {
+                                            attrs: {
+                                              "element-id": "tags",
+                                              "add-tags-on-comma": true,
+                                              typeahead: true
+                                            },
+                                            model: {
+                                              value: _vm.selectedTags,
+                                              callback: function($$v) {
+                                                _vm.selectedTags = $$v
+                                              },
+                                              expression: "selectedTags"
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _vm.show_lang_div === true
+                                    ? _c(
+                                        "div",
+                                        { staticClass: "form-group" },
+                                        [
+                                          _c(
+                                            "label",
+                                            { attrs: { for: "title" } },
+                                            [
+                                              _vm._v(
+                                                _vm._s(
+                                                  _vm.$trans(
+                                                    "messages.Keywords"
+                                                  )
+                                                ) + ": "
+                                              ),
+                                              _c(
+                                                "span",
+                                                { staticClass: "text-danger" },
+                                                [
+                                                  _vm._v(
+                                                    _vm._s(
+                                                      _vm.$trans(
+                                                        "messages.Separate with (,) please"
+                                                      )
+                                                    )
+                                                  )
+                                                ]
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
+                                          _c("tags-input", {
+                                            attrs: {
+                                              "element-id": "keys",
+                                              "add-tags-on-comma": true,
+                                              placeholder: "Add a keyword",
+                                              typeahead: true
+                                            },
+                                            model: {
+                                              value: _vm.selectedKeys,
+                                              callback: function($$v) {
+                                                _vm.selectedKeys = $$v
+                                              },
+                                              expression: "selectedKeys"
+                                            }
+                                          })
+                                        ],
+                                        1
+                                      )
+                                    : _vm._e()
                                 ])
                               ]
                             )
@@ -64664,26 +64878,49 @@ var render = function() {
                                     "div",
                                     { staticClass: "col-md-5 offset-md-4" },
                                     [
-                                      _c(
-                                        "button",
-                                        {
-                                          staticClass:
-                                            "btn rounded btn-primary reserva",
-                                          attrs: { type: "button" },
-                                          on: {
-                                            click: function($event) {
-                                              return _vm.createPost()
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _vm._v(
-                                            _vm._s(
-                                              _vm.$trans("messages.Create")
-                                            )
+                                      _vm.show_lang_div === true
+                                        ? _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn rounded btn-primary reserva",
+                                              attrs: { type: "button" },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.createPost()
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                _vm._s(
+                                                  _vm.$trans("messages.Create")
+                                                )
+                                              )
+                                            ]
                                           )
-                                        ]
-                                      ),
+                                        : _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn rounded btn-primary reserva",
+                                              attrs: { type: "button" },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.createPost()
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                _vm._s(
+                                                  _vm.$trans(
+                                                    "messages.Translate"
+                                                  )
+                                                )
+                                              )
+                                            ]
+                                          ),
                                       _vm._v(" "),
                                       _c(
                                         "button",
@@ -65263,7 +65500,7 @@ var render = function() {
             attrs: { href: "#", role: "button", "aria-pressed": "true" },
             on: {
               click: function($event) {
-                _vm.ventanaCreatPost = true
+                return _vm.openAddPost()
               }
             }
           },
@@ -65278,7 +65515,11 @@ var render = function() {
       [
         _vm.ventanaCreatPost
           ? _c("add-post-form-component", {
-              attrs: { locale: _vm.locale },
+              attrs: {
+                show_lang_div: _vm.show_lang_div,
+                post: _vm.post,
+                locale: _vm.locale
+              },
               on: {
                 postnew: _vm.addPostIndex,
                 close: function($event) {
@@ -65408,11 +65649,34 @@ var render = function() {
                             attrs: { href: "#" },
                             on: {
                               click: function($event) {
+                                return _vm.openAddTranslate(index, post)
+                              }
+                            }
+                          },
+                          [
+                            _c("i", {
+                              staticClass: "fas fa-language",
+                              attrs: { title: "Add Language/Añadir Lenguage" }
+                            })
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
                                 return _vm.openEditPost(index, post)
                               }
                             }
                           },
-                          [_c("i", { staticClass: "fa fa-edit" })]
+                          [
+                            _c("i", {
+                              staticClass: "fa fa-edit",
+                              attrs: { title: "Edit/Editar" }
+                            })
+                          ]
                         ),
                         _vm._v(" "),
                         _c(
@@ -65429,7 +65693,12 @@ var render = function() {
                               }
                             }
                           },
-                          [_c("i", { staticClass: "fa fa-trash-alt" })]
+                          [
+                            _c("i", {
+                              staticClass: "fa fa-trash-alt",
+                              attrs: { title: "Delete/Eliminar" }
+                            })
+                          ]
                         )
                       ]),
                       _vm._v(" "),
@@ -65443,11 +65712,15 @@ var render = function() {
                         "td",
                         _vm._l(post.tags, function(tag) {
                           return _c("div", {}, [
-                            _vm._v(
-                              "\n                  " +
-                                _vm._s(tag.name) +
-                                "\n                  "
-                            )
+                            _c("p", [
+                              _c(
+                                "span",
+                                {
+                                  staticClass: "badge badge-pill badge-primary"
+                                },
+                                [_vm._v(_vm._s(tag.name))]
+                              )
+                            ])
                           ])
                         }),
                         0
@@ -66500,7 +66773,13 @@ var render = function() {
                     _c("h5", [_vm._v(_vm._s(_vm.$trans("messages.Services")))]),
                     _vm._v(" "),
                     _vm._l(res.servicios, function(serv) {
-                      return _c("p", [_vm._v(_vm._s(serv.name))])
+                      return _c("p", [
+                        _c(
+                          "span",
+                          { staticClass: "badge badge-pill badge-primary" },
+                          [_vm._v(_vm._s(serv.name))]
+                        )
+                      ])
                     })
                   ],
                   2
@@ -66513,7 +66792,13 @@ var render = function() {
                     _c("h5", [_vm._v(_vm._s(_vm.$trans("messages.Rooms")))]),
                     _vm._v(" "),
                     _vm._l(res.habitaciones, function(roo) {
-                      return _c("p", [_vm._v(_vm._s(roo.name))])
+                      return _c("p", [
+                        _c(
+                          "span",
+                          { staticClass: "badge badge-pill badge-info" },
+                          [_vm._v(_vm._s(roo.name))]
+                        )
+                      ])
                     })
                   ],
                   2
@@ -81535,6 +81820,7 @@ module.exports = {
     "Excellent!!": "Excellent!!",
     "Excursions": "Excursions",
     "Facilities": "Facilities",
+    "Find us with QR": "Find us with QR",
     "Foods": "Foods",
     "For your security, please confirm your password to continue.": "For your security, please confirm your password to continue.",
     "Forbidden": "Forbidden",
@@ -81564,6 +81850,7 @@ module.exports = {
     "Keywords": "Keywords",
     "Know our places": "Know our places",
     "Landline": "Landline",
+    "Language": "Language",
     "Languages": "Languages",
     "Last active": "Last active",
     "Last used": "Last used",
@@ -81619,6 +81906,7 @@ module.exports = {
     "Post": "Post",
     "Post created successfully": "Post created successfully",
     "Post deleted successfully": "Post deleted successfully",
+    "Post translated successfully": "Post transcrito satisfactoriamente",
     "Posted by: ": "Posted by: ",
     "Posts": "Posts",
     "Posts Category": "Posts Category",
@@ -81671,7 +81959,9 @@ module.exports = {
     "Saved.": "Saved.",
     "Searching hostal": "Searching hostal",
     "Select A New Photo": "Select A New Photo",
+    "Select Category": "Select Category",
     "Select Country": "Select Country",
+    "Select Language": "Select Language",
     "Select first how many rooms do you need for see what days are available in calendar": "Select first how many rooms do you need for see what days are available in calendar",
     "Send": "Send",
     "Send Password Reset Link": "Send Password Reset Link",
@@ -81734,6 +82024,7 @@ module.exports = {
     "Too Many Attempts.": "Too Many Attempts.",
     "Too Many Requests": "Too Many Requests",
     "Tools": "Tools",
+    "Translate": "Transcribir",
     "Transportation": "Transportation",
     "Two Factor Authentication": "Two Factor Authentication",
     "Two factor authentication is now enabled. Scan the following QR code using your phone's authenticator application.": "Two factor authentication is now enabled. Scan the following QR code using your phone's authenticator application.",
@@ -82014,6 +82305,7 @@ module.exports = {
     "Excellent!!": "Excelente!!",
     "Excursions": "Excursiones",
     "Facilities": "Facilidades",
+    "Find us with QR": "Encu\xE9ntranos con el QR",
     "Foods": "Alimentos",
     "For your security, please confirm your password to continue.": "Por su seguridad, confirme su contrase\xF1a para continuar.",
     "Forbidden": "Prohibido",
@@ -82043,7 +82335,8 @@ module.exports = {
     "Keywords": "Palabras claves",
     "Know our places": "Conozca nuestros espacios",
     "Landline": "Tel\xE9fono Fijo",
-    "Languages": "Idioma",
+    "Language": "Idioma",
+    "Languages": "Idiomas",
     "Last active": "Activo por \xFAltima vez",
     "Last used": "Usado por \xFAltima vez",
     "Leave": "Abandonar",
@@ -82098,6 +82391,7 @@ module.exports = {
     "Post": "Post",
     "Post created successfully": "Post creado satisfactoriamente",
     "Post deleted successfully": "Post eliminado satisfactoriamente",
+    "Post translated successfully": "Post translated successfully",
     "Posted by: ": "Posteado por: ",
     "Posts": "Posts",
     "Posts Category": "Categoria de Posts",
@@ -82150,7 +82444,9 @@ module.exports = {
     "Saved.": "Guardado.",
     "Searching hostal": "En busca de un hostal",
     "Select A New Photo": "Seleccione una nueva foto",
+    "Select Category": "Seleccione Categor\xEDa",
     "Select Country": "Seleccione un pa\xEDs",
+    "Select Language": "Seleccione lenguaje",
     "Select first how many rooms do you need for see what days are available in calendar": "Seleccione primero cu\xE1ntas habitaciones necesitar\xE1 para saber la disponibilidad en el calendario",
     "Send": "Enviar",
     "Send Password Reset Link": "Enviar enlace para restablecer la contrase\xF1a",
@@ -82213,6 +82509,7 @@ module.exports = {
     "Too Many Attempts.": "Demasiados intentos",
     "Too Many Requests": "Demasiadas peticiones",
     "Tools": "Herramientas",
+    "Translate": "Translate",
     "Transportation": "Transportaci\xF3n",
     "Two Factor Authentication": "Autenticaci\xF3n de dos factores",
     "Two factor authentication is now enabled. Scan the following QR code using your phone's authenticator application.": "La autenticaci\xF3n de dos factores ahora est\xE1 habilitada. Escanee el siguiente c\xF3digo QR usando la aplicaci\xF3n de autenticaci\xF3n de su tel\xE9fono.",
@@ -82377,6 +82674,7 @@ module.exports = {
     "Ensure your account is using a long, random password to stay secure.": "Aseg\xFArese que su cuenta est\xE9 usando una contrase\xF1a larga y aleatoria para mantenerse seguro.",
     "Error": "Error",
     "Excellent!!": "Excelente!!",
+    "Find us with QR": "Encu\xE9ntranos con el QR",
     "For your security, please confirm your password to continue.": "Por su seguridad, confirme su contrase\xF1a para continuar.",
     "Forbidden": "Prohibido",
     "Forgot Your Password?": "\xBFOlvid\xF3 su Contrase\xF1a?",
@@ -82405,7 +82703,8 @@ module.exports = {
     "Keywords": "Palabras claves",
     "Know our places": "Conozca nuestros espacios",
     "Landline": "Tel\xE9fono Fijo",
-    "Languages": "Idioma",
+    "Language": "Idioma",
+    "Languages": "Idiomas",
     "Last active": "Activo por \xFAltima vez",
     "Last used": "Usado por \xFAltima vez",
     "Leave": "Abandonar",
@@ -82456,6 +82755,7 @@ module.exports = {
     "Post": "Post",
     "Post created successfully": "Post creado satisfactoriamente",
     "Post deleted successfully": "Post eliminado satisfactoriamente",
+    "Post translated successfully": "Post transcrito satisfactoriamente",
     "Posted by: ": "Posteado por: ",
     "Posts": "Posts",
     "Posts Category": "Categoria de Posts",
@@ -82487,7 +82787,9 @@ module.exports = {
     "Saved.": "Guardado.",
     "Searching hostal": "En busca de un hostal",
     "Select A New Photo": "Seleccione una nueva foto",
+    "Select Category": "Seleccione Categor\xEDa",
     "Select Country": "Seleccione un pa\xEDs",
+    "Select Language": "Seleccione lenguaje",
     "Select first how many rooms do you need for see what days are available in calendar": "Seleccione primero cu\xE1ntas habitaciones necesitar\xE1 para saber la disponibilidad en el calendario",
     "Send": "Enviar",
     "Send Password Reset Link": "Enviar enlace para restablecer la contrase\xF1a",
@@ -82546,6 +82848,7 @@ module.exports = {
     "Token Name": "Nombre del Token",
     "Too Many Attempts.": "Demasiados intentos",
     "Too Many Requests": "Demasiadas peticiones",
+    "Translate": "Transcribir",
     "Two Factor Authentication": "Autenticaci\xF3n de dos factores",
     "Two factor authentication is now enabled. Scan the following QR code using your phone's authenticator application.": "La autenticaci\xF3n de dos factores ahora est\xE1 habilitada. Escanee el siguiente c\xF3digo QR usando la aplicaci\xF3n de autenticaci\xF3n de su tel\xE9fono.",
     "Type Account": "Tipo de Cuenta",

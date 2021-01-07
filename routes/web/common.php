@@ -43,6 +43,8 @@ Route::get('/exist-post', [App\Http\Controllers\PostController::class, 'existPos
 Route::get('/qr-generate', [App\Http\Controllers\QRController::class, 'qrGenerate']);
 Route::post('/contact', [App\Http\Controllers\ContactoController::class, 'store']);
 Route::post('/post-love/{id}', [App\Http\Controllers\WelcomeController::class, 'addLove']);
+Route::post('/addTranslate',[App\Http\Controllers\PostController::class, 'addTranslate']);
+Route::get('/languagesList',[App\Http\Controllers\LanguageController::class, 'getLanguagesList']);
 Route::post('/share/{id}/{media}', [App\Http\Controllers\WelcomeController::class, 'sharePostMedia']);
 Route::get('/gallery', function(){
   return view('galeria');

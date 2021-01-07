@@ -5,12 +5,12 @@
       <h1 class="h3 mb-2 text-gray-800">{{ $trans('messages.Posts') }}</h1>
     </div>
     <div class="col-md-6">
-      <a href="#" @click="ventanaCreatPost = true" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">{{ $trans('messages.Add') }}</a>
+      <a href="#" @click="openAddPost()" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">{{ $trans('messages.Add') }}</a>
     </div>
 
   </div>
   <div class="card shadow mb-4">
-    <add-post-form-component @postnew="addPostIndex" :locale="locale" v-if="ventanaCreatPost" @close="ventanaCreatPost = false">
+    <add-post-form-component @postnew="addPostIndex" :show_lang_div="show_lang_div" :post="post" :locale="locale" v-if="ventanaCreatPost" @close="ventanaCreatPost = false">
 
     </add-post-form-component>
     <edit-post-form-component @postupd="updPostIndex" :locale="locale" :post="post" v-if="ventanaEditPost" @close="ventanaEditPost = false">
@@ -70,8 +70,9 @@
 
                 <tr v-for="(post, index) in posts" :post="post" :key="post.id">
                   <td>
-                      <a href="#" @click="openEditPost(index,post)"><i class="fa fa-edit"></i></a>
-                      <a href="#" @click="deletePost(index,post.id,post.title)"><i class="fa fa-trash-alt"></i></a>
+                      <a href="#" @click="openAddTranslate(index,post)"><i class="fas fa-language" title="Add Language/Añadir Lenguage"></i></a>
+                      <a href="#" @click="openEditPost(index,post)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
+                      <a href="#" @click="deletePost(index,post.id,post.title)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
                   </td>
                   <td>{{post.id}}</td>
                   <td>{{post.title}}</td>
@@ -127,6 +128,7 @@
      },
           posts:[],
           post:[],
+          show_lang_div:false,
           postActualizar:false,
           idPostActualizar:-1,
           value:'',
@@ -237,6 +239,15 @@
                 });
 
 
+        },
+        openAddTranslate:function(index,post){
+          this.post=post;
+          this.show_lang_div=false;
+          this.ventanaCreatPost = true;
+        },
+        openAddPost:function(){
+          this.show_lang_div=true;
+          this.ventanaCreatPost = true;
         },
         openEditPost:function(index,post){
 
