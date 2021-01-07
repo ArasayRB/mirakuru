@@ -115,10 +115,10 @@
                 </div>
                 <div class="card-body row">
                   <div class="col-2"> <h5>{{ $trans('messages.Services') }}</h5>
-                    <p v-for="serv in res.servicios">{{serv.name}}</p>
+                    <p v-for="serv in res.servicios"><span class="badge badge-pill badge-primary">{{serv.name}}</span></p>
                   </div>
                   <div class="col-3"> <h5>{{ $trans('messages.Rooms') }}</h5>
-                    <p v-for="roo in res.habitaciones">{{roo.name}}</p>
+                    <p v-for="roo in res.habitaciones"><span class="badge badge-pill badge-info">{{roo.name}}</span></p>
                   </div>
                   <div class="col-2"><h5>{{ $trans('messages.Persons') }}</h5>
                     <p>{{res.totally_persons}}</p>
