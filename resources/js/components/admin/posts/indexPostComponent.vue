@@ -78,7 +78,7 @@
                   <td>{{post.content}}</td>
                   <td>
                     <div class="" v-for="tag in post.tags ">
-                    {{tag.name}}
+                    <p> <span class="badge badge-pill badge-primary">{{tag.name}}</span></p>
                     </div>
                   </td>
                   <td>{{post.summary}}</td>
