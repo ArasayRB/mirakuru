@@ -154,6 +154,7 @@ return [
   "Not Found"=> "Not Found",
   "None Post added yet"=> "None Post added yet",
   "None reservation added yet"=>"None reservation added yet",
+  "None language added yet"=>"None language added yet",
   "Notification"=>"Notification",
   "of"=> "of",
   "Oh no"=> "Oh no",
