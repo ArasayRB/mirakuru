@@ -73,7 +73,6 @@
     @endguest
     <!--Comprobamos si el status esta a true y existe más de un lenguaje-->
   @if (config('locale.status') && count(config('locale.languages')) > 1)
-                <ul class="navbar-nav ml-auto">
                    <li class="nav-item dropdown">
                      <a class="nav-link dropdown-toggle text-light"  id="dropdownMenuLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
                        {{__('Languages')}}
@@ -88,7 +87,6 @@
                        @endforeach
                      </div>
                    </li>
-                 </ul>
             @endif
 
 
