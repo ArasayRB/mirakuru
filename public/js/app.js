@@ -2328,6 +2328,7 @@ __webpack_require__.r(__webpack_exports__);
       var url;
       var msg_succ;
       var data;
+      var default_lang = this.$lang.getLocale();
 
       if (this.show_lang_div === false) {
         url = "/addTranslate";
@@ -2383,6 +2384,7 @@ __webpack_require__.r(__webpack_exports__);
         data.append("image", this.imagenPost);
         data.append("category", this.categoria);
         data.append("lang", this.lang_trans);
+        data.append("default-lang", default_lang);
         data.append("checkEditSummary", this.checkEditSummary);
         data.append("checkEditContent", this.checkEditContent);
         data.append("tags", postTags);
@@ -2476,11 +2478,13 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   mounted: function mounted() {
+    /*
     if (this.$attrs.locale) {
-      this.$lang.setLocale(this.$attrs.locale);
-    } else {
+         this.$lang.setLocale(this.$attrs.locale);
+         }
+    else {
       this.$lang.setLocale('en');
-    }
+    }*/
   }
 });
 
@@ -2703,6 +2707,7 @@ __webpack_require__.r(__webpack_exports__);
       var url;
       var data;
       var msg_edited;
+      var default_lang = this.$lang.getLocale();
       var config = {
         headers: {
           "Content-Type": "multipart/form-data"
@@ -2734,6 +2739,7 @@ __webpack_require__.r(__webpack_exports__);
         data = new FormData();
         data.append('_method', 'patch');
         data.append("title", post.title);
+        data.append("default-lang", default_lang);
         data.append("img_url", this.imagenPost);
         data.append("category_id", this.categoria);
         data.append("summary", post.summary);
@@ -3204,8 +3210,6 @@ __webpack_require__.r(__webpack_exports__);
       if (response.data == '') {
         _this4.mensage = _this4.$trans('messages.None Post added yet');
       }
-
-      console.log('CatPost- ' + response.data);
     })["catch"](function (error) {
       return _this4.errors.push(error);
     });

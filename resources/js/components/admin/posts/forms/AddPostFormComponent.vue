@@ -195,10 +195,11 @@ placeholder="Add a keyword"
             console.log('Entro -'+e.target.files[0]);
         },
         createPost:function(){
-
             let url;
             let msg_succ;
             let data;
+
+           let default_lang=this.$lang.getLocale();
            if(this.show_lang_div===false){
               url="/addTranslate";
               msg_succ=this.$trans('messages.Post translated successfully');
@@ -247,6 +248,7 @@ placeholder="Add a keyword"
               data.append("image", this.imagenPost);
               data.append("category", this.categoria);
               data.append("lang", this.lang_trans);
+              data.append("default-lang", default_lang);
               data.append("checkEditSummary", this.checkEditSummary);
               data.append("checkEditContent", this.checkEditContent);
               data.append("tags", postTags);
@@ -311,7 +313,6 @@ placeholder="Add a keyword"
         },
       },
       created: function () {
-
         axios.get('/languagesList')
               .then(response=> this.languages=response.data)
               .catch(error=>this.error.push(error));
@@ -335,12 +336,13 @@ placeholder="Add a keyword"
                    .catch(error => this.errors.push(error));
          },
         mounted() {
+          /*
           if (this.$attrs.locale) {
                this.$lang.setLocale(this.$attrs.locale);
                }
           else {
             this.$lang.setLocale('en');
-          }
+          }*/
         }
     }
 </script>

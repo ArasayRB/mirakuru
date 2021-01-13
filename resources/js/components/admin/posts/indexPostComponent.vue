@@ -316,7 +316,7 @@
                 if (response.data==''){
                   this.mensage=this.$trans('messages.None Post added yet');
                 }
-                console.log('CatPost- '+response.data);})
+              })
               .catch(error => this.errors.push(error));
          axios.get('/categoriesList')
                .then(response =>{

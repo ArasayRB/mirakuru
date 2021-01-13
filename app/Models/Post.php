@@ -16,6 +16,7 @@ class Post extends Model
     use HasFactory; use Taggable;
     protected $fillable = [
         'title',
+        'default_lang',
         'content',
         'summary',
         'publicate_state',

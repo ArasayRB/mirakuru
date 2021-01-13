@@ -97,6 +97,7 @@ class PostController extends Controller
     {
         $dataPost=request()->validate([
           'title'=> 'required|max:255',
+          'default-lang'=> 'required',
           'image'=> 'required|image',
           'category'=> 'required',
           'checkEditSummary'=> 'required',
@@ -109,6 +110,7 @@ class PostController extends Controller
         $keywords = explode(",", request('keywords'));
         $post= new Post();
         $post->title=request('title');
+        $post->default_lang=request('default-lang');
         $post->content=request('checkEditContent');
         $post->publicate_state=false;
         $post->summary=request('checkEditSummary');
@@ -238,6 +240,7 @@ class PostController extends Controller
       if (request('img_url')!=""){
         $dataPost=request()->validate([
           'title'=> 'required|max:255',
+          'default-lang'=> 'required',
           'img_url'=> 'required|image',
           'category_id'=> 'required',
           'summary'=> 'required',
@@ -253,6 +256,7 @@ class PostController extends Controller
       else{
         $dataPost=request()->validate([
           'title'=> 'required|max:255',
+          'default-lang'=> 'required',
           'category_id'=> 'required',
           'summary'=> 'required',
           'content'=> 'required',
@@ -265,6 +269,7 @@ class PostController extends Controller
         $keywords = explode(",", request('keywords'));
         $slug = Str::slug($post->title, '-');
         $post->title=request('title');
+        $post->default_lang=request('default-lang');
         $post->content=request('content');
         $post->publicate_state=false;
         $post->summary=request('summary');

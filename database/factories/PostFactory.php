@@ -27,6 +27,7 @@ class PostFactory extends Factory
       $cantCatPost=CategoriaPost::all()->count();
         return [
           'title' => $this->faker->jobTitle,
+          'default_lang' => 'en',
           'content' => $this->faker->paragraph,
           'summary' => $this->faker->text($maxNbChars = 100),
           'publicate_state' => $this->faker->boolean,

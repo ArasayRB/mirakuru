@@ -188,6 +188,7 @@ placeholder="Add a keyword"
           let url;
           let data;
           let msg_edited;
+          let default_lang=this.$lang.getLocale();
           let config= { headers: {"Content-Type": "multipart/form-data" }};
 
             let tagsList=post.tags;
@@ -215,6 +216,7 @@ placeholder="Add a keyword"
               data = new FormData();
     	          data.append('_method', 'patch');
                 data.append("title", post.title);
+                data.append("default-lang", default_lang);
                 data.append("img_url", this.imagenPost);
                 data.append("category_id", this.categoria);
                 data.append("summary", post.summary);
