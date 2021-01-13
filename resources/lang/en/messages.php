@@ -288,6 +288,7 @@ return [
   "The provided two factor authentication code was invalid."=> "The provided two factor authentication code was invalid.",
   "The team's name and owner information."=> "The team's name and owner information.",
   "The post has been successfully modified"=>"The post has been successfully modified",
+  "The post translation has been successfully modified"=>"The post translation has been successfully modified",
   "This action is unauthorized."=> "This action is unauthorized.",
   "This device"=> "This device",
   "This password does not match our records."=> "This password does not match our records.",

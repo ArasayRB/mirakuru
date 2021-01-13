@@ -45,6 +45,10 @@ Route::post('/contact', [App\Http\Controllers\ContactoController::class, 'store'
 Route::post('/post-love/{id}', [App\Http\Controllers\WelcomeController::class, 'addLove']);
 Route::post('/addTranslate',[App\Http\Controllers\PostController::class, 'addTranslate']);
 Route::get('/languagesList',[App\Http\Controllers\LanguageController::class, 'getLanguagesList']);
+Route::get('/translated-post/{id}',[App\Http\Controllers\PostController::class, 'getTranslatedPostById']);
+Route::get('/translated-language-post/{id}',[App\Http\Controllers\PostController::class, 'getTranslatedLanguagePostById']);
+Route::get('/get-translated-post-by-lang/{lang}/{id_post}',[App\Http\Controllers\PostController::class, 'getTranslatedPostByLang']);
+Route::post('/posts-translated-edited/{id_post}/{lang_name}',[App\Http\Controllers\PostController::class, 'updateTranslatedPostByLang']);
 Route::post('/share/{id}/{media}', [App\Http\Controllers\WelcomeController::class, 'sharePostMedia']);
 Route::get('/gallery', function(){
   return view('galeria');

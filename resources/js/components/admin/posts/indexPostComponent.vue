@@ -13,7 +13,7 @@
     <add-post-form-component @postnew="addPostIndex" :show_lang_div="show_lang_div" :post="post" :locale="locale" v-if="ventanaCreatPost" @close="ventanaCreatPost = false">
 
     </add-post-form-component>
-    <edit-post-form-component @postupd="updPostIndex" :locale="locale" :post="post" v-if="ventanaEditPost" @close="ventanaEditPost = false">
+    <edit-post-form-component @postupd="updPostIndex" :lan_to_edit="lan_to_edit" :locale="locale" :post="post" v-if="ventanaEditPost" @close="ventanaEditPost = false">
 
     </edit-post-form-component>
     <div class="card-header py-3">
@@ -70,6 +70,19 @@
 
                 <tr v-for="(post, index) in posts" :post="post" :key="post.id">
                   <td>
+                    <div class="dropdown">
+                      <a class="dropdown-toggle" title="Edit Transcription/Editar Transcripción" data-toggle="dropdown" @click="getTranslates(index,post)">
+                        <i class="fa fa-edit"></i>
+                        <i class="fas fa-language"></i>
+                      </a>
+                      <div class="dropdown-menu">
+
+                        <a class="dropdown-item" type="button" v-for="lang_available in translated_languages" @click="openEditTranslated(post, lang_available)">
+                            {{lang_available}}
+                        </a>
+
+                        </div>
+                    </div>
                       <a href="#" @click="openAddTranslate(index,post)"><i class="fas fa-language" title="Add Language/Añadir Lenguage"></i></a>
                       <a href="#" @click="openEditPost(index,post)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
                       <a href="#" @click="deletePost(index,post.id,post.title)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
@@ -135,7 +148,11 @@
           id:'',
           mensage:'',
           valueImg:'',
+          lang:true,
           title:'',
+          translated_languages:[],
+          lang_available:'',
+          lan_to_edit:'none',
           locale:'',
           user:this.$attrs.user,
           imagenPost:'',
@@ -179,10 +196,12 @@
           this.posts.push(postAdd);
           this.ventanaCreatPost=false;
         },
-        updPostIndex:function(postUpd){
+        updPostIndex:function(postUpd,act_lan_to_edit){
+          console.log('Nueva variable lan_to_edit es: '+act_lan_to_edit);
           const position=this.posts.findIndex(post=>post.id===postUpd.id);
           this.posts[position]=postUpd;
           this.ventanaEditPost=false;
+          this.lan_to_edit=act_lan_to_edit;
         },
         deletePost:function(index,post,post_name){
           let post_id=post;
@@ -249,11 +268,34 @@
           this.show_lang_div=true;
           this.ventanaCreatPost = true;
         },
+        getTranslates:function(index,post){
+          axios.get('/translated-language-post/'+post.id)
+               .then(response =>{
+                 this.translated_languages = response.data;
+                   this.lang=false;
+                 if (response.data==''){
+                   this.mensage=this.$trans('messages.None Post added yet');
+                 }})
+               .catch(error => this.errors.push(error));
+        },
         openEditPost:function(index,post){
 
         this.post=post;
           this.ventanaEditPost=true;
 
+        },
+        openEditTranslated:function(post, lang_available){
+          let post_translated_array;
+          axios.get('/get-translated-post-by-lang/'+lang_available+'/'+post.id)
+               .then(response =>{
+                 post_translated_array = response.data;
+                 this.post=post_translated_array;
+                     this.ventanaEditPost=true;
+                     this.lan_to_edit=lang_available;
+                 if (response.data==''){
+                   this.mensage=this.$trans('messages.None Post added yet');
+                 }})
+               .catch(error => this.errors.push(error));
         },
 
       },

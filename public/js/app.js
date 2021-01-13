@@ -2610,12 +2610,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     VueCkeditor: vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
-  props: ['post', 'locale'],
+  props: ['post', 'locale', 'lan_to_edit'],
   data: function data() {
     return {
       tags: [],
@@ -2662,6 +2664,9 @@ __webpack_require__.r(__webpack_exports__);
       urlPostUp: this.$attrs.urlpostup,
       categories: '',
       categori: '',
+      languages: [],
+      language: '',
+      lang_trans: '',
       value: '',
       src: 'storage/img_web/posts_img/',
       imagenPost: '',
@@ -2695,6 +2700,9 @@ __webpack_require__.r(__webpack_exports__);
     editedPost: function editedPost(post) {
       var _this = this;
 
+      var url;
+      var data;
+      var msg_edited;
       var config = {
         headers: {
           "Content-Type": "multipart/form-data"
@@ -2722,30 +2730,43 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
 
-      var data = new FormData();
-      data.append('_method', 'patch');
-      data.append("title", post.title);
-      data.append("img_url", this.imagenPost);
-      data.append("category_id", this.categoria);
-      data.append("summary", post.summary);
-      data.append("content", post.content);
-      data.append("tags", postTags);
-      data.append("keywords", postKeys);
-      var url = "/posts/" + post.id;
-      post.img_url = this.imagenPost;
-      console.log('textTgs- ' + postTags + ', textKeys- ' + postKeys);
+      if (this.lan_to_edit === 'none') {
+        data = new FormData();
+        data.append('_method', 'patch');
+        data.append("title", post.title);
+        data.append("img_url", this.imagenPost);
+        data.append("category_id", this.categoria);
+        data.append("summary", post.summary);
+        data.append("content", post.content);
+        data.append("tags", postTags);
+        data.append("keywords", postKeys);
+        url = "/posts/" + post.id;
+        post.img_url = this.imagenPost;
+        msg_edited = this.$trans('messages.The post has been successfully modified');
+      } else {
+        data = new FormData();
+        data.append("title", post.title);
+        data.append("summary", post.summary);
+        data.append("content", post.content); //data.append("tags", postTags);
+        //data.append("keywords", postKeys);
+
+        url = "/posts-translated-edited/" + post.id + "/" + this.lan_to_edit;
+        msg_edited = this.$trans('messages.The post translation has been successfully modified');
+      }
+
       axios.post(url, data, config).then(function (response) {
         swal({
           title: _this.$trans('messages.Post'),
-          text: _this.$trans('messages.The post has been successfully modified'),
+          text: msg_edited,
           icon: 'success',
           closeOnClickOutside: false,
           closeOnEsc: false
         }).then(function (select) {
           if (select) {
             var postUpdate = response.data;
+            _this.lan_to_edit = 'none';
 
-            _this.$emit('postupd', postUpdate);
+            _this.$emit('postupd', postUpdate, _this.lan_to_edit);
           }
         }); //console.log(response);
       })["catch"](function (error) {
@@ -2788,6 +2809,11 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this2 = this;
 
+    axios.get('/languagesList').then(function (response) {
+      return _this2.languages = response.data;
+    })["catch"](function (error) {
+      return _this2.error.push(error);
+    });
     this.categoria = this.post.category_id;
     axios.get('/categoriesList').then(function (response) {
       _this2.categories = response.data;
@@ -2828,6 +2854,19 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-ckeditor2 */ "./node_modules/vue-ckeditor2/dist/vue-ckeditor2.esm.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2984,7 +3023,11 @@ __webpack_require__.r(__webpack_exports__);
       id: '',
       mensage: '',
       valueImg: '',
+      lang: true,
       title: '',
+      translated_languages: [],
+      lang_available: '',
+      lan_to_edit: 'none',
       locale: '',
       user: this.$attrs.user,
       imagenPost: '',
@@ -3026,12 +3069,14 @@ __webpack_require__.r(__webpack_exports__);
       this.posts.push(postAdd);
       this.ventanaCreatPost = false;
     },
-    updPostIndex: function updPostIndex(postUpd) {
+    updPostIndex: function updPostIndex(postUpd, act_lan_to_edit) {
+      console.log('Nueva variable lan_to_edit es: ' + act_lan_to_edit);
       var position = this.posts.findIndex(function (post) {
         return post.id === postUpd.id;
       });
       this.posts[position] = postUpd;
       this.ventanaEditPost = false;
+      this.lan_to_edit = act_lan_to_edit;
     },
     deletePost: function deletePost(index, post, post_name) {
       var _this = this;
@@ -3103,29 +3148,60 @@ __webpack_require__.r(__webpack_exports__);
       this.show_lang_div = true;
       this.ventanaCreatPost = true;
     },
+    getTranslates: function getTranslates(index, post) {
+      var _this2 = this;
+
+      axios.get('/translated-language-post/' + post.id).then(function (response) {
+        _this2.translated_languages = response.data;
+        _this2.lang = false;
+
+        if (response.data == '') {
+          _this2.mensage = _this2.$trans('messages.None Post added yet');
+        }
+      })["catch"](function (error) {
+        return _this2.errors.push(error);
+      });
+    },
     openEditPost: function openEditPost(index, post) {
       this.post = post;
       this.ventanaEditPost = true;
+    },
+    openEditTranslated: function openEditTranslated(post, lang_available) {
+      var _this3 = this;
+
+      var post_translated_array;
+      axios.get('/get-translated-post-by-lang/' + lang_available + '/' + post.id).then(function (response) {
+        post_translated_array = response.data;
+        _this3.post = post_translated_array;
+        _this3.ventanaEditPost = true;
+        _this3.lan_to_edit = lang_available;
+
+        if (response.data == '') {
+          _this3.mensage = _this3.$trans('messages.None Post added yet');
+        }
+      })["catch"](function (error) {
+        return _this3.errors.push(error);
+      });
     }
   },
   created: function created() {
-    var _this2 = this;
+    var _this4 = this;
 
     axios.get('/postsTable').then(function (response) {
-      _this2.posts = response.data;
+      _this4.posts = response.data;
 
       if (response.data == '') {
-        _this2.mensage = _this2.$trans('messages.None Post added yet');
+        _this4.mensage = _this4.$trans('messages.None Post added yet');
       }
 
       console.log('CatPost- ' + response.data);
     })["catch"](function (error) {
-      return _this2.errors.push(error);
+      return _this4.errors.push(error);
     });
     axios.get('/categoriesList').then(function (response) {
-      _this2.categories = response.data;
+      _this4.categories = response.data;
     })["catch"](function (error) {
-      return _this2.errors.push(error);
+      return _this4.errors.push(error);
     });
   },
   mounted: function mounted() {
@@ -65081,113 +65157,130 @@ var render = function() {
                                     })
                                   ]),
                                   _vm._v(" "),
-                                  _c("div", { staticClass: "form-group" }, [
-                                    _c("label", { attrs: { for: "image" } }, [
-                                      _vm._v(
-                                        _vm._s(_vm.$trans("messages.Image"))
-                                      )
-                                    ]),
-                                    _vm._v(" "),
-                                    _c("input", {
-                                      staticClass:
-                                        "form-control-file font-italic mb-2",
-                                      attrs: { type: "file", name: "image" },
-                                      on: { change: _vm.image }
-                                    }),
-                                    _vm._v(" "),
-                                    _c("div", { staticClass: "row" }, [
-                                      _c("img", {
-                                        attrs: {
-                                          src: _vm.src + _vm.post.img_url,
-                                          alt: _vm.post.img_url,
-                                          width: "100"
-                                        }
-                                      })
-                                    ])
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "form-group" }, [
-                                    _c(
-                                      "label",
-                                      { attrs: { for: "category" } },
-                                      [
-                                        _vm._v(
-                                          _vm._s(
-                                            _vm.$trans("messages.Category")
-                                          )
-                                        )
-                                      ]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "select",
-                                      {
-                                        directives: [
-                                          {
-                                            name: "model",
-                                            rawName: "v-model",
-                                            value: _vm.categoria,
-                                            expression: "categoria"
-                                          }
-                                        ],
-                                        staticClass: "form-control",
-                                        attrs: {
-                                          name: "category",
-                                          required: ""
-                                        },
-                                        on: {
-                                          change: function($event) {
-                                            var $$selectedVal = Array.prototype.filter
-                                              .call(
-                                                $event.target.options,
-                                                function(o) {
-                                                  return o.selected
-                                                }
+                                  _vm.lan_to_edit === "none"
+                                    ? _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "image" } },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.$trans("messages.Image")
                                               )
-                                              .map(function(o) {
-                                                var val =
-                                                  "_value" in o
-                                                    ? o._value
-                                                    : o.value
-                                                return val
-                                              })
-                                            _vm.categoria = $event.target
-                                              .multiple
-                                              ? $$selectedVal
-                                              : $$selectedVal[0]
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c("option", { attrs: { value: "" } }, [
-                                          _vm._v("Seleccionar Actividad")
-                                        ]),
+                                            )
+                                          ]
+                                        ),
                                         _vm._v(" "),
-                                        _vm._l(_vm.categories, function(
-                                          categori
-                                        ) {
-                                          return _c(
-                                            "option",
-                                            {
-                                              attrs: { selected: "" },
-                                              domProps: {
-                                                selected:
-                                                  _vm.post.category_id ===
-                                                  categori.id,
-                                                value: categori.id
-                                              }
-                                            },
-                                            [
-                                              _vm._v(
-                                                _vm._s(categori.category_post)
+                                        _c("input", {
+                                          staticClass:
+                                            "form-control-file font-italic mb-2",
+                                          attrs: {
+                                            type: "file",
+                                            name: "image"
+                                          },
+                                          on: { change: _vm.image }
+                                        }),
+                                        _vm._v(" "),
+                                        _c("div", { staticClass: "row" }, [
+                                          _c("img", {
+                                            attrs: {
+                                              src: _vm.src + _vm.post.img_url,
+                                              alt: _vm.post.img_url,
+                                              width: "100"
+                                            }
+                                          })
+                                        ])
+                                      ])
+                                    : _vm._e(),
+                                  _vm._v(" "),
+                                  _vm.lan_to_edit === "none"
+                                    ? _c("div", { staticClass: "form-group" }, [
+                                        _c(
+                                          "label",
+                                          { attrs: { for: "category" } },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.$trans("messages.Category")
                                               )
-                                            ]
-                                          )
-                                        })
-                                      ],
-                                      2
-                                    )
-                                  ]),
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "select",
+                                          {
+                                            directives: [
+                                              {
+                                                name: "model",
+                                                rawName: "v-model",
+                                                value: _vm.categoria,
+                                                expression: "categoria"
+                                              }
+                                            ],
+                                            staticClass: "form-control",
+                                            attrs: {
+                                              name: "category",
+                                              required: ""
+                                            },
+                                            on: {
+                                              change: function($event) {
+                                                var $$selectedVal = Array.prototype.filter
+                                                  .call(
+                                                    $event.target.options,
+                                                    function(o) {
+                                                      return o.selected
+                                                    }
+                                                  )
+                                                  .map(function(o) {
+                                                    var val =
+                                                      "_value" in o
+                                                        ? o._value
+                                                        : o.value
+                                                    return val
+                                                  })
+                                                _vm.categoria = $event.target
+                                                  .multiple
+                                                  ? $$selectedVal
+                                                  : $$selectedVal[0]
+                                              }
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "option",
+                                              { attrs: { value: "" } },
+                                              [_vm._v("Seleccionar Actividad")]
+                                            ),
+                                            _vm._v(" "),
+                                            _vm._l(_vm.categories, function(
+                                              categori
+                                            ) {
+                                              return _c(
+                                                "option",
+                                                {
+                                                  attrs: { selected: "" },
+                                                  domProps: {
+                                                    selected:
+                                                      _vm.post.category_id ===
+                                                      categori.id,
+                                                    value: categori.id
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    _vm._s(
+                                                      categori.category_post
+                                                    )
+                                                  )
+                                                ]
+                                              )
+                                            })
+                                          ],
+                                          2
+                                        )
+                                      ])
+                                    : _vm._e(),
                                   _vm._v(" "),
                                   _c("div", { staticClass: "form-group" }, [
                                     _c(
@@ -65531,7 +65624,11 @@ var render = function() {
         _vm._v(" "),
         _vm.ventanaEditPost
           ? _c("edit-post-form-component", {
-              attrs: { locale: _vm.locale, post: _vm.post },
+              attrs: {
+                lan_to_edit: _vm.lan_to_edit,
+                locale: _vm.locale,
+                post: _vm.post
+              },
               on: {
                 postupd: _vm.updPostIndex,
                 close: function($event) {
@@ -65643,6 +65740,62 @@ var render = function() {
                   _vm._l(_vm.posts, function(post, index) {
                     return _c("tr", { key: post.id, attrs: { post: post } }, [
                       _c("td", [
+                        _c("div", { staticClass: "dropdown" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "dropdown-toggle",
+                              attrs: {
+                                title:
+                                  "Edit Transcription/Editar Transcripción",
+                                "data-toggle": "dropdown"
+                              },
+                              on: {
+                                click: function($event) {
+                                  return _vm.getTranslates(index, post)
+                                }
+                              }
+                            },
+                            [
+                              _c("i", { staticClass: "fa fa-edit" }),
+                              _vm._v(" "),
+                              _c("i", { staticClass: "fas fa-language" })
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "dropdown-menu" },
+                            _vm._l(_vm.translated_languages, function(
+                              lang_available
+                            ) {
+                              return _c(
+                                "a",
+                                {
+                                  staticClass: "dropdown-item",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.openEditTranslated(
+                                        post,
+                                        lang_available
+                                      )
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                          " +
+                                      _vm._s(lang_available) +
+                                      "\n                      "
+                                  )
+                                ]
+                              )
+                            }),
+                            0
+                          )
+                        ]),
+                        _vm._v(" "),
                         _c(
                           "a",
                           {
@@ -82009,6 +82162,7 @@ module.exports = {
     "The :attribute must be at least :length characters.": "The :attribute must be at least :length characters.",
     "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba": "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba",
     "The post has been successfully modified": "The post has been successfully modified",
+    "The post translation has been successfully modified": "The post translation has been successfully modified",
     "The provided password does not match your current password.": "The provided password does not match your current password.",
     "The provided password was incorrect.": "The provided password was incorrect.",
     "The provided two factor authentication code was invalid.": "The provided two factor authentication code was invalid.",
@@ -82494,6 +82648,7 @@ module.exports = {
     "The :attribute must be at least :length characters.": "La :attribute debe tener al menos :length caracteres.",
     "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba": "El Hostal MIRAKURU Gran Familia es parte de la cultura patrimonial de la ciudad de Trinidad en Cuba",
     "The post has been successfully modified": "El post ha sido modificado satisfactoriamente",
+    "The post translation has been successfully modified": "La transcripci\xF3n del post ha sido actualizada satisfactoriamnte",
     "The provided password does not match your current password.": "La contrase\xF1a proporcionada no coincide con su actual contrase\xF1a.",
     "The provided password was incorrect.": "La contrase\xF1a proporcionada no es correcta.",
     "The provided two factor authentication code was invalid.": "El c\xF3digo de autenticaci\xF3n de dos factores proporcionado no es v\xE1lido.",
@@ -82835,6 +82990,7 @@ module.exports = {
     "The :attribute must be at least :length characters.": "La :attribute debe tener al menos :length caracteres.",
     "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba": "El Hostal MIRAKURU Gran Familia es parte de la cultura patrimonial de la ciudad de Trinidad en Cuba",
     "The post has been successfully modified": "El post ha sido modificado satisfactoriamente",
+    "The post translation has been successfully modified": "La transcripci\xF3n del post ha sido actualizada satisfactoriamnte",
     "The provided password does not match your current password.": "La contrase\xF1a proporcionada no coincide con su actual contrase\xF1a.",
     "The provided password was incorrect.": "La contrase\xF1a proporcionada no es correcta.",
     "The provided two factor authentication code was invalid.": "El c\xF3digo de autenticaci\xF3n de dos factores proporcionado no es v\xE1lido.",

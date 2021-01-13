@@ -10,5 +10,12 @@ trait LanguageTrait {
         return $translate;
     }
 
+    public function getLangIdByName($lang_name){
+      $id_lang=Language::where('language',$lang_name)
+                       ->get();
+                       return $id_lang[0]->id;
+
+    }
+
 
 }

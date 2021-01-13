@@ -20,7 +20,7 @@ class Translate extends Model
     ];
 
     public function languages(){
-      return $this->belongsToMany(Language::class)->withTimestamps();
+      return $this->belongsToMany(Language::class,'translate_language','translate_id','language_id')->withPivot('content_trans','id')->withTimestamps();
     }
 
     public function contents(){

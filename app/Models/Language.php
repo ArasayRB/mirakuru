@@ -15,6 +15,6 @@ class Language extends Model
     ];
 
     public function translates(){
-      return belongsToMany(Translate::class)->withTimestamps();
+      return belongsToMany(Translate::class,'translate_language','language_id','translate_id')->withPivot('content_trans','id')->withTimestamps();
     }
 }

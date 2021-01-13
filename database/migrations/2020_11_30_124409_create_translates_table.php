@@ -15,15 +15,12 @@ class CreateTranslatesTable extends Migration
     {
         Schema::create('translates', function (Blueprint $table) {
             $table->id();
-            $table->string('id_content_trans');
+            $table->integer('id_content_trans');
             $table->longText('content');
             $table->unsignedBigInteger('tipo_content');
-            $table->unsignedBigInteger('trans_lang');
             $table->string('indice_content');
-            $table->longText('content_trans');
             $table->timestamps();
             $table->foreign('tipo_content')->references('id')->on('content_types')->onDelete('cascade');
-            $table->foreign('trans_lang')->references('id')->on('languages')->onDelete('cascade');
         });
     }
 

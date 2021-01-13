@@ -154,19 +154,19 @@ class PostController extends Controller
 
 
       $data_trans=array(
-        ['id_content_trans'=>'Post-'.$post->id.'-'.request('lang'),
+        ['id_content_trans'=>$post->id,
         'content'=>$post['content'],
         'tipo_content'=>$tipo_content,
         'trans_lang'=>request('lang'),
         'indice_content'=>'content',
         'content_trans'=>request('checkEditContent')],
-        ['id_content_trans'=>'Post-'.$post->id.'-'.request('lang'),
+        ['id_content_trans'=>$post->id,
         'content'=>$post['summary'],
         'tipo_content'=>$tipo_content,
         'trans_lang'=>request('lang'),
         'indice_content'=>'summary',
         'content_trans'=>request('checkEditSummary')],
-        ['id_content_trans'=>'Post-'.$post->id.'-'.request('lang'),
+        ['id_content_trans'=>$post->id,
         'content'=>$post['title'],
         'tipo_content'=>$tipo_content,
         'trans_lang'=>request('lang'),
@@ -177,9 +177,26 @@ class PostController extends Controller
 
       $postToAdd=$this->getPost($post->id);
       return $postToAdd;
+    }
 
+    public function getTranslatedPostById($id){
+      $array_translates_posts=$this->getPostTranslatesById($id);
+      dd($array_translates_posts);
+    }
 
+    public function getTranslatedLanguagePostById($id){
+      $array_trans_lang_post=$this->getPostTranslatesLanguageById($id);
+      return $array_trans_lang_post;
+    }
 
+    public function getTranslatedPostByLang($lang,$post_id){
+      $id_lang=$this->getLangIdByName($lang);
+      $post_translated=$this->getTranslatedTransPost($id_lang,$post_id);
+      $post=$this->getPost($post_id);
+      $post->title=$post_translated['title']['content_trans'];
+      $post->content=$post_translated['content']['content_trans'];
+      $post->summary=$post_translated['summary']['content_trans'];
+      return $post;
     }
 
     /**
@@ -277,6 +294,47 @@ class PostController extends Controller
 
         $postToUpd=$this->getPost($post->id);
         return $postToUpd;
+    }
+
+    public function updateTranslatedPostByLang($post_id,$lang_name, Request $request){
+      $dataPost=request()->validate([
+        'title'=> 'required|max:255',
+        'content'=> 'required',
+        'summary'=> 'required',
+      ]);
+
+      $post=Post::find(request('post_id'));
+
+      $contentType='Post';
+      $tipo_content=$this->findContentId($contentType);
+
+      $lang=$this->getLangIdByName($lang_name);
+
+
+      $data_trans=array(
+        ['id_content_trans'=>$post_id,
+        'content'=>request('content'),
+        'tipo_content'=>$tipo_content,
+        'trans_lang'=>$lang,
+        'indice_content'=>'content',
+        'content_trans'=>request('content')],
+        ['id_content_trans'=>$post_id,
+        'content'=>request('summary'),
+        'tipo_content'=>$tipo_content,
+        'trans_lang'=>$lang,
+        'indice_content'=>'summary',
+        'content_trans'=>request('summary')],
+        ['id_content_trans'=>$post_id,
+        'content'=>request('title'),
+        'tipo_content'=>$tipo_content,
+        'trans_lang'=>$lang,
+        'indice_content'=>'title',
+        'content_trans'=>request('title')]
+      );
+      $result=$this->updateTranslate($data_trans);
+
+      $postToAdd=$this->getPost($post_id);
+      return $result;
     }
 
     /**

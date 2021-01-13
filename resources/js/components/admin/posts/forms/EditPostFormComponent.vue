@@ -18,12 +18,14 @@
         <div class="container mt-5">
           <div class="row justify-content-center">
             <div class="col-12">
+
+
               <div class="form-group">
                 <label for="title">{{ $trans('messages.Title') }}</label>
                 <input type="text" name="title" v-model="post.title" class="form-control font-italic mb-2">
               </div>
 
-              <div class="form-group">
+              <div class="form-group" v-if="lan_to_edit==='none'">
 
                 <label for="image">{{ $trans('messages.Image') }}</label>
               <input type="file" name="image" v-on:change="image" class="form-control-file font-italic mb-2">
@@ -31,7 +33,7 @@
                 <img :src="src+post.img_url" :alt="post.img_url" width="100">
               </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" v-if="lan_to_edit==='none'">
                 <label for="category">{{ $trans('messages.Category') }}</label>
                 <select class="form-control" v-model="categoria" name="category" required>
                  <option value=''>Seleccionar Actividad</option>
@@ -117,7 +119,8 @@ placeholder="Add a keyword"
     export default {
       components: { VueCkeditor },
       props:['post',
-              'locale'],
+             'locale',
+             'lan_to_edit'],
       data(){
         return {
           tags: [],
@@ -146,6 +149,9 @@ placeholder="Add a keyword"
           urlPostUp:this.$attrs.urlpostup,
           categories:'',
           categori:'',
+          languages:[],
+          language:'',
+          lang_trans:'',
           value:'',
           src:'storage/img_web/posts_img/',
           imagenPost:'',
@@ -179,6 +185,9 @@ placeholder="Add a keyword"
           this.imagenPost=e.target.files[0];
         },
         editedPost:function(post){
+          let url;
+          let data;
+          let msg_edited;
           let config= { headers: {"Content-Type": "multipart/form-data" }};
 
             let tagsList=post.tags;
@@ -202,29 +211,43 @@ placeholder="Add a keyword"
               postKeys= ''+postKeys+keysList[i].name+',';
             }
             }
-          let data = new FormData();
-	          data.append('_method', 'patch');
-            data.append("title", post.title);
-            data.append("img_url", this.imagenPost);
-            data.append("category_id", this.categoria);
-            data.append("summary", post.summary);
-            data.append("content", post.content);
-            data.append("tags", postTags);
-            data.append("keywords", postKeys);
-          let url="/posts/"+post.id;
-          post.img_url=this.imagenPost;
-          console.log('textTgs- '+postTags+', textKeys- '+postKeys);
+            if(this.lan_to_edit==='none'){
+              data = new FormData();
+    	          data.append('_method', 'patch');
+                data.append("title", post.title);
+                data.append("img_url", this.imagenPost);
+                data.append("category_id", this.categoria);
+                data.append("summary", post.summary);
+                data.append("content", post.content);
+                data.append("tags", postTags);
+                data.append("keywords", postKeys);
+              url="/posts/"+post.id;
+              post.img_url=this.imagenPost;
+              msg_edited=this.$trans('messages.The post has been successfully modified');
+            }
+
+            else{
+              data = new FormData();
+                data.append("title", post.title);
+                data.append("summary", post.summary);
+                data.append("content", post.content);
+                //data.append("tags", postTags);
+                //data.append("keywords", postKeys);
+              url="/posts-translated-edited/"+post.id+"/"+this.lan_to_edit;
+              msg_edited=this.$trans('messages.The post translation has been successfully modified');
+            }
           axios.post(url,data,config)
                .then(response=>{
                  swal({title:this.$trans('messages.Post'),
-                       text:this.$trans('messages.The post has been successfully modified'),
+                       text:msg_edited,
                        icon:'success',
                        closeOnClickOutside:false,
                        closeOnEsc:false
                      }).then(select=>{
                        if (select){
                          let postUpdate=response.data;
-                         this.$emit('postupd',postUpdate);
+                         this.lan_to_edit='none';
+                         this.$emit('postupd',postUpdate,this.lan_to_edit);
                        }
                      });
                  //console.log(response);
@@ -262,6 +285,11 @@ placeholder="Add a keyword"
 
       },
       created: function () {
+
+        axios.get('/languagesList')
+              .then(response=> this.languages=response.data)
+              .catch(error=>this.error.push(error));
+
         this.categoria=this.post.category_id;
          axios.get('/categoriesList')
               .then(response =>{
