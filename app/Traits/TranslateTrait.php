@@ -76,6 +76,9 @@ trait TranslateTrait {
                 $languages_array[]=$language[0]->language;
               }
       }
+      if(count($languages_array)===0){
+        return 'no-language-added';
+      }
                                return $languages_array;
     }
 

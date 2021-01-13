@@ -271,11 +271,21 @@
         getTranslates:function(index,post){
           axios.get('/translated-language-post/'+post.id)
                .then(response =>{
-                 this.translated_languages = response.data;
                    this.lang=false;
-                 if (response.data==''){
-                   this.mensage=this.$trans('messages.None Post added yet');
-                 }})
+                 if (response.data==='no-language-added'){
+                   this.translated_languages = [];
+                   let mensageLang=this.$trans('messages.None language added yet');
+                   swal({title:this.$trans('messages.Warning!'),
+                         text:mensageLang,
+                         icon:'warning',
+                         closeOnClickOutside:false,
+                         closeOnEsc:false
+                       });
+                 }
+                 else{
+                     this.translated_languages = response.data;
+                 }
+               })
                .catch(error => this.errors.push(error));
         },
         openEditPost:function(index,post){

@@ -3152,11 +3152,22 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       axios.get('/translated-language-post/' + post.id).then(function (response) {
-        _this2.translated_languages = response.data;
         _this2.lang = false;
 
-        if (response.data == '') {
-          _this2.mensage = _this2.$trans('messages.None Post added yet');
+        if (response.data === 'no-language-added') {
+          _this2.translated_languages = [];
+
+          var mensageLang = _this2.$trans('messages.None language added yet');
+
+          swal({
+            title: _this2.$trans('messages.Warning!'),
+            text: mensageLang,
+            icon: 'warning',
+            closeOnClickOutside: false,
+            closeOnEsc: false
+          });
+        } else {
+          _this2.translated_languages = response.data;
         }
       })["catch"](function (error) {
         return _this2.errors.push(error);
@@ -82031,6 +82042,7 @@ module.exports = {
     "New Post": "New Post",
     "Newsletter ": "Newsletter ",
     "None Post added yet": "None Post added yet",
+    "None language added yet": "None language added yet",
     "None reservation added yet": "None reservation added yet",
     "Not Found": "Not Found",
     "Notification": "Notification",
@@ -82517,6 +82529,7 @@ module.exports = {
     "New Post": "Crear Post",
     "Newsletter ": "Noticias ",
     "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
+    "None language added yet": "Ning\xFAn idioma a\xF1adido a\xFAn",
     "None reservation added yet": "Ninguna reserva a\xF1adida a\xFAn",
     "Not Found": "No encontrado",
     "Notification": "Notificaci\xF3n",
@@ -82882,6 +82895,7 @@ module.exports = {
     "New Password": "Nueva contrase\xF1a",
     "Newsletter ": "Noticias ",
     "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
+    "None language added yet": "Ning\xFAn idioma a\xF1adido a\xFAn",
     "None reservation added yet": "Ninguna reserva a\xF1adida a\xFAn",
     "Not Found": "No encontrado",
     "Notification": "Notificaci\xF3n",
