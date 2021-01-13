@@ -41,4 +41,9 @@ class WelcomeController extends Controller
     public function sharePostMedia($id,$media){
       return $this->sharePostMediaSocial($id,$media);
     }
+
+    public function anyExistingPost(){
+    $answare= $this->existPost();
+    return $answare;
+    }
 }

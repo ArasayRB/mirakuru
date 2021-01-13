@@ -11,6 +11,12 @@ trait PostTrait {
     return $posts;
     }
 
+    public function existPost(){
+      $post=Post::all();
+                  return count($post);
+
+    }
+
     public function show($idPost){
       $post=Post::with('users')
                   ->find($idPost);

@@ -223,12 +223,6 @@ class PostController extends Controller
         //return view('admin.posts.edit',['post'=>$post,'categories'=>$categories]);
     }
 
-    public function existPost(){
-      $post=Post::all();
-                  return count($post);
-
-    }
-
     /**
      * Update the specified resource in storage.
      *
