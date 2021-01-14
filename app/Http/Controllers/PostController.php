@@ -288,6 +288,7 @@ class PostController extends Controller
         $post->cant_likes=0;
         $post->cant_shares=0;
         $post->tags=request('tags');
+        $post->keywords=request('keywords');
         $post->slug=Str::slug($post->title, '-');
         $post->qr_img_url='qrcode_'.$post->id.'_'.$post->slug.'.svg';
         $post->update();
