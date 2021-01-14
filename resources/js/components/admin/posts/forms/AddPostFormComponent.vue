@@ -67,6 +67,9 @@
                  <br>
                  <tags-input element-id="tags" :add-tags-on-comma=true	class=""
 v-model="selectedTags"
+:existing-tags="tags"
+id-field="key"
+text-field="value"
 
 :typeahead="true"></tags-input>
 
@@ -79,6 +82,10 @@ v-model="selectedTags"
         <tags-input element-id="keys" :add-tags-on-comma=true	class=""
 v-model="selectedKeys"
 placeholder="Add a keyword"
+:existing-tags="keywords"
+id-field="key"
+text-field="value"
+
 
 
 :typeahead="true"></tags-input>
@@ -155,7 +162,6 @@ placeholder="Add a keyword"
           language:'',
           activeClass:'active',
           showClass:'show',
-          post:'',
           value:'',
           title:'',
           imagenPost:'',
@@ -169,6 +175,11 @@ placeholder="Add a keyword"
           token   : window.CSRF_TOKEN,
 
         }
+      },
+      watch:{
+        selectedTags(val){
+          console.log('hi-',val);
+        },
       },
       methods:{
         onBlur(evt) {

@@ -54,6 +54,8 @@ Vue.use(VueLocalStorage);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('tags-input', VoerroTagsInput);
+Vue.component('keys-input', VoerroTagsInput);
+Vue.component('keywords-input', VoerroTagsInput);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('cont-view-share-like-component', require('./components/forms/ContViewShareLikeComponent.vue').default);
 Vue.component('reservar-hostal-component', require('./components/forms/ReservarHostalComponent.vue').default);

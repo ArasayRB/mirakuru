@@ -2229,6 +2229,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2285,7 +2292,6 @@ __webpack_require__.r(__webpack_exports__);
       language: '',
       activeClass: 'active',
       showClass: 'show',
-      post: '',
       value: '',
       title: '',
       imagenPost: '',
@@ -2298,6 +2304,11 @@ __webpack_require__.r(__webpack_exports__);
       error: '',
       token: window.CSRF_TOKEN
     };
+  },
+  watch: {
+    selectedTags: function selectedTags(val) {
+      console.log('hi-', val);
+    }
   },
   methods: {
     onBlur: function onBlur(evt) {
@@ -2713,25 +2724,25 @@ __webpack_require__.r(__webpack_exports__);
           "Content-Type": "multipart/form-data"
         }
       };
-      var tagsList = post.tags;
+      var tagsList = this.selectedTags;
       var postTags = "";
 
       for (var i = 0; i < tagsList.length; i = i + 1) {
         if (i == tagsList.length - 1) {
-          postTags = '' + postTags + tagsList[i].name;
+          postTags = '' + postTags + tagsList[i].value;
         } else {
-          postTags = '' + postTags + tagsList[i].name + ',';
+          postTags = '' + postTags + tagsList[i].value + ',';
         }
       }
 
-      var keysList = post.keywords;
+      var keysList = this.selectedKeys;
       var postKeys = "";
 
       for (var i = 0; i < keysList.length; i = i + 1) {
         if (i == keysList.length - 1) {
-          postKeys = '' + postKeys + keysList[i].name;
+          postKeys = '' + postKeys + keysList[i].value;
         } else {
-          postKeys = '' + postKeys + keysList[i].name + ',';
+          postKeys = '' + postKeys + keysList[i].value + ',';
         }
       }
 
@@ -2814,6 +2825,20 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     var _this2 = this;
+
+    for (var i = 0; i < this.post.tags.length; i++) {
+      this.selectedTags.push({
+        'key': '',
+        'value': this.post.tags[i].name
+      });
+    }
+
+    for (var i = 0; i < this.post.keywords.length; i++) {
+      this.selectedKeys.push({
+        'key': '',
+        'value': this.post.keywords[i].name
+      });
+    }
 
     axios.get('/languagesList').then(function (response) {
       return _this2.languages = response.data;
@@ -64877,6 +64902,9 @@ var render = function() {
                                             attrs: {
                                               "element-id": "tags",
                                               "add-tags-on-comma": true,
+                                              "existing-tags": _vm.tags,
+                                              "id-field": "key",
+                                              "text-field": "value",
                                               typeahead: true
                                             },
                                             model: {
@@ -64929,6 +64957,9 @@ var render = function() {
                                               "element-id": "keys",
                                               "add-tags-on-comma": true,
                                               placeholder: "Add a keyword",
+                                              "existing-tags": _vm.keywords,
+                                              "id-field": "key",
+                                              "text-field": "value",
                                               typeahead: true
                                             },
                                             model: {
@@ -65422,16 +65453,16 @@ var render = function() {
                                           "element-id": "tags",
                                           "add-tags-on-comma": true,
                                           "existing-tags": _vm.tags,
-                                          "id-field": "slug",
-                                          "text-field": "name",
+                                          "id-field": "key",
+                                          "text-field": "value",
                                           typeahead: true
                                         },
                                         model: {
-                                          value: _vm.post.tags,
+                                          value: _vm.selectedTags,
                                           callback: function($$v) {
-                                            _vm.$set(_vm.post, "tags", $$v)
+                                            _vm.selectedTags = $$v
                                           },
-                                          expression: "post.tags"
+                                          expression: "selectedTags"
                                         }
                                       })
                                     ],
@@ -65468,17 +65499,17 @@ var render = function() {
                                           "element-id": "keys",
                                           "add-tags-on-comma": true,
                                           "existing-tags": _vm.keywords,
-                                          "id-field": "id",
-                                          "text-field": "name",
+                                          "id-field": "key",
+                                          "text-field": "value",
                                           placeholder: "Add a keyword",
                                           typeahead: true
                                         },
                                         model: {
-                                          value: _vm.post.keywords,
+                                          value: _vm.selectedKeys,
                                           callback: function($$v) {
-                                            _vm.$set(_vm.post, "keywords", $$v)
+                                            _vm.selectedKeys = $$v
                                           },
-                                          expression: "post.keywords"
+                                          expression: "selectedKeys"
                                         }
                                       })
                                     ],
@@ -80942,6 +80973,8 @@ Vue.use(vue_localstorage__WEBPACK_IMPORTED_MODULE_1___default.a);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_6__["default"]);
+Vue.component('keys-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_6__["default"]);
+Vue.component('keywords-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_6__["default"]);
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
 Vue.component('cont-view-share-like-component', __webpack_require__(/*! ./components/forms/ContViewShareLikeComponent.vue */ "./resources/js/components/forms/ContViewShareLikeComponent.vue")["default"]);
 Vue.component('reservar-hostal-component', __webpack_require__(/*! ./components/forms/ReservarHostalComponent.vue */ "./resources/js/components/forms/ReservarHostalComponent.vue")["default"]);

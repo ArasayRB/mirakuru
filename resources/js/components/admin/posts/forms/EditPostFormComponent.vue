@@ -61,10 +61,10 @@
                            <label>{{ $trans('messages.Tags') }} : <span class="text-danger">*</span></label>
                            <br>
                            <tags-input element-id="tags" :add-tags-on-comma=true	class=""
-    v-model="post.tags"
+    v-model="selectedTags"
     :existing-tags="tags"
-    id-field="slug"
-    text-field="name"
+    id-field="key"
+    text-field="value"
     :typeahead="true"></tags-input>
 
 
@@ -74,10 +74,10 @@
                   <label for="title">{{ $trans('messages.Keywords') }}: <span class="text-danger">{{ $trans('messages.Separate with (,) please') }}</span></label></label>
 
                   <tags-input element-id="keys" :add-tags-on-comma=true	class=""
-v-model="post.keywords"
+v-model="selectedKeys"
 :existing-tags="keywords"
-id-field="id"
-text-field="name"
+id-field="key"
+text-field="value"
 placeholder="Add a keyword"
 
 :typeahead="true"></tags-input>
@@ -191,25 +191,25 @@ placeholder="Add a keyword"
           let default_lang=this.$lang.getLocale();
           let config= { headers: {"Content-Type": "multipart/form-data" }};
 
-            let tagsList=post.tags;
+            let tagsList=this.selectedTags;
             let postTags="";
             for(var i=0; i<tagsList.length;i=i+1){
               if(i==(tagsList.length-1)){
-              postTags= ''+postTags+tagsList[i].name;
+              postTags= ''+postTags+tagsList[i].value;
             }
             else{
-              postTags= ''+postTags+tagsList[i].name+',';
+              postTags= ''+postTags+tagsList[i].value+',';
             }
             }
 
-            let keysList=post.keywords;
+            let keysList=this.selectedKeys;
             let postKeys="";
             for(var i=0; i<keysList.length;i=i+1){
               if(i==(keysList.length-1)){
-              postKeys= ''+postKeys+keysList[i].name;
+              postKeys= ''+postKeys+keysList[i].value;
             }
             else{
-              postKeys= ''+postKeys+keysList[i].name+',';
+              postKeys= ''+postKeys+keysList[i].value+',';
             }
             }
             if(this.lan_to_edit==='none'){
@@ -287,7 +287,15 @@ placeholder="Add a keyword"
 
       },
       created: function () {
+          for(var i=0; i<this.post.tags.length;i++){
+            this.selectedTags.push({'key':'',
+                                      'value':this.post.tags[i].name});
+          }
 
+          for(var i=0; i<this.post.keywords.length;i++){
+            this.selectedKeys.push({'key':'',
+                                      'value':this.post.keywords[i].name});
+          }
         axios.get('/languagesList')
               .then(response=> this.languages=response.data)
               .catch(error=>this.error.push(error));

@@ -76,15 +76,25 @@ class PostController extends Controller
     {
       $post=Post::first();
       $tags=$post->existingTags();
+      $tags_array=[];
+      foreach ($tags as $tag) {
+        $tags_array[]=array('key'=>'',
+                            'value'=>$tag->name);
+      }
 
-        return $tags;
+        return $tags_array;
     }
 
     public function availableKeys()
     {
       $keywords=$this->getAllKeyword();
+      $keywords_array=[];
+      foreach ($keywords as $keyword) {
+        $keywords_array[]=array('key'=>'',
+                                'value'=>$keyword->name);
+      }
 
-        return $keywords;
+        return $keywords_array;
     }
 
     /**
