@@ -11,6 +11,54 @@ trait PostTrait {
     return $posts;
     }
 
+    public function getPostsMoreRead($cant){
+      $posts_more_read;
+      if($cant===''){
+      $posts_more_read=Post::with('users')
+                           ->orderBy('cant_access_read','DESC')
+                           ->get();
+                    }
+      else {
+        $posts_more_read=Post::with('users')
+                             ->take($cant)
+                             ->orderBy('cant_access_read','DESC')
+                             ->get();
+      }
+      return $posts_more_read;
+    }
+
+    public function getPostsMoreLikes($cant){
+      $posts_more_liked;
+      if($cant===''){
+      $posts_more_liked=Post::with('users')
+                           ->orderBy('cant_likes','DESC')
+                           ->get();
+                    }
+      else {
+        $posts_more_liked=Post::with('users')
+                             ->take($cant)
+                             ->orderBy('cant_likes','DESC')
+                             ->get();
+      }
+      return $posts_more_liked;
+    }
+
+    public function getLatestPosts($cant){
+      $latest_posts;
+      if($cant===''){
+      $latest_posts=Post::with('users')
+                           ->orderBy('created_at','DESC')
+                           ->get();
+                    }
+      else {
+        $latest_posts=Post::with('users')
+                             ->take($cant)
+                             ->orderBy('created_at','DESC')
+                             ->get();
+      }
+      return $latest_posts;
+    }
+
     public function existPost(){
       $post=Post::all();
                   return count($post);

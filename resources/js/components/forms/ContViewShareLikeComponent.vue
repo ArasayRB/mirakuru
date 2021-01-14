@@ -2,8 +2,8 @@
 
   <div class="position-fixed">
     <div class="row ml-1">
-     <p class="text-info"><i title="Reads/ Lecturas"  class="fa fa-eye"></i> {{cant_read}} | </p>
-     <a href="#" @click="addLove()"> <p class="text-info"><i title="Show your love/ Muestra tu amor" class="fa fa-heart"></i> {{likes}} </p></a>
+     <strong class="d-inline-block mb-2 text-primary"><p class="text-info"><i title="Reads/ Lecturas"  class="fa fa-eye"></i> {{cant_read}} | </p>
+     <a href="#" @click="addLove()"> <p class="text-info"><i title="Show your love/ Muestra tu amor" class="fa fa-heart"></i> {{likes}} </p></a></strong>
     </div>
 
         <div class="row ml-1">

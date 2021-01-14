@@ -40,6 +40,7 @@ Route::get('/active-books', [App\Http\Controllers\ReservaController::class, 'act
 Route::get('/active-books-list', [App\Http\Controllers\ReservaController::class, 'listBooksByUser'])->name('active-books-list');
 Route::post('/delete-book-by-guest/{book}/{email}/{name}', [App\Http\Controllers\ReservaController::class, 'deleteBookByUser'])->name('delete-book-by-guest');
 Route::get('/exist-post', [App\Http\Controllers\WelcomeController::class, 'anyExistingPost']);
+Route::get('/posts-list', [App\Http\Controllers\WelcomeController::class, 'getPostsList']);
 Route::get('/qr-generate', [App\Http\Controllers\QRController::class, 'qrGenerate']);
 Route::post('/contact', [App\Http\Controllers\ContactoController::class, 'store']);
 Route::post('/post-love/{id}', [App\Http\Controllers\WelcomeController::class, 'addLove']);

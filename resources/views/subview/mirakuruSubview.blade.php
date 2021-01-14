@@ -211,28 +211,30 @@
 </div><!--Fin SECTION TESTIMONIOS-->
 @if ( $posts ?? '')
 <section class="container-fluid col-12 pt-5" id="blog" name="blog"><h1 id="post" class="text-center pb-2 pt-5 text-uppercase animate__animated animate__zoomIn">{{ __('Posts') }}</h1><!--Section Blog-->
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link active" id="nav-readed-tab" data-toggle="tab" href="#nav-readed" role="tab" aria-controls="nav-readed" aria-selected="true"><strong class="d-inline-block mb-2 text-primary">More Read</strong></a>
+      <a class="nav-item nav-link" id="nav-liked-tab" data-toggle="tab" href="#nav-liked" role="tab" aria-controls="nav-liked" aria-selected="false"><strong class="d-inline-block mb-2 text-primary">More Liked</strong></a>
+      <a class="nav-item nav-link" id="nav-last-tab" data-toggle="tab" href="#nav-last" role="tab" aria-controls="nav-last" aria-selected="false"><strong class="d-inline-block mb-2 text-primary">Last</strong></a>
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-readed" role="tabpanel" aria-labelledby="nav-readed-tab">
+      <post-ppal-tab-component post="readed">
+      </post-ppal-tab-component>
+    </div>
+    <div class="tab-pane fade" id="nav-liked" role="tabpanel" aria-labelledby="nav-liked-tab">
+        <post-ppal-tab-component post="liked">
+        </post-ppal-tab-component>
+    </div>
+    <div class="tab-pane fade" id="nav-last" role="tabpanel" aria-labelledby="nav-last-tab">
+        <post-ppal-tab-component post="latest">
+        </post-ppal-tab-component>
+    </div>
+  </div>
   <div class="row mb-2">
 
-      @foreach ($posts ?? '' as $post)
 
-
-      <div class="col-md-6">
-        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-          <div class="col-auto d-none d-lg-block w-25 h-25">
-            <img src="{{ asset('/storage/img_web/posts_img/'.$post->img_url) }}" class="mx-auto d-block rounded-circle w-100 h-1010">
-          </div>
-          <div class="col p-4 d-flex flex-column position-static">
-            <strong class="d-inline-block mb-2 text-primary">{{__('Posted by: ')}}{{$post->users->name}}</strong>
-            <h3 class="mb-0">{{$post->title}}</h3>
-            <div class="mb-1 text-muted">{{$post->created_at}}</div>
-            <p class="card-text mb-auto">{{$post->summary}}</p>
-            <a href="/post-list/{{$post->id}}" class="stretched-link">{{__('Continue reading')}}</a>
-
-          </div>
-
-        </div>
-      </div>
-      @endforeach
 
 
   </div>
