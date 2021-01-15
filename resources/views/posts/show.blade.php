@@ -7,7 +7,7 @@
 @stop
 @section('content')
   <div class="row">
-  <aside class="col-1 pl-3 h-100">
+  <aside class="col-1">
   <cont-view-share-like-component model="post" url_post="{{url('/welcome/'.$post->id)}}" id_post="{{$post->id}}" title="{{$post->title}}" cant_read="{{$post->cant_access_read}}" cant_shares="{{$post->cant_shares}}" cant_likes="{{$post->cant_likes}}">
   </cont-view-share-like-component>
 

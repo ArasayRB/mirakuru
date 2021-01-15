@@ -67383,7 +67383,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "position-fixed" }, [
     _c("div", { staticClass: "row ml-1" }, [
-      _c("strong", { staticClass: "d-inline-block mb-2 text-primary" }, [
+      _c("strong", { staticClass: "d-inline-block mb-1 text-primary" }, [
         _c("p", { staticClass: "text-info" }, [
           _c("i", {
             staticClass: "fa fa-eye",
