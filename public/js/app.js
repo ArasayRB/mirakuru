@@ -2280,9 +2280,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -65321,7 +65318,104 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", {}, [
-    _vm._m(0),
+    _c("nav", [
+      _c(
+        "div",
+        {
+          staticClass: "nav nav-tabs",
+          attrs: { id: "nav-tab", role: "tablist" }
+        },
+        [
+          _c(
+            "a",
+            {
+              staticClass: "nav-item nav-link active",
+              attrs: {
+                id: "nav-readed-tab",
+                "data-toggle": "tab",
+                href: "#nav-readed",
+                role: "tab",
+                "aria-controls": "nav-readed",
+                "aria-selected": "true"
+              }
+            },
+            [
+              _c(
+                "strong",
+                { staticClass: "d-inline-block mb-2 text-primary" },
+                [_vm._v(_vm._s(_vm.$trans("messages.The most readed")))]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "nav-item nav-link",
+              attrs: {
+                id: "nav-liked-tab",
+                "data-toggle": "tab",
+                href: "#nav-liked",
+                role: "tab",
+                "aria-controls": "nav-liked",
+                "aria-selected": "false"
+              }
+            },
+            [
+              _c(
+                "strong",
+                { staticClass: "d-inline-block mb-2 text-primary" },
+                [_vm._v(_vm._s(_vm.$trans("messages.The most liked")))]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "nav-item nav-link",
+              attrs: {
+                id: "nav-last-tab",
+                "data-toggle": "tab",
+                href: "#nav-last",
+                role: "tab",
+                "aria-controls": "nav-last",
+                "aria-selected": "false"
+              }
+            },
+            [
+              _c(
+                "strong",
+                { staticClass: "d-inline-block mb-2 text-primary" },
+                [_vm._v(_vm._s(_vm.$trans("messages.The latest posts")))]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "nav-item nav-link",
+              attrs: {
+                id: "nav-all-posts-tab",
+                "data-toggle": "tab",
+                href: "#nav-all-posts",
+                role: "tab",
+                "aria-controls": "nav-all-posts",
+                "aria-selected": "false"
+              }
+            },
+            [
+              _c(
+                "strong",
+                { staticClass: "d-inline-block mb-2 text-primary" },
+                [_vm._v(_vm._s(_vm.$trans("messages.All Posts")))]
+              )
+            ]
+          )
+        ]
+      )
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "tab-content", attrs: { id: "nav-tabContent" } }, [
       _c(
@@ -65612,240 +65706,125 @@ var render = function() {
         },
         [
           _c(
-            "div",
-            { staticClass: "pt-5 mt-3" },
-            [
-              _c(
-                "paginate",
+            "paginate",
+            {
+              ref: "paginator",
+              staticClass: "pt-5 mt-3",
+              attrs: { name: "posts_all", list: _vm.posts_all, per: 3 }
+            },
+            _vm._l(_vm.paginated("posts_all"), function(post_all) {
+              return _c(
+                "div",
                 {
-                  ref: "paginator",
-                  staticClass: "pt-5 mt-3",
-                  attrs: { name: "posts_all", list: _vm.posts_all, per: 3 }
+                  key: post_all.id,
+                  staticClass:
+                    "row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
                 },
-                _vm._l(_vm.paginated("posts_all"), function(post_all) {
-                  return _c(
+                [
+                  _c(
+                    "div",
+                    { staticClass: "col-auto d-none d-lg-block w-25 h-25" },
+                    [
+                      _c("img", {
+                        staticClass:
+                          "mx-auto d-block pt-2 rounded-circle w-100 h-1010",
+                        attrs: { src: _vm.src + post_all.img_url }
+                      })
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
                     "div",
                     {
-                      key: post_all.id,
-                      staticClass:
-                        "row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
+                      staticClass: "col p-4 d-flex flex-column position-static"
                     },
                     [
                       _c(
-                        "div",
-                        { staticClass: "col-auto d-none d-lg-block w-25 h-25" },
+                        "strong",
+                        { staticClass: "d-inline-block mb-2 text-primary" },
                         [
-                          _c("img", {
-                            staticClass:
-                              "mx-auto d-block pt-2 rounded-circle w-100 h-1010",
-                            attrs: { src: _vm.src + post_all.img_url }
-                          })
+                          _vm._v(
+                            _vm._s(_vm.$trans("messages.Posted by: ")) +
+                              _vm._s(post_all.users.name)
+                          )
                         ]
                       ),
                       _vm._v(" "),
                       _c(
-                        "div",
+                        "strong",
+                        { staticClass: "d-inline-block mb-2 text-primary" },
+                        [
+                          _c("i", {
+                            staticClass: "fa fa-eye",
+                            attrs: { title: "Show your love/ Muestra tu amor" }
+                          }),
+                          _vm._v(
+                            " " + _vm._s(post_all.cant_access_read) + " | "
+                          ),
+                          _c("i", {
+                            staticClass: "fa fa-heart",
+                            attrs: { title: "Show your love/ Muestra tu amor" }
+                          }),
+                          _vm._v(" " + _vm._s(post_all.cant_likes))
+                        ]
+                      ),
+                      _vm._v(" "),
+                      _c("h3", { staticClass: "mb-0" }, [
+                        _vm._v(_vm._s(post_all.title))
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "mb-1 text-muted" }, [
+                        _vm._v(_vm._s(post_all.created_at))
+                      ]),
+                      _vm._v(" "),
+                      _c("p", { staticClass: "card-text mb-auto" }, [
+                        _vm._v(_vm._s(post_all.summary))
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "a",
                         {
-                          staticClass:
-                            "col p-4 d-flex flex-column position-static"
+                          staticClass: "stretched-link",
+                          attrs: { href: _vm.hreff + post_all.id }
                         },
                         [
-                          _c(
-                            "strong",
-                            { staticClass: "d-inline-block mb-2 text-primary" },
-                            [
-                              _vm._v(
-                                _vm._s(_vm.$trans("messages.Posted by: ")) +
-                                  _vm._s(post_all.users.name)
-                              )
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "strong",
-                            { staticClass: "d-inline-block mb-2 text-primary" },
-                            [
-                              _c("i", {
-                                staticClass: "fa fa-eye",
-                                attrs: {
-                                  title: "Show your love/ Muestra tu amor"
-                                }
-                              }),
-                              _vm._v(
-                                " " + _vm._s(post_all.cant_access_read) + " | "
-                              ),
-                              _c("i", {
-                                staticClass: "fa fa-heart",
-                                attrs: {
-                                  title: "Show your love/ Muestra tu amor"
-                                }
-                              }),
-                              _vm._v(" " + _vm._s(post_all.cant_likes))
-                            ]
-                          ),
-                          _vm._v(" "),
-                          _c("h3", { staticClass: "mb-0" }, [
-                            _vm._v(_vm._s(post_all.title))
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "mb-1 text-muted" }, [
-                            _vm._v(_vm._s(post_all.created_at))
-                          ]),
-                          _vm._v(" "),
-                          _c("p", { staticClass: "card-text mb-auto" }, [
-                            _vm._v(_vm._s(post_all.summary))
-                          ]),
-                          _vm._v(" "),
-                          _c(
-                            "a",
-                            {
-                              staticClass: "stretched-link",
-                              attrs: { href: _vm.hreff + post_all.id }
-                            },
-                            [
-                              _vm._v(
-                                _vm._s(_vm.$trans("messages.Continue reading"))
-                              )
-                            ]
+                          _vm._v(
+                            _vm._s(_vm.$trans("messages.Continue reading"))
                           )
                         ]
                       )
                     ]
                   )
-                }),
-                0
-              ),
-              _vm._v(" "),
-              _c(
-                "strong",
-                { staticClass: "text-primary" },
-                [
-                  _c("paginate-links", {
-                    attrs: {
-                      for: "posts_all",
-                      "show-step-links": true,
-                      simple: {
-                        prev: "Anterior",
-                        next: "Siguiente"
-                      }
-                    }
-                  })
-                ],
-                1
+                ]
               )
+            }),
+            0
+          ),
+          _vm._v(" "),
+          _c(
+            "strong",
+            { staticClass: "text-primary" },
+            [
+              _c("paginate-links", {
+                attrs: {
+                  for: "posts_all",
+                  "show-step-links": true,
+                  simple: {
+                    prev: _vm.$trans("messages.Previous"),
+                    next: _vm.$trans("messages.Next")
+                  }
+                }
+              })
             ],
             1
           )
-        ]
+        ],
+        1
       )
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("nav", [
-      _c(
-        "div",
-        {
-          staticClass: "nav nav-tabs",
-          attrs: { id: "nav-tab", role: "tablist" }
-        },
-        [
-          _c(
-            "a",
-            {
-              staticClass: "nav-item nav-link active",
-              attrs: {
-                id: "nav-readed-tab",
-                "data-toggle": "tab",
-                href: "#nav-readed",
-                role: "tab",
-                "aria-controls": "nav-readed",
-                "aria-selected": "true"
-              }
-            },
-            [
-              _c(
-                "strong",
-                { staticClass: "d-inline-block mb-2 text-primary" },
-                [_vm._v("More Read")]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "nav-item nav-link",
-              attrs: {
-                id: "nav-liked-tab",
-                "data-toggle": "tab",
-                href: "#nav-liked",
-                role: "tab",
-                "aria-controls": "nav-liked",
-                "aria-selected": "false"
-              }
-            },
-            [
-              _c(
-                "strong",
-                { staticClass: "d-inline-block mb-2 text-primary" },
-                [_vm._v("More Liked")]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "nav-item nav-link",
-              attrs: {
-                id: "nav-last-tab",
-                "data-toggle": "tab",
-                href: "#nav-last",
-                role: "tab",
-                "aria-controls": "nav-last",
-                "aria-selected": "false"
-              }
-            },
-            [
-              _c(
-                "strong",
-                { staticClass: "d-inline-block mb-2 text-primary" },
-                [_vm._v("Last")]
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "nav-item nav-link",
-              attrs: {
-                id: "nav-all-posts-tab",
-                "data-toggle": "tab",
-                href: "#nav-all-posts",
-                role: "tab",
-                "aria-controls": "nav-all-posts",
-                "aria-selected": "false"
-              }
-            },
-            [
-              _c(
-                "strong",
-                { staticClass: "d-inline-block mb-2 text-primary" },
-                [_vm._v("All Posts")]
-              )
-            ]
-          )
-        ]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -84061,6 +84040,7 @@ module.exports = {
     "Administrator users can perform any action.": "Administrator users can perform any action.",
     "Adress": "Address",
     "All": "All",
+    "All Posts": "All Posts",
     "All of the people that are part of this team.": "All of the people that are part of this team.",
     "All rights reserved.": "All rights reserved.",
     "Already registered?": "Already registered?",
@@ -84186,6 +84166,7 @@ module.exports = {
     "New Password": "New Password",
     "New Post": "New Post",
     "Newsletter ": "Newsletter ",
+    "Next": "Next",
     "None Post added yet": "None Post added yet",
     "None language added yet": "None language added yet",
     "None reservation added yet": "None reservation added yet",
@@ -84241,6 +84222,7 @@ module.exports = {
     "Ppal text7": "ALL FOR THE SAME VALUE",
     "Ppal text8": "In addition, among our offers we want to include",
     "Ppal text9": "THE EXCHANGE, yes, you have read very well, we know that we find ourselves in very difficult situations in the world economy, and ",
+    "Previous": "Previous",
     "Profile": "Profile",
     "Profile Information": "Profile Information",
     "Publication State": "Publication state",
@@ -84318,6 +84300,9 @@ module.exports = {
     "The :attribute must be at least :length characters and contain at least one uppercase character.": "The :attribute must be at least :length characters and contain at least one uppercase character.",
     "The :attribute must be at least :length characters.": "The :attribute must be at least :length characters.",
     "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba": "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba",
+    "The latest posts": "The latest posts",
+    "The most liked": "The most liked",
+    "The most readed": "The most readed",
     "The post has been successfully modified": "The post has been successfully modified",
     "The post translation has been successfully modified": "The post translation has been successfully modified",
     "The provided password does not match your current password.": "The provided password does not match your current password.",
@@ -84548,6 +84533,7 @@ module.exports = {
     "Administrator users can perform any action.": "Los administradores pueden realizar cualquier acci\xF3n.",
     "Adress": "Direcci\xF3n",
     "All": "Todas",
+    "All Posts": "Todos los Posts",
     "All of the people that are part of this team.": "Todas las personas que forman parte de este equipo.",
     "All rights reserved.": "Todos los derechos reservados.",
     "Already registered?": "Ya se registr\xF3?",
@@ -84673,6 +84659,7 @@ module.exports = {
     "New Password": "Nueva contrase\xF1a",
     "New Post": "Crear Post",
     "Newsletter ": "Noticias ",
+    "Next": "Siguiente",
     "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
     "None language added yet": "Ning\xFAn idioma a\xF1adido a\xFAn",
     "None reservation added yet": "Ninguna reserva a\xF1adida a\xFAn",
@@ -84728,6 +84715,7 @@ module.exports = {
     "Ppal text7": "TODO POR UN MISMO VALOR",
     "Ppal text8": "Adem\xE1s entre nuestras ofertas queremos incluir",
     "Ppal text9": "EL INTERCAMBIO, s\xED, has le\xEDdo muy bien, sabemos que nos encontramos en situaciones muy dif\xEDciles de la econom\xEDa mundial, y ",
+    "Previous": "Anterior",
     "Profile": "Perfil",
     "Profile Information": "Informaci\xF3n de Perfil",
     "Publication State": "Estado de Publicacion",
@@ -84805,6 +84793,9 @@ module.exports = {
     "The :attribute must be at least :length characters and contain at least one uppercase character.": "La :attribute debe tener al menos :length caracteres y contener por lo menos una letra may\xFAscula",
     "The :attribute must be at least :length characters.": "La :attribute debe tener al menos :length caracteres.",
     "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba": "El Hostal MIRAKURU Gran Familia es parte de la cultura patrimonial de la ciudad de Trinidad en Cuba",
+    "The latest posts": "\xDAltimos Posts",
+    "The most liked": "Lo m\xE1s gustado",
+    "The most readed": "Lo m\xE1s le\xEDdo",
     "The post has been successfully modified": "El post ha sido modificado satisfactoriamente",
     "The post translation has been successfully modified": "La traducci\xF3n del post ha sido actualizada satisfactoriamnte",
     "The provided password does not match your current password.": "La contrase\xF1a proporcionada no coincide con su actual contrase\xF1a.",
@@ -84919,6 +84910,7 @@ module.exports = {
     "Administrator users can perform any action.": "Los administradores pueden realizar cualquier acci\xF3n.",
     "Adress": "Direcci\xF3n",
     "All": "Todas",
+    "All Posts": "Todos los Posts",
     "All of the people that are part of this team.": "Todas las personas que forman parte de este equipo.",
     "All rights reserved.": "Todos los derechos reservados.",
     "Already registered?": "Ya se registr\xF3?",
@@ -85039,6 +85031,7 @@ module.exports = {
     "Nevermind": "Olvidar",
     "New Password": "Nueva contrase\xF1a",
     "Newsletter ": "Noticias ",
+    "Next": "Siguiente",
     "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
     "None language added yet": "Ning\xFAn idioma a\xF1adido a\xFAn",
     "None reservation added yet": "Ninguna reserva a\xF1adida a\xFAn",
@@ -85073,6 +85066,7 @@ module.exports = {
     "Posted by: ": "Posteado por: ",
     "Posts": "Posts",
     "Posts Category": "Categoria de Posts",
+    "Previous": "Anterior",
     "Profile": "Perfil",
     "Profile Information": "Informaci\xF3n de Perfil",
     "REASONS TO VISIT THE ISLAND MUSEUM OF THE CARIBBEAN": "RAZONES PARA VISITAR LA ISLA MUSEO DEL CARIBE",
@@ -85148,6 +85142,9 @@ module.exports = {
     "The :attribute must be at least :length characters and contain at least one uppercase character.": "La :attribute debe tener al menos :length caracteres y contener por lo menos una letra may\xFAscula",
     "The :attribute must be at least :length characters.": "La :attribute debe tener al menos :length caracteres.",
     "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba": "El Hostal MIRAKURU Gran Familia es parte de la cultura patrimonial de la ciudad de Trinidad en Cuba",
+    "The latest posts": "\xDAltimos Posts",
+    "The most liked": "Lo m\xE1s gustado",
+    "The most readed": "Lo m\xE1s le\xEDdo",
     "The post has been successfully modified": "El post ha sido modificado satisfactoriamente",
     "The post translation has been successfully modified": "La traducci\xF3n del post ha sido actualizada satisfactoriamnte",
     "The provided password does not match your current password.": "La contrase\xF1a proporcionada no coincide con su actual contrase\xF1a.",

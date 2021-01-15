@@ -2,10 +2,10 @@
 <div class="">
   <nav>
     <div class="nav nav-tabs" id="nav-tab" role="tablist">
-      <a class="nav-item nav-link active" id="nav-readed-tab" data-toggle="tab" href="#nav-readed" role="tab" aria-controls="nav-readed" aria-selected="true"><strong class="d-inline-block mb-2 text-primary">More Read</strong></a>
-      <a class="nav-item nav-link" id="nav-liked-tab" data-toggle="tab" href="#nav-liked" role="tab" aria-controls="nav-liked" aria-selected="false"><strong class="d-inline-block mb-2 text-primary">More Liked</strong></a>
-      <a class="nav-item nav-link" id="nav-last-tab" data-toggle="tab" href="#nav-last" role="tab" aria-controls="nav-last" aria-selected="false"><strong class="d-inline-block mb-2 text-primary">Last</strong></a>
-      <a class="nav-item nav-link" id="nav-all-posts-tab" data-toggle="tab" href="#nav-all-posts" role="tab" aria-controls="nav-all-posts" aria-selected="false"><strong class="d-inline-block mb-2 text-primary">All Posts</strong></a>
+      <a class="nav-item nav-link active" id="nav-readed-tab" data-toggle="tab" href="#nav-readed" role="tab" aria-controls="nav-readed" aria-selected="true"><strong class="d-inline-block mb-2 text-primary">{{ $trans('messages.The most readed') }}</strong></a>
+      <a class="nav-item nav-link" id="nav-liked-tab" data-toggle="tab" href="#nav-liked" role="tab" aria-controls="nav-liked" aria-selected="false"><strong class="d-inline-block mb-2 text-primary">{{ $trans('messages.The most liked') }}</strong></a>
+      <a class="nav-item nav-link" id="nav-last-tab" data-toggle="tab" href="#nav-last" role="tab" aria-controls="nav-last" aria-selected="false"><strong class="d-inline-block mb-2 text-primary">{{ $trans('messages.The latest posts') }}</strong></a>
+      <a class="nav-item nav-link" id="nav-all-posts-tab" data-toggle="tab" href="#nav-all-posts" role="tab" aria-controls="nav-all-posts" aria-selected="false"><strong class="d-inline-block mb-2 text-primary">{{ $trans('messages.All Posts') }}</strong></a>
     </div>
   </nav>
   <div class="tab-content" id="nav-tabContent">
@@ -67,8 +67,6 @@
       </div>
     </div>
     <div class="tab-pane fade" id="nav-all-posts" role="tabpanel" aria-labelledby="nav-all-posts-tab">
-
-      <div class="pt-5 mt-3">
       <paginate class="pt-5 mt-3" ref="paginator" name = "posts_all" :list = "posts_all" :per = "3">
           <div v-for="post_all in paginated('posts_all')" :key="post_all.id" class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
             <div class="col-auto d-none d-lg-block w-25 h-25">
@@ -89,11 +87,10 @@
               for="posts_all"
               :show-step-links="true"
               :simple="{
-                  prev: 'Anterior',
-                  next: 'Siguiente'
+                  prev: $trans('messages.Previous'),
+                  next: $trans('messages.Next')
               }"
              ></paginate-links></strong>
-               </div>
     </div>
   </div>
 
