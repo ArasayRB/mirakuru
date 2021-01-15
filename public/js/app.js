@@ -276,6 +276,7 @@ module.exports = __webpack_require__(/*! ./lib/axios */ "./node_modules/axios/li
 
 var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/utils.js");
 var settle = __webpack_require__(/*! ./../core/settle */ "./node_modules/axios/lib/core/settle.js");
+var cookies = __webpack_require__(/*! ./../helpers/cookies */ "./node_modules/axios/lib/helpers/cookies.js");
 var buildURL = __webpack_require__(/*! ./../helpers/buildURL */ "./node_modules/axios/lib/helpers/buildURL.js");
 var buildFullPath = __webpack_require__(/*! ../core/buildFullPath */ "./node_modules/axios/lib/core/buildFullPath.js");
 var parseHeaders = __webpack_require__(/*! ./../helpers/parseHeaders */ "./node_modules/axios/lib/helpers/parseHeaders.js");
@@ -296,7 +297,7 @@ module.exports = function xhrAdapter(config) {
     // HTTP basic authentication
     if (config.auth) {
       var username = config.auth.username || '';
-      var password = config.auth.password || '';
+      var password = config.auth.password ? unescape(encodeURIComponent(config.auth.password)) : '';
       requestHeaders.Authorization = 'Basic ' + btoa(username + ':' + password);
     }
 
@@ -377,8 +378,6 @@ module.exports = function xhrAdapter(config) {
     // This is only done if running in a standard browser environment.
     // Specifically not if we're in a web worker, or react-native.
     if (utils.isStandardBrowserEnv()) {
-      var cookies = __webpack_require__(/*! ./../helpers/cookies */ "./node_modules/axios/lib/helpers/cookies.js");
-
       // Add xsrf header
       var xsrfValue = (config.withCredentials || isURLSameOrigin(fullPath)) && config.xsrfCookieName ?
         cookies.read(config.xsrfCookieName) :
@@ -444,7 +443,7 @@ module.exports = function xhrAdapter(config) {
       });
     }
 
-    if (requestData === undefined) {
+    if (!requestData) {
       requestData = null;
     }
 
@@ -512,6 +511,9 @@ axios.all = function all(promises) {
   return Promise.all(promises);
 };
 axios.spread = __webpack_require__(/*! ./helpers/spread */ "./node_modules/axios/lib/helpers/spread.js");
+
+// Expose isAxiosError
+axios.isAxiosError = __webpack_require__(/*! ./helpers/isAxiosError */ "./node_modules/axios/lib/helpers/isAxiosError.js");
 
 module.exports = axios;
 
@@ -721,9 +723,10 @@ Axios.prototype.getUri = function getUri(config) {
 utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData(method) {
   /*eslint func-names:0*/
   Axios.prototype[method] = function(url, config) {
-    return this.request(utils.merge(config || {}, {
+    return this.request(mergeConfig(config || {}, {
       method: method,
-      url: url
+      url: url,
+      data: (config || {}).data
     }));
   };
 });
@@ -731,7 +734,7 @@ utils.forEach(['delete', 'get', 'head', 'options'], function forEachMethodNoData
 utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
   /*eslint func-names:0*/
   Axios.prototype[method] = function(url, data, config) {
-    return this.request(utils.merge(config || {}, {
+    return this.request(mergeConfig(config || {}, {
       method: method,
       url: url,
       data: data
@@ -991,7 +994,7 @@ module.exports = function enhanceError(error, config, code, request, response) {
   error.response = response;
   error.isAxiosError = true;
 
-  error.toJSON = function() {
+  error.toJSON = function toJSON() {
     return {
       // Standard
       message: this.message,
@@ -1040,59 +1043,73 @@ module.exports = function mergeConfig(config1, config2) {
   config2 = config2 || {};
   var config = {};
 
-  var valueFromConfig2Keys = ['url', 'method', 'params', 'data'];
-  var mergeDeepPropertiesKeys = ['headers', 'auth', 'proxy'];
+  var valueFromConfig2Keys = ['url', 'method', 'data'];
+  var mergeDeepPropertiesKeys = ['headers', 'auth', 'proxy', 'params'];
   var defaultToConfig2Keys = [
-    'baseURL', 'url', 'transformRequest', 'transformResponse', 'paramsSerializer',
-    'timeout', 'withCredentials', 'adapter', 'responseType', 'xsrfCookieName',
-    'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress',
-    'maxContentLength', 'validateStatus', 'maxRedirects', 'httpAgent',
-    'httpsAgent', 'cancelToken', 'socketPath'
+    'baseURL', 'transformRequest', 'transformResponse', 'paramsSerializer',
+    'timeout', 'timeoutMessage', 'withCredentials', 'adapter', 'responseType', 'xsrfCookieName',
+    'xsrfHeaderName', 'onUploadProgress', 'onDownloadProgress', 'decompress',
+    'maxContentLength', 'maxBodyLength', 'maxRedirects', 'transport', 'httpAgent',
+    'httpsAgent', 'cancelToken', 'socketPath', 'responseEncoding'
   ];
+  var directMergeKeys = ['validateStatus'];
+
+  function getMergedValue(target, source) {
+    if (utils.isPlainObject(target) && utils.isPlainObject(source)) {
+      return utils.merge(target, source);
+    } else if (utils.isPlainObject(source)) {
+      return utils.merge({}, source);
+    } else if (utils.isArray(source)) {
+      return source.slice();
+    }
+    return source;
+  }
+
+  function mergeDeepProperties(prop) {
+    if (!utils.isUndefined(config2[prop])) {
+      config[prop] = getMergedValue(config1[prop], config2[prop]);
+    } else if (!utils.isUndefined(config1[prop])) {
+      config[prop] = getMergedValue(undefined, config1[prop]);
+    }
+  }
 
   utils.forEach(valueFromConfig2Keys, function valueFromConfig2(prop) {
-    if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
+    if (!utils.isUndefined(config2[prop])) {
+      config[prop] = getMergedValue(undefined, config2[prop]);
     }
   });
 
-  utils.forEach(mergeDeepPropertiesKeys, function mergeDeepProperties(prop) {
-    if (utils.isObject(config2[prop])) {
-      config[prop] = utils.deepMerge(config1[prop], config2[prop]);
-    } else if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
-    } else if (utils.isObject(config1[prop])) {
-      config[prop] = utils.deepMerge(config1[prop]);
-    } else if (typeof config1[prop] !== 'undefined') {
-      config[prop] = config1[prop];
-    }
-  });
+  utils.forEach(mergeDeepPropertiesKeys, mergeDeepProperties);
 
   utils.forEach(defaultToConfig2Keys, function defaultToConfig2(prop) {
-    if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
-    } else if (typeof config1[prop] !== 'undefined') {
-      config[prop] = config1[prop];
+    if (!utils.isUndefined(config2[prop])) {
+      config[prop] = getMergedValue(undefined, config2[prop]);
+    } else if (!utils.isUndefined(config1[prop])) {
+      config[prop] = getMergedValue(undefined, config1[prop]);
+    }
+  });
+
+  utils.forEach(directMergeKeys, function merge(prop) {
+    if (prop in config2) {
+      config[prop] = getMergedValue(config1[prop], config2[prop]);
+    } else if (prop in config1) {
+      config[prop] = getMergedValue(undefined, config1[prop]);
     }
   });
 
   var axiosKeys = valueFromConfig2Keys
     .concat(mergeDeepPropertiesKeys)
-    .concat(defaultToConfig2Keys);
+    .concat(defaultToConfig2Keys)
+    .concat(directMergeKeys);
 
   var otherKeys = Object
-    .keys(config2)
+    .keys(config1)
+    .concat(Object.keys(config2))
     .filter(function filterAxiosKeys(key) {
       return axiosKeys.indexOf(key) === -1;
     });
 
-  utils.forEach(otherKeys, function otherKeysDefaultToConfig2(prop) {
-    if (typeof config2[prop] !== 'undefined') {
-      config[prop] = config2[prop];
-    } else if (typeof config1[prop] !== 'undefined') {
-      config[prop] = config1[prop];
-    }
-  });
+  utils.forEach(otherKeys, mergeDeepProperties);
 
   return config;
 };
@@ -1121,7 +1138,7 @@ var createError = __webpack_require__(/*! ./createError */ "./node_modules/axios
  */
 module.exports = function settle(resolve, reject, response) {
   var validateStatus = response.config.validateStatus;
-  if (!validateStatus || validateStatus(response.status)) {
+  if (!response.status || !validateStatus || validateStatus(response.status)) {
     resolve(response);
   } else {
     reject(createError(
@@ -1253,6 +1270,7 @@ var defaults = {
   xsrfHeaderName: 'X-XSRF-TOKEN',
 
   maxContentLength: -1,
+  maxBodyLength: -1,
 
   validateStatus: function validateStatus(status) {
     return status >= 200 && status < 300;
@@ -1316,7 +1334,6 @@ var utils = __webpack_require__(/*! ./../utils */ "./node_modules/axios/lib/util
 
 function encode(val) {
   return encodeURIComponent(val).
-    replace(/%40/gi, '@').
     replace(/%3A/gi, ':').
     replace(/%24/g, '$').
     replace(/%2C/gi, ',').
@@ -1497,6 +1514,29 @@ module.exports = function isAbsoluteURL(url) {
   // RFC 3986 defines scheme name as a sequence of characters beginning with a letter and followed
   // by any combination of letters, digits, plus, period, or hyphen.
   return /^([a-z][a-z\d\+\-\.]*:)?\/\//i.test(url);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/axios/lib/helpers/isAxiosError.js":
+/*!********************************************************!*\
+  !*** ./node_modules/axios/lib/helpers/isAxiosError.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+/**
+ * Determines whether the payload is an error thrown by Axios
+ *
+ * @param {*} payload The value to test
+ * @returns {boolean} True if the payload is an error thrown by Axios, otherwise false
+ */
+module.exports = function isAxiosError(payload) {
+  return (typeof payload === 'object') && (payload.isAxiosError === true);
 };
 
 
@@ -1826,6 +1866,21 @@ function isObject(val) {
 }
 
 /**
+ * Determine if a value is a plain Object
+ *
+ * @param {Object} val The value to test
+ * @return {boolean} True if value is a plain Object, otherwise false
+ */
+function isPlainObject(val) {
+  if (toString.call(val) !== '[object Object]') {
+    return false;
+  }
+
+  var prototype = Object.getPrototypeOf(val);
+  return prototype === null || prototype === Object.prototype;
+}
+
+/**
  * Determine if a value is a Date
  *
  * @param {Object} val The value to test
@@ -1981,34 +2036,12 @@ function forEach(obj, fn) {
 function merge(/* obj1, obj2, obj3, ... */) {
   var result = {};
   function assignValue(val, key) {
-    if (typeof result[key] === 'object' && typeof val === 'object') {
+    if (isPlainObject(result[key]) && isPlainObject(val)) {
       result[key] = merge(result[key], val);
-    } else {
-      result[key] = val;
-    }
-  }
-
-  for (var i = 0, l = arguments.length; i < l; i++) {
-    forEach(arguments[i], assignValue);
-  }
-  return result;
-}
-
-/**
- * Function equal to merge with the difference being that no reference
- * to original objects is kept.
- *
- * @see merge
- * @param {Object} obj1 Object to merge
- * @returns {Object} Result of all merge properties
- */
-function deepMerge(/* obj1, obj2, obj3, ... */) {
-  var result = {};
-  function assignValue(val, key) {
-    if (typeof result[key] === 'object' && typeof val === 'object') {
-      result[key] = deepMerge(result[key], val);
-    } else if (typeof val === 'object') {
-      result[key] = deepMerge({}, val);
+    } else if (isPlainObject(val)) {
+      result[key] = merge({}, val);
+    } else if (isArray(val)) {
+      result[key] = val.slice();
     } else {
       result[key] = val;
     }
@@ -2039,6 +2072,19 @@ function extend(a, b, thisArg) {
   return a;
 }
 
+/**
+ * Remove byte order marker. This catches EF BB BF (the UTF-8 BOM)
+ *
+ * @param {string} content with BOM
+ * @return {string} content value without BOM
+ */
+function stripBOM(content) {
+  if (content.charCodeAt(0) === 0xFEFF) {
+    content = content.slice(1);
+  }
+  return content;
+}
+
 module.exports = {
   isArray: isArray,
   isArrayBuffer: isArrayBuffer,
@@ -2048,6 +2094,7 @@ module.exports = {
   isString: isString,
   isNumber: isNumber,
   isObject: isObject,
+  isPlainObject: isPlainObject,
   isUndefined: isUndefined,
   isDate: isDate,
   isFile: isFile,
@@ -2058,9 +2105,9 @@ module.exports = {
   isStandardBrowserEnv: isStandardBrowserEnv,
   forEach: forEach,
   merge: merge,
-  deepMerge: deepMerge,
   extend: extend,
-  trim: trim
+  trim: trim,
+  stripBOM: stripBOM
 };
 
 
@@ -2174,15 +2221,78 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      post: this.$attrs.post,
       pot: [],
       pot_lat: [],
       posts_liked: [],
       posts_read: [],
       posts_last: [],
+      posts_all: [],
+      paginate: ['posts_all'],
       hreff: '/post-list/',
       src: 'storage/img_web/posts_img/',
       token: window.CSRF_TOKEN
@@ -2195,6 +2305,7 @@ __webpack_require__.r(__webpack_exports__);
       _this.posts_liked = response.data.posts_more_liked;
       _this.posts_read = response.data.posts_more_read;
       _this.posts_last = response.data.latest_posts;
+      _this.posts_all = response.data.posts;
 
       if (response.data == '') {
         _this.mensage = _this.$trans('messages.None Post added yet');
@@ -9726,6 +9837,112 @@ __webpack_require__.r(__webpack_exports__);
 
 })));
 //# sourceMappingURL=bootstrap.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=style&index=0&lang=css&":
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.paginate-links{\n    width:100%;\n    list-style: none;\n    text-align: center;\n}\n.paginate-links li {\n    display: inline;\n    background-color:#1fa9ed;\n    color:white;\n    padding:0.5rem;\n    margin-left:0.3rem;\n    margin-right: 0.3rem;\n    cursor:pointer;\n    border-radius: 3px;\n}\n.paginate-result{\n    width: 100%;\n    text-align:center;\n    margin-bottom: 1rem;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/lib/css-base.js":
+/*!*************************************************!*\
+  !*** ./node_modules/css-loader/lib/css-base.js ***!
+  \*************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+// css base code, injected by the css-loader
+module.exports = function(useSourceMap) {
+	var list = [];
+
+	// return the list of modules as css string
+	list.toString = function toString() {
+		return this.map(function (item) {
+			var content = cssWithMappingToString(item, useSourceMap);
+			if(item[2]) {
+				return "@media " + item[2] + "{" + content + "}";
+			} else {
+				return content;
+			}
+		}).join("");
+	};
+
+	// import a list of modules into the list
+	list.i = function(modules, mediaQuery) {
+		if(typeof modules === "string")
+			modules = [[null, modules, ""]];
+		var alreadyImportedModules = {};
+		for(var i = 0; i < this.length; i++) {
+			var id = this[i][0];
+			if(typeof id === "number")
+				alreadyImportedModules[id] = true;
+		}
+		for(i = 0; i < modules.length; i++) {
+			var item = modules[i];
+			// skip already imported module
+			// this implementation is not 100% perfect for weird media query combinations
+			//  when a module is imported multiple times with different media queries.
+			//  I hope this will never occur (Hey this way we have smaller bundles)
+			if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+				if(mediaQuery && !item[2]) {
+					item[2] = mediaQuery;
+				} else if(mediaQuery) {
+					item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+				}
+				list.push(item);
+			}
+		}
+	};
+	return list;
+};
+
+function cssWithMappingToString(item, useSourceMap) {
+	var content = item[1] || '';
+	var cssMapping = item[3];
+	if (!cssMapping) {
+		return content;
+	}
+
+	if (useSourceMap && typeof btoa === 'function') {
+		var sourceMapping = toComment(cssMapping);
+		var sourceURLs = cssMapping.sources.map(function (source) {
+			return '/*# sourceURL=' + cssMapping.sourceRoot + source + ' */'
+		});
+
+		return [content].concat(sourceURLs).concat([sourceMapping]).join('\n');
+	}
+
+	return [content].join('\n');
+}
+
+// Adapted from convert-source-map (MIT)
+function toComment(sourceMap) {
+	// eslint-disable-next-line no-undef
+	var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap))));
+	var data = 'sourceMappingURL=data:application/json;charset=utf-8;base64,' + base64;
+
+	return '/*# ' + data + ' */';
+}
 
 
 /***/ }),
@@ -63072,6 +63289,545 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=style&index=0&lang=css&":
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PostPpalTabComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/lib/addStyles.js":
+/*!****************************************************!*\
+  !*** ./node_modules/style-loader/lib/addStyles.js ***!
+  \****************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/*
+	MIT License http://www.opensource.org/licenses/mit-license.php
+	Author Tobias Koppers @sokra
+*/
+
+var stylesInDom = {};
+
+var	memoize = function (fn) {
+	var memo;
+
+	return function () {
+		if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+		return memo;
+	};
+};
+
+var isOldIE = memoize(function () {
+	// Test for IE <= 9 as proposed by Browserhacks
+	// @see http://browserhacks.com/#hack-e71d8692f65334173fee715c222cb805
+	// Tests for existence of standard globals is to allow style-loader
+	// to operate correctly into non-standard environments
+	// @see https://github.com/webpack-contrib/style-loader/issues/177
+	return window && document && document.all && !window.atob;
+});
+
+var getTarget = function (target, parent) {
+  if (parent){
+    return parent.querySelector(target);
+  }
+  return document.querySelector(target);
+};
+
+var getElement = (function (fn) {
+	var memo = {};
+
+	return function(target, parent) {
+                // If passing function in options, then use it for resolve "head" element.
+                // Useful for Shadow Root style i.e
+                // {
+                //   insertInto: function () { return document.querySelector("#foo").shadowRoot }
+                // }
+                if (typeof target === 'function') {
+                        return target();
+                }
+                if (typeof memo[target] === "undefined") {
+			var styleTarget = getTarget.call(this, target, parent);
+			// Special case to return head of iframe instead of iframe itself
+			if (window.HTMLIFrameElement && styleTarget instanceof window.HTMLIFrameElement) {
+				try {
+					// This will throw an exception if access to iframe is blocked
+					// due to cross-origin restrictions
+					styleTarget = styleTarget.contentDocument.head;
+				} catch(e) {
+					styleTarget = null;
+				}
+			}
+			memo[target] = styleTarget;
+		}
+		return memo[target]
+	};
+})();
+
+var singleton = null;
+var	singletonCounter = 0;
+var	stylesInsertedAtTop = [];
+
+var	fixUrls = __webpack_require__(/*! ./urls */ "./node_modules/style-loader/lib/urls.js");
+
+module.exports = function(list, options) {
+	if (typeof DEBUG !== "undefined" && DEBUG) {
+		if (typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+	}
+
+	options = options || {};
+
+	options.attrs = typeof options.attrs === "object" ? options.attrs : {};
+
+	// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+	// tags it will allow on a page
+	if (!options.singleton && typeof options.singleton !== "boolean") options.singleton = isOldIE();
+
+	// By default, add <style> tags to the <head> element
+        if (!options.insertInto) options.insertInto = "head";
+
+	// By default, add <style> tags to the bottom of the target
+	if (!options.insertAt) options.insertAt = "bottom";
+
+	var styles = listToStyles(list, options);
+
+	addStylesToDom(styles, options);
+
+	return function update (newList) {
+		var mayRemove = [];
+
+		for (var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+
+			domStyle.refs--;
+			mayRemove.push(domStyle);
+		}
+
+		if(newList) {
+			var newStyles = listToStyles(newList, options);
+			addStylesToDom(newStyles, options);
+		}
+
+		for (var i = 0; i < mayRemove.length; i++) {
+			var domStyle = mayRemove[i];
+
+			if(domStyle.refs === 0) {
+				for (var j = 0; j < domStyle.parts.length; j++) domStyle.parts[j]();
+
+				delete stylesInDom[domStyle.id];
+			}
+		}
+	};
+};
+
+function addStylesToDom (styles, options) {
+	for (var i = 0; i < styles.length; i++) {
+		var item = styles[i];
+		var domStyle = stylesInDom[item.id];
+
+		if(domStyle) {
+			domStyle.refs++;
+
+			for(var j = 0; j < domStyle.parts.length; j++) {
+				domStyle.parts[j](item.parts[j]);
+			}
+
+			for(; j < item.parts.length; j++) {
+				domStyle.parts.push(addStyle(item.parts[j], options));
+			}
+		} else {
+			var parts = [];
+
+			for(var j = 0; j < item.parts.length; j++) {
+				parts.push(addStyle(item.parts[j], options));
+			}
+
+			stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+		}
+	}
+}
+
+function listToStyles (list, options) {
+	var styles = [];
+	var newStyles = {};
+
+	for (var i = 0; i < list.length; i++) {
+		var item = list[i];
+		var id = options.base ? item[0] + options.base : item[0];
+		var css = item[1];
+		var media = item[2];
+		var sourceMap = item[3];
+		var part = {css: css, media: media, sourceMap: sourceMap};
+
+		if(!newStyles[id]) styles.push(newStyles[id] = {id: id, parts: [part]});
+		else newStyles[id].parts.push(part);
+	}
+
+	return styles;
+}
+
+function insertStyleElement (options, style) {
+	var target = getElement(options.insertInto)
+
+	if (!target) {
+		throw new Error("Couldn't find a style target. This probably means that the value for the 'insertInto' parameter is invalid.");
+	}
+
+	var lastStyleElementInsertedAtTop = stylesInsertedAtTop[stylesInsertedAtTop.length - 1];
+
+	if (options.insertAt === "top") {
+		if (!lastStyleElementInsertedAtTop) {
+			target.insertBefore(style, target.firstChild);
+		} else if (lastStyleElementInsertedAtTop.nextSibling) {
+			target.insertBefore(style, lastStyleElementInsertedAtTop.nextSibling);
+		} else {
+			target.appendChild(style);
+		}
+		stylesInsertedAtTop.push(style);
+	} else if (options.insertAt === "bottom") {
+		target.appendChild(style);
+	} else if (typeof options.insertAt === "object" && options.insertAt.before) {
+		var nextSibling = getElement(options.insertAt.before, target);
+		target.insertBefore(style, nextSibling);
+	} else {
+		throw new Error("[Style Loader]\n\n Invalid value for parameter 'insertAt' ('options.insertAt') found.\n Must be 'top', 'bottom', or Object.\n (https://github.com/webpack-contrib/style-loader#insertat)\n");
+	}
+}
+
+function removeStyleElement (style) {
+	if (style.parentNode === null) return false;
+	style.parentNode.removeChild(style);
+
+	var idx = stylesInsertedAtTop.indexOf(style);
+	if(idx >= 0) {
+		stylesInsertedAtTop.splice(idx, 1);
+	}
+}
+
+function createStyleElement (options) {
+	var style = document.createElement("style");
+
+	if(options.attrs.type === undefined) {
+		options.attrs.type = "text/css";
+	}
+
+	if(options.attrs.nonce === undefined) {
+		var nonce = getNonce();
+		if (nonce) {
+			options.attrs.nonce = nonce;
+		}
+	}
+
+	addAttrs(style, options.attrs);
+	insertStyleElement(options, style);
+
+	return style;
+}
+
+function createLinkElement (options) {
+	var link = document.createElement("link");
+
+	if(options.attrs.type === undefined) {
+		options.attrs.type = "text/css";
+	}
+	options.attrs.rel = "stylesheet";
+
+	addAttrs(link, options.attrs);
+	insertStyleElement(options, link);
+
+	return link;
+}
+
+function addAttrs (el, attrs) {
+	Object.keys(attrs).forEach(function (key) {
+		el.setAttribute(key, attrs[key]);
+	});
+}
+
+function getNonce() {
+	if (false) {}
+
+	return __webpack_require__.nc;
+}
+
+function addStyle (obj, options) {
+	var style, update, remove, result;
+
+	// If a transform function was defined, run it on the css
+	if (options.transform && obj.css) {
+	    result = typeof options.transform === 'function'
+		 ? options.transform(obj.css) 
+		 : options.transform.default(obj.css);
+
+	    if (result) {
+	    	// If transform returns a value, use that instead of the original css.
+	    	// This allows running runtime transformations on the css.
+	    	obj.css = result;
+	    } else {
+	    	// If the transform function returns a falsy value, don't add this css.
+	    	// This allows conditional loading of css
+	    	return function() {
+	    		// noop
+	    	};
+	    }
+	}
+
+	if (options.singleton) {
+		var styleIndex = singletonCounter++;
+
+		style = singleton || (singleton = createStyleElement(options));
+
+		update = applyToSingletonTag.bind(null, style, styleIndex, false);
+		remove = applyToSingletonTag.bind(null, style, styleIndex, true);
+
+	} else if (
+		obj.sourceMap &&
+		typeof URL === "function" &&
+		typeof URL.createObjectURL === "function" &&
+		typeof URL.revokeObjectURL === "function" &&
+		typeof Blob === "function" &&
+		typeof btoa === "function"
+	) {
+		style = createLinkElement(options);
+		update = updateLink.bind(null, style, options);
+		remove = function () {
+			removeStyleElement(style);
+
+			if(style.href) URL.revokeObjectURL(style.href);
+		};
+	} else {
+		style = createStyleElement(options);
+		update = applyToTag.bind(null, style);
+		remove = function () {
+			removeStyleElement(style);
+		};
+	}
+
+	update(obj);
+
+	return function updateStyle (newObj) {
+		if (newObj) {
+			if (
+				newObj.css === obj.css &&
+				newObj.media === obj.media &&
+				newObj.sourceMap === obj.sourceMap
+			) {
+				return;
+			}
+
+			update(obj = newObj);
+		} else {
+			remove();
+		}
+	};
+}
+
+var replaceText = (function () {
+	var textStore = [];
+
+	return function (index, replacement) {
+		textStore[index] = replacement;
+
+		return textStore.filter(Boolean).join('\n');
+	};
+})();
+
+function applyToSingletonTag (style, index, remove, obj) {
+	var css = remove ? "" : obj.css;
+
+	if (style.styleSheet) {
+		style.styleSheet.cssText = replaceText(index, css);
+	} else {
+		var cssNode = document.createTextNode(css);
+		var childNodes = style.childNodes;
+
+		if (childNodes[index]) style.removeChild(childNodes[index]);
+
+		if (childNodes.length) {
+			style.insertBefore(cssNode, childNodes[index]);
+		} else {
+			style.appendChild(cssNode);
+		}
+	}
+}
+
+function applyToTag (style, obj) {
+	var css = obj.css;
+	var media = obj.media;
+
+	if(media) {
+		style.setAttribute("media", media)
+	}
+
+	if(style.styleSheet) {
+		style.styleSheet.cssText = css;
+	} else {
+		while(style.firstChild) {
+			style.removeChild(style.firstChild);
+		}
+
+		style.appendChild(document.createTextNode(css));
+	}
+}
+
+function updateLink (link, options, obj) {
+	var css = obj.css;
+	var sourceMap = obj.sourceMap;
+
+	/*
+		If convertToAbsoluteUrls isn't defined, but sourcemaps are enabled
+		and there is no publicPath defined then lets turn convertToAbsoluteUrls
+		on by default.  Otherwise default to the convertToAbsoluteUrls option
+		directly
+	*/
+	var autoFixUrls = options.convertToAbsoluteUrls === undefined && sourceMap;
+
+	if (options.convertToAbsoluteUrls || autoFixUrls) {
+		css = fixUrls(css);
+	}
+
+	if (sourceMap) {
+		// http://stackoverflow.com/a/26603875
+		css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+	}
+
+	var blob = new Blob([css], { type: "text/css" });
+
+	var oldSrc = link.href;
+
+	link.href = URL.createObjectURL(blob);
+
+	if(oldSrc) URL.revokeObjectURL(oldSrc);
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/style-loader/lib/urls.js":
+/*!***********************************************!*\
+  !*** ./node_modules/style-loader/lib/urls.js ***!
+  \***********************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+
+/**
+ * When source maps are enabled, `style-loader` uses a link element with a data-uri to
+ * embed the css on the page. This breaks all relative urls because now they are relative to a
+ * bundle instead of the current page.
+ *
+ * One solution is to only use full urls, but that may be impossible.
+ *
+ * Instead, this function "fixes" the relative urls to be absolute according to the current page location.
+ *
+ * A rudimentary test suite is located at `test/fixUrls.js` and can be run via the `npm test` command.
+ *
+ */
+
+module.exports = function (css) {
+  // get current location
+  var location = typeof window !== "undefined" && window.location;
+
+  if (!location) {
+    throw new Error("fixUrls requires window.location");
+  }
+
+	// blank or null?
+	if (!css || typeof css !== "string") {
+	  return css;
+  }
+
+  var baseUrl = location.protocol + "//" + location.host;
+  var currentDir = baseUrl + location.pathname.replace(/\/[^\/]*$/, "/");
+
+	// convert each url(...)
+	/*
+	This regular expression is just a way to recursively match brackets within
+	a string.
+
+	 /url\s*\(  = Match on the word "url" with any whitespace after it and then a parens
+	   (  = Start a capturing group
+	     (?:  = Start a non-capturing group
+	         [^)(]  = Match anything that isn't a parentheses
+	         |  = OR
+	         \(  = Match a start parentheses
+	             (?:  = Start another non-capturing groups
+	                 [^)(]+  = Match anything that isn't a parentheses
+	                 |  = OR
+	                 \(  = Match a start parentheses
+	                     [^)(]*  = Match anything that isn't a parentheses
+	                 \)  = Match a end parentheses
+	             )  = End Group
+              *\) = Match anything and then a close parens
+          )  = Close non-capturing group
+          *  = Match anything
+       )  = Close capturing group
+	 \)  = Match a close parens
+
+	 /gi  = Get all matches, not the first.  Be case insensitive.
+	 */
+	var fixedCss = css.replace(/url\s*\(((?:[^)(]|\((?:[^)(]+|\([^)(]*\))*\))*)\)/gi, function(fullMatch, origUrl) {
+		// strip quotes (if they exist)
+		var unquotedOrigUrl = origUrl
+			.trim()
+			.replace(/^"(.*)"$/, function(o, $1){ return $1; })
+			.replace(/^'(.*)'$/, function(o, $1){ return $1; });
+
+		// already a full url? no change
+		if (/^(#|data:|http:\/\/|https:\/\/|file:\/\/\/|\s*$)/i.test(unquotedOrigUrl)) {
+		  return fullMatch;
+		}
+
+		// convert the url to a full url
+		var newUrl;
+
+		if (unquotedOrigUrl.indexOf("//") === 0) {
+		  	//TODO: should we add protocol?
+			newUrl = unquotedOrigUrl;
+		} else if (unquotedOrigUrl.indexOf("/") === 0) {
+			// path should be relative to the base url
+			newUrl = baseUrl + unquotedOrigUrl; // already starts with '/'
+		} else {
+			// path should be relative to current directory
+			newUrl = currentDir + unquotedOrigUrl.replace(/^\.\//, ""); // Strip leading './'
+		}
+
+		// send back the fixed url(...)
+		return "url(" + JSON.stringify(newUrl) + ")";
+	});
+
+	// send back the fixed css
+	return fixedCss;
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/sweetalert/dist/sweetalert.min.js":
 /*!********************************************************!*\
   !*** ./node_modules/sweetalert/dist/sweetalert.min.js ***!
@@ -64565,188 +65321,531 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", {}, [
-    _vm.post === "readed"
-      ? _c(
-          "div",
-          _vm._l(_vm.posts_read, function(pot) {
-            return _c("div", { staticClass: "pt-5 mt-3" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "tab-content", attrs: { id: "nav-tabContent" } }, [
+      _c(
+        "div",
+        {
+          staticClass: "tab-pane fade show active",
+          attrs: {
+            id: "nav-readed",
+            role: "tabpanel",
+            "aria-labelledby": "nav-readed-tab"
+          }
+        },
+        _vm._l(_vm.posts_read, function(pot) {
+          return _c("div", { staticClass: "pt-5 mt-3" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
+              },
+              [
+                _c(
+                  "div",
+                  { staticClass: "col-auto d-none d-lg-block w-25 h-25" },
+                  [
+                    _c("img", {
+                      staticClass:
+                        "mx-auto d-block pt-2 rounded-circle w-100 h-1010",
+                      attrs: { src: _vm.src + pot.img_url }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col p-4 d-flex flex-column position-static" },
+                  [
+                    _c(
+                      "strong",
+                      { staticClass: "d-inline-block mb-2 text-primary" },
+                      [
+                        _vm._v(
+                          _vm._s(_vm.$trans("messages.Posted by: ")) +
+                            _vm._s(pot.users.name)
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "strong",
+                      { staticClass: "d-inline-block mb-2 text-primary" },
+                      [
+                        _c("i", {
+                          staticClass: "fa fa-eye",
+                          attrs: { title: "Show your love/ Muestra tu amor" }
+                        }),
+                        _vm._v(" " + _vm._s(pot.cant_access_read) + " | "),
+                        _c("i", {
+                          staticClass: "fa fa-heart",
+                          attrs: { title: "Show your love/ Muestra tu amor" }
+                        }),
+                        _vm._v(" " + _vm._s(pot.cant_likes))
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("h3", { staticClass: "mb-0" }, [
+                      _vm._v(_vm._s(pot.title))
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "mb-1 text-muted" }, [
+                      _vm._v(_vm._s(pot.created_at))
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "card-text mb-auto" }, [
+                      _vm._v(_vm._s(pot.summary))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "stretched-link",
+                        attrs: { href: _vm.hreff + pot.id }
+                      },
+                      [_vm._v(_vm._s(_vm.$trans("messages.Continue reading")))]
+                    )
+                  ]
+                )
+              ]
+            )
+          ])
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "tab-pane fade",
+          attrs: {
+            id: "nav-liked",
+            role: "tabpanel",
+            "aria-labelledby": "nav-liked-tab"
+          }
+        },
+        _vm._l(_vm.posts_liked, function(pot) {
+          return _c("div", { staticClass: "pt-5 mt-3" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
+              },
+              [
+                _c(
+                  "div",
+                  { staticClass: "col-auto d-none d-lg-block w-25 h-25" },
+                  [
+                    _c("img", {
+                      staticClass:
+                        "mx-auto d-block pt-2 rounded-circle w-100 h-1010",
+                      attrs: { src: _vm.src + pot.img_url }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col p-4 d-flex flex-column position-static" },
+                  [
+                    _c(
+                      "strong",
+                      { staticClass: "d-inline-block mb-2 text-primary" },
+                      [
+                        _vm._v(
+                          _vm._s(_vm.$trans("messages.Posted by: ")) +
+                            _vm._s(pot.users.name)
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "strong",
+                      { staticClass: "d-inline-block mb-2 text-primary" },
+                      [
+                        _c("i", {
+                          staticClass: "fa fa-eye",
+                          attrs: { title: "Show your love/ Muestra tu amor" }
+                        }),
+                        _vm._v(" " + _vm._s(pot.cant_access_read) + " | "),
+                        _c("i", {
+                          staticClass: "fa fa-heart",
+                          attrs: { title: "Show your love/ Muestra tu amor" }
+                        }),
+                        _vm._v(" " + _vm._s(pot.cant_likes))
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("h3", { staticClass: "mb-0" }, [
+                      _vm._v(_vm._s(pot.title))
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "mb-1 text-muted" }, [
+                      _vm._v(_vm._s(pot.created_at))
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "card-text mb-auto" }, [
+                      _vm._v(_vm._s(pot.summary))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "stretched-link",
+                        attrs: { href: _vm.hreff + pot.id }
+                      },
+                      [_vm._v(_vm._s(_vm.$trans("messages.Continue reading")))]
+                    )
+                  ]
+                )
+              ]
+            )
+          ])
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "tab-pane fade",
+          attrs: {
+            id: "nav-last",
+            role: "tabpanel",
+            "aria-labelledby": "nav-last-tab"
+          }
+        },
+        _vm._l(_vm.posts_last, function(pot_lat) {
+          return _c("div", { staticClass: "pt-5 mt-3" }, [
+            _c(
+              "div",
+              {
+                staticClass:
+                  "row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
+              },
+              [
+                _c(
+                  "div",
+                  { staticClass: "col-auto d-none d-lg-block w-25 h-25" },
+                  [
+                    _c("img", {
+                      staticClass:
+                        "mx-auto d-block pt-2 rounded-circle w-100 h-1010",
+                      attrs: { src: _vm.src + pot_lat.img_url }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "col p-4 d-flex flex-column position-static" },
+                  [
+                    _c(
+                      "strong",
+                      { staticClass: "d-inline-block mb-2 text-primary" },
+                      [
+                        _vm._v(
+                          _vm._s(_vm.$trans("messages.Posted by: ")) +
+                            _vm._s(pot_lat.users.name)
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "strong",
+                      { staticClass: "d-inline-block mb-2 text-primary" },
+                      [
+                        _c("i", {
+                          staticClass: "fa fa-eye",
+                          attrs: { title: "Show your love/ Muestra tu amor" }
+                        }),
+                        _vm._v(" " + _vm._s(pot_lat.cant_access_read) + " | "),
+                        _c("i", {
+                          staticClass: "fa fa-heart",
+                          attrs: { title: "Show your love/ Muestra tu amor" }
+                        }),
+                        _vm._v(" " + _vm._s(pot_lat.cant_likes))
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("h3", { staticClass: "mb-0" }, [
+                      _vm._v(_vm._s(pot_lat.title))
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "mb-1 text-muted" }, [
+                      _vm._v(_vm._s(pot_lat.created_at))
+                    ]),
+                    _vm._v(" "),
+                    _c("p", { staticClass: "card-text mb-auto" }, [
+                      _vm._v(_vm._s(pot_lat.summary))
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "stretched-link",
+                        attrs: { href: _vm.hreff + pot_lat.id }
+                      },
+                      [_vm._v(_vm._s(_vm.$trans("messages.Continue reading")))]
+                    )
+                  ]
+                )
+              ]
+            )
+          ])
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          staticClass: "tab-pane fade",
+          attrs: {
+            id: "nav-all-posts",
+            role: "tabpanel",
+            "aria-labelledby": "nav-all-posts-tab"
+          }
+        },
+        [
+          _c(
+            "div",
+            { staticClass: "pt-5 mt-3" },
+            [
               _c(
-                "div",
+                "paginate",
                 {
-                  staticClass:
-                    "row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
+                  ref: "paginator",
+                  staticClass: "pt-5 mt-3",
+                  attrs: { name: "posts_all", list: _vm.posts_all, per: 3 }
                 },
-                [
-                  _c(
-                    "div",
-                    { staticClass: "col-auto d-none d-lg-block w-25 h-25" },
-                    [
-                      _c("img", {
-                        staticClass:
-                          "mx-auto d-block pt-2 rounded-circle w-100 h-1010",
-                        attrs: { src: _vm.src + pot.img_url }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
+                _vm._l(_vm.paginated("posts_all"), function(post_all) {
+                  return _c(
                     "div",
                     {
-                      staticClass: "col p-4 d-flex flex-column position-static"
+                      key: post_all.id,
+                      staticClass:
+                        "row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
                     },
                     [
                       _c(
-                        "strong",
-                        { staticClass: "d-inline-block mb-2 text-primary" },
+                        "div",
+                        { staticClass: "col-auto d-none d-lg-block w-25 h-25" },
                         [
-                          _vm._v(
-                            _vm._s(_vm.$trans("messages.Posted by: ")) +
-                              _vm._s(pot.users.name)
-                          )
+                          _c("img", {
+                            staticClass:
+                              "mx-auto d-block pt-2 rounded-circle w-100 h-1010",
+                            attrs: { src: _vm.src + post_all.img_url }
+                          })
                         ]
                       ),
                       _vm._v(" "),
                       _c(
-                        "strong",
-                        { staticClass: "d-inline-block mb-2 text-primary" },
-                        [
-                          _c("i", {
-                            staticClass: "fa fa-eye",
-                            attrs: { title: "Show your love/ Muestra tu amor" }
-                          }),
-                          _vm._v(" " + _vm._s(pot.cant_access_read) + " | "),
-                          _c("i", {
-                            staticClass: "fa fa-heart",
-                            attrs: { title: "Show your love/ Muestra tu amor" }
-                          }),
-                          _vm._v(" " + _vm._s(pot.cant_likes))
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("h3", { staticClass: "mb-0" }, [
-                        _vm._v(_vm._s(pot.title))
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "mb-1 text-muted" }, [
-                        _vm._v(_vm._s(pot.created_at))
-                      ]),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "card-text mb-auto" }, [
-                        _vm._v(_vm._s(pot.summary))
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "a",
+                        "div",
                         {
-                          staticClass: "stretched-link",
-                          attrs: { href: _vm.hreff + pot.id }
+                          staticClass:
+                            "col p-4 d-flex flex-column position-static"
                         },
                         [
-                          _vm._v(
-                            _vm._s(_vm.$trans("messages.Continue reading"))
+                          _c(
+                            "strong",
+                            { staticClass: "d-inline-block mb-2 text-primary" },
+                            [
+                              _vm._v(
+                                _vm._s(_vm.$trans("messages.Posted by: ")) +
+                                  _vm._s(post_all.users.name)
+                              )
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "strong",
+                            { staticClass: "d-inline-block mb-2 text-primary" },
+                            [
+                              _c("i", {
+                                staticClass: "fa fa-eye",
+                                attrs: {
+                                  title: "Show your love/ Muestra tu amor"
+                                }
+                              }),
+                              _vm._v(
+                                " " + _vm._s(post_all.cant_access_read) + " | "
+                              ),
+                              _c("i", {
+                                staticClass: "fa fa-heart",
+                                attrs: {
+                                  title: "Show your love/ Muestra tu amor"
+                                }
+                              }),
+                              _vm._v(" " + _vm._s(post_all.cant_likes))
+                            ]
+                          ),
+                          _vm._v(" "),
+                          _c("h3", { staticClass: "mb-0" }, [
+                            _vm._v(_vm._s(post_all.title))
+                          ]),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "mb-1 text-muted" }, [
+                            _vm._v(_vm._s(post_all.created_at))
+                          ]),
+                          _vm._v(" "),
+                          _c("p", { staticClass: "card-text mb-auto" }, [
+                            _vm._v(_vm._s(post_all.summary))
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "a",
+                            {
+                              staticClass: "stretched-link",
+                              attrs: { href: _vm.hreff + post_all.id }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(_vm.$trans("messages.Continue reading"))
+                              )
+                            ]
                           )
                         ]
                       )
                     ]
                   )
-                ]
-              )
-            ])
-          }),
-          0
-        )
-      : _c(
-          "div",
-          _vm._l(_vm.posts_liked, function(pot) {
-            return _c("div", { staticClass: "pt-5 mt-3" }, [
+                }),
+                0
+              ),
+              _vm._v(" "),
               _c(
-                "div",
-                {
-                  staticClass:
-                    "row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative"
-                },
+                "strong",
+                { staticClass: "text-primary" },
                 [
-                  _c(
-                    "div",
-                    { staticClass: "col-auto d-none d-lg-block w-25 h-25" },
-                    [
-                      _c("img", {
-                        staticClass:
-                          "mx-auto d-block pt-2 rounded-circle w-100 h-1010",
-                        attrs: { src: _vm.src + pot.img_url }
-                      })
-                    ]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    {
-                      staticClass: "col p-4 d-flex flex-column position-static"
-                    },
-                    [
-                      _c(
-                        "strong",
-                        { staticClass: "d-inline-block mb-2 text-primary" },
-                        [
-                          _vm._v(
-                            _vm._s(_vm.$trans("messages.Posted by: ")) +
-                              _vm._s(pot.users.name)
-                          )
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "strong",
-                        { staticClass: "d-inline-block mb-2 text-primary" },
-                        [
-                          _c("i", {
-                            staticClass: "fa fa-eye",
-                            attrs: { title: "Show your love/ Muestra tu amor" }
-                          }),
-                          _vm._v(" " + _vm._s(pot.cant_access_read) + " | "),
-                          _c("i", {
-                            staticClass: "fa fa-heart",
-                            attrs: { title: "Show your love/ Muestra tu amor" }
-                          }),
-                          _vm._v(" " + _vm._s(pot.cant_likes))
-                        ]
-                      ),
-                      _vm._v(" "),
-                      _c("h3", { staticClass: "mb-0" }, [
-                        _vm._v(_vm._s(pot.title))
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "mb-1 text-muted" }, [
-                        _vm._v(_vm._s(pot.created_at))
-                      ]),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "card-text mb-auto" }, [
-                        _vm._v(_vm._s(pot.summary))
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "a",
-                        {
-                          staticClass: "stretched-link",
-                          attrs: { href: _vm.hreff + pot.id }
-                        },
-                        [
-                          _vm._v(
-                            _vm._s(_vm.$trans("messages.Continue reading"))
-                          )
-                        ]
-                      )
-                    ]
-                  )
-                ]
+                  _c("paginate-links", {
+                    attrs: {
+                      for: "posts_all",
+                      "show-step-links": true,
+                      simple: {
+                        prev: "Anterior",
+                        next: "Siguiente"
+                      }
+                    }
+                  })
+                ],
+                1
               )
-            ])
-          }),
-          0
-        )
+            ],
+            1
+          )
+        ]
+      )
+    ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("nav", [
+      _c(
+        "div",
+        {
+          staticClass: "nav nav-tabs",
+          attrs: { id: "nav-tab", role: "tablist" }
+        },
+        [
+          _c(
+            "a",
+            {
+              staticClass: "nav-item nav-link active",
+              attrs: {
+                id: "nav-readed-tab",
+                "data-toggle": "tab",
+                href: "#nav-readed",
+                role: "tab",
+                "aria-controls": "nav-readed",
+                "aria-selected": "true"
+              }
+            },
+            [
+              _c(
+                "strong",
+                { staticClass: "d-inline-block mb-2 text-primary" },
+                [_vm._v("More Read")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "nav-item nav-link",
+              attrs: {
+                id: "nav-liked-tab",
+                "data-toggle": "tab",
+                href: "#nav-liked",
+                role: "tab",
+                "aria-controls": "nav-liked",
+                "aria-selected": "false"
+              }
+            },
+            [
+              _c(
+                "strong",
+                { staticClass: "d-inline-block mb-2 text-primary" },
+                [_vm._v("More Liked")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "nav-item nav-link",
+              attrs: {
+                id: "nav-last-tab",
+                "data-toggle": "tab",
+                href: "#nav-last",
+                role: "tab",
+                "aria-controls": "nav-last",
+                "aria-selected": "false"
+              }
+            },
+            [
+              _c(
+                "strong",
+                { staticClass: "d-inline-block mb-2 text-primary" },
+                [_vm._v("Last")]
+              )
+            ]
+          ),
+          _vm._v(" "),
+          _c(
+            "a",
+            {
+              staticClass: "nav-item nav-link",
+              attrs: {
+                id: "nav-all-posts-tab",
+                "data-toggle": "tab",
+                href: "#nav-all-posts",
+                role: "tab",
+                "aria-controls": "nav-all-posts",
+                "aria-selected": "false"
+              }
+            },
+            [
+              _c(
+                "strong",
+                { staticClass: "d-inline-block mb-2 text-primary" },
+                [_vm._v("All Posts")]
+              )
+            ]
+          )
+        ]
+      )
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -69153,6 +70252,610 @@ return index;
 })));
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../process/browser.js */ "./node_modules/process/browser.js")))
+
+/***/ }),
+
+/***/ "./node_modules/vue-paginate/dist/vue-paginate.js":
+/*!********************************************************!*\
+  !*** ./node_modules/vue-paginate/dist/vue-paginate.js ***!
+  \********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+/**
+ * vue-paginate v3.6.0
+ * (c) 2018 Taha Shashtari
+ * @license MIT
+ */
+(function (global, factory) {
+   true ? module.exports = factory() :
+  undefined;
+}(this, function () { 'use strict';
+
+  var warn = function () {}
+  var formatComponentName
+
+  var hasConsole = typeof console !== 'undefined'
+
+  warn = function (msg, vm, type) {
+    if ( type === void 0 ) type = 'error';
+
+    if (hasConsole) {
+      console[type]("[vue-paginate]: " + msg + " " + (
+        vm ? formatLocation(formatComponentName(vm)) : ''
+        ))
+    }
+  }
+
+  formatComponentName = function (vm) {
+    if (vm.$root === vm) {
+      return 'root instance'
+    }
+    var name = vm._isVue
+    ? vm.$options.name || vm.$options._componentTag
+    : vm.name
+    return (
+      (name ? ("component <" + name + ">") : "anonymous component") +
+      (vm._isVue && vm.$options.__file ? (" at " + (vm.$options.__file)) : '')
+      )
+  }
+
+  var formatLocation = function (str) {
+    if (str === 'anonymous component') {
+      str += " - use the \"name\" option for better debugging messages."
+    }
+    return ("\n(found in " + str + ")")
+  }
+
+  var Paginate = {
+    name: 'paginate',
+    props: {
+      name: {
+        type: String,
+        required: true
+      },
+      list: {
+        type: Array,
+        required: true
+      },
+      per: {
+        type: Number,
+        default: 3,
+        validator: function validator (value) {
+          return value > 0
+        }
+      },
+      tag: {
+        type: String,
+        default: 'ul'
+      },
+      container: {
+        type: Object,
+        default: null
+      }
+    },
+    data: function data () {
+      return {
+        initialListSize: this.list.length
+      }
+    },
+    computed: {
+      parent: function parent () {
+        return this.container ? this.container : this.$parent
+      },
+      currentPage: {
+        get: function get () {
+          if (this.parent.paginate[this.name]) {
+            return this.parent.paginate[this.name].page
+          }
+        },
+        set: function set (page) {
+          this.parent.paginate[this.name].page = page
+        }
+      },
+      pageItemsCount: function pageItemsCount () {
+        var numOfItems = this.list.length
+        var first = this.currentPage * this.per + 1
+        var last = Math.min((this.currentPage * this.per) + this.per, numOfItems)
+        return (first + "-" + last + " of " + numOfItems)
+      },
+
+      lastPage: function lastPage () {
+        return Math.ceil(this.list.length / this.per)
+      }
+    },
+    mounted: function mounted () {
+      if (this.per <= 0) {
+        warn(("<paginate name=\"" + (this.name) + "\"> 'per' prop can't be 0 or less."), this.parent)
+      }
+      if (!this.parent.paginate[this.name]) {
+        warn(("'" + (this.name) + "' is not registered in 'paginate' array."), this.parent)
+        return
+      }
+      this.paginateList()
+    },
+    watch: {
+      currentPage: function currentPage () {
+        this.paginateList()
+      },
+      list: function list () {
+        if (this.currentPage >= this.lastPage) {
+          this.currentPage = this.lastPage - 1
+        }
+        this.paginateList()
+      },
+      per: function per () {
+        this.currentPage = 0
+        this.paginateList()
+      }
+    },
+    methods: {
+      paginateList: function paginateList () {
+        var index = this.currentPage * this.per
+        var paginatedList = this.list.slice(index, index + this.per)
+        this.parent.paginate[this.name].list = paginatedList
+      },
+      goToPage: function goToPage (page) {
+        var lastPage = Math.ceil(this.list.length / this.per)
+        if (page > lastPage) {
+          warn(("You cannot go to page " + page + ". The last page is " + lastPage + "."), this.parent)
+          return
+        }
+        this.currentPage = page - 1
+      }
+    },
+    render: function render (h) {
+      return h(this.tag, {}, this.$slots.default)
+    }
+  }
+
+  var LEFT_ARROW = '«'
+  var RIGHT_ARROW = '»'
+  var ELLIPSES = '…'
+
+  var LimitedLinksGenerator = function LimitedLinksGenerator (listOfPages, currentPage, limit) {
+    this.listOfPages = listOfPages
+    this.lastPage = listOfPages.length - 1
+    this.currentPage = currentPage === this.lastPage
+      ? this.lastPage - 1
+      : currentPage
+    this.limit = limit
+  };
+
+  LimitedLinksGenerator.prototype.generate = function generate () {
+    var firstHalf = this._buildFirstHalf()
+    var secondHalf = this._buildSecondHalf()
+    return firstHalf.concat( secondHalf)
+  };
+
+  LimitedLinksGenerator.prototype._buildFirstHalf = function _buildFirstHalf () {
+    var firstHalf = this._allPagesButLast()
+      .slice(
+        this._currentChunkIndex(),
+        this._currentChunkIndex() + this.limit
+      )
+    // Add backward ellipses with first page if needed
+    if (this.currentPage >= this.limit) {
+      firstHalf.unshift(ELLIPSES)
+      firstHalf.unshift(0)
+    }
+    // Add ellipses if needed
+    if (this.lastPage - this.limit > this._currentChunkIndex()) {
+      firstHalf.push(ELLIPSES)
+    }
+    return firstHalf
+  };
+
+  LimitedLinksGenerator.prototype._buildSecondHalf = function _buildSecondHalf () {
+    var secondHalf = [this.lastPage]
+    return secondHalf
+  };
+
+  LimitedLinksGenerator.prototype._currentChunkIndex = function _currentChunkIndex () {
+    var currentChunk = Math.floor(this.currentPage / this.limit)
+    return currentChunk * this.limit 
+  };
+
+  LimitedLinksGenerator.prototype._allPagesButLast = function _allPagesButLast () {
+      var this$1 = this;
+
+    return this.listOfPages.filter(function (n) { return n !== this$1.lastPage; })
+  };
+
+  var PaginateLinks = {
+    name: 'paginate-links',
+    props: {
+      for: {
+        type: String,
+        required: true
+      },
+      limit: {
+        type: Number,
+        default: 0
+      },
+      simple: {
+        type: Object,
+        default: null,
+        validator: function validator (obj) {
+          return obj.prev && obj.next
+        }
+      },
+      stepLinks: {
+        type: Object,
+        default: function () {
+          return {
+            prev: LEFT_ARROW,
+            next: RIGHT_ARROW
+          }
+        },
+        validator: function validator$1 (obj) {
+          return obj.prev && obj.next
+        }
+      },
+      showStepLinks: {
+        type: Boolean
+      },
+      hideSinglePage: {
+        type: Boolean
+      },
+      classes: {
+        type: Object,
+        default: null
+      },
+      async: {
+        type: Boolean,
+        default: false
+      },
+      container: {
+        type: Object,
+        default: null
+      }
+    },
+    data: function data () {
+      return {
+        listOfPages: [],
+        numberOfPages: 0,
+        target: null
+      }
+    },
+    computed: {
+      parent: function parent () {
+        return this.container ? this.container.el : this.$parent
+      },
+      state: function state () {
+        return this.container ? this.container.state : this.$parent.paginate[this.for]
+      },
+      currentPage: {
+        get: function get () {
+          if (this.state) {
+            return this.state.page
+          }
+        },
+        set: function set (page) {
+          this.state.page = page
+        }
+      }
+    },
+    mounted: function mounted () {
+      var this$1 = this;
+
+      if (this.simple && this.limit) {
+        warn(("<paginate-links for=\"" + (this.for) + "\"> 'simple' and 'limit' props can't be used at the same time. In this case, 'simple' will take precedence, and 'limit' will be ignored."), this.parent, 'warn')
+      }
+      if (this.simple && !this.simple.next) {
+        warn(("<paginate-links for=\"" + (this.for) + "\"> 'simple' prop doesn't contain 'next' value."), this.parent)
+      }
+      if (this.simple && !this.simple.prev) {
+        warn(("<paginate-links for=\"" + (this.for) + "\"> 'simple' prop doesn't contain 'prev' value."), this.parent)
+      }
+      if (this.stepLinks && !this.stepLinks.next) {
+        warn(("<paginate-links for=\"" + (this.for) + "\"> 'step-links' prop doesn't contain 'next' value."), this.parent)
+      }
+      if (this.stepLinks && !this.stepLinks.prev) {
+        warn(("<paginate-links for=\"" + (this.for) + "\"> 'step-links' prop doesn't contain 'prev' value."), this.parent)
+      }
+      this.$nextTick(function () {
+        this$1.updateListOfPages()
+      })
+    },
+    watch: {
+      'state': {
+        handler: function handler () {
+          this.updateListOfPages()
+        },
+        deep: true
+      },
+      currentPage: function currentPage (toPage, fromPage) {
+        this.$emit('change', toPage + 1, fromPage + 1)
+      }
+    },
+    methods: {
+      updateListOfPages: function updateListOfPages () {
+        this.target = getTargetPaginateComponent(this.parent.$children, this.for)
+        if (!this.target) {
+          if (this.async) { return }
+          warn(("<paginate-links for=\"" + (this.for) + "\"> can't be used without its companion <paginate name=\"" + (this.for) + "\">"), this.parent)
+          warn("To fix that issue you may need to use :async=\"true\" on <paginate-links> component to allow for asyncronous rendering", this.parent, 'warn')
+          return
+        }
+        this.numberOfPages = Math.ceil(this.target.list.length / this.target.per)
+        this.listOfPages = getListOfPageNumbers(this.numberOfPages)
+      }
+    },
+    render: function render (h) {
+      var this$1 = this;
+
+      if (!this.target && this.async) { return null }
+
+      var links = this.simple
+        ? getSimpleLinks(this, h)
+        : this.limit > 1
+        ? getLimitedLinks(this, h)
+        : getFullLinks(this, h)
+
+      if (this.hideSinglePage && this.numberOfPages <= 1) {
+        return null
+      }
+
+      var el = h('ul', {
+        class: ['paginate-links', this.for]
+      }, links)
+
+      if (this.classes) {
+        this.$nextTick(function () {
+          addAdditionalClasses(el.elm, this$1.classes)
+        })
+      }
+      return el
+    }
+  }
+
+  function getFullLinks (vm, h) {
+    var allLinks = vm.showStepLinks
+      ? [vm.stepLinks.prev ].concat( vm.listOfPages, [vm.stepLinks.next])
+      : vm.listOfPages
+    return allLinks.map(function (link) {
+      var data = {
+        on: {
+          click: function (e) {
+            e.preventDefault()
+            vm.currentPage = getTargetPageForLink(
+              link,
+              vm.limit,
+              vm.currentPage,
+              vm.listOfPages,
+              vm.stepLinks
+            )
+          }
+        }
+      }
+      var liClasses = getClassesForLink(
+        link,
+        vm.currentPage,
+        vm.listOfPages.length - 1,
+        vm.stepLinks
+      )
+      var linkText = link === vm.stepLinks.next || link === vm.stepLinks.prev
+        ? link
+        : link + 1 // it means it's a number
+      return h('li', { class: liClasses }, [h('a', data, linkText)])
+    })
+  }
+
+  function getLimitedLinks (vm, h) {
+    var limitedLinks = new LimitedLinksGenerator(
+      vm.listOfPages,
+      vm.currentPage,
+      vm.limit,
+      vm.stepLinks
+    ).generate()
+
+    limitedLinks = vm.showStepLinks
+      ? [vm.stepLinks.prev ].concat( limitedLinks, [vm.stepLinks.next])
+      : limitedLinks
+
+    var limitedLinksMetadata = getLimitedLinksMetadata(limitedLinks)
+
+    return limitedLinks.map(function (link, index) {
+      var data = {
+        on: {
+          click: function (e) {
+            e.preventDefault()
+            vm.currentPage = getTargetPageForLink(
+              link,
+              vm.limit,
+              vm.currentPage,
+              vm.listOfPages,
+              vm.stepLinks,
+              limitedLinksMetadata[index]
+            )
+          }
+        }
+      }
+      var liClasses = getClassesForLink(
+        link,
+        vm.currentPage,
+        vm.listOfPages.length - 1,
+        vm.stepLinks
+      )
+      // If the link is a number,
+      // then incremented by 1 (since it's 0 based).
+      // otherwise, do nothing (so, it's a symbol).
+      var text = (link === parseInt(link, 10)) ? link + 1 : link
+      return h('li', { class: liClasses }, [h('a', data, text)])
+    })
+  }
+
+  function getSimpleLinks (vm, h) {
+    var lastPage = vm.listOfPages.length - 1
+    var prevData = {
+      on: {
+        click: function (e) {
+          e.preventDefault()
+          if (vm.currentPage > 0) { vm.currentPage -= 1 }
+        }
+      }
+    }
+    var nextData = {
+      on: {
+        click: function (e) {
+          e.preventDefault()
+          if (vm.currentPage < lastPage) { vm.currentPage += 1 }
+        }
+      }
+    }
+    var nextListData = { class: ['next', vm.currentPage >= lastPage ? 'disabled' : ''] }
+    var prevListData = { class: ['prev', vm.currentPage <= 0 ? 'disabled' : ''] }
+    var prevLink = h('li', prevListData, [h('a', prevData, vm.simple.prev)])
+    var nextLink = h('li', nextListData, [h('a', nextData, vm.simple.next)])
+    return [prevLink, nextLink]
+  }
+
+  function getTargetPaginateComponent (children, targetName) {
+    return children
+      .filter(function (child) { return (child.$vnode.componentOptions.tag === 'paginate'); })
+      .find(function (child) { return child.name === targetName; })
+  }
+
+  function getListOfPageNumbers (numberOfPages) {
+    // converts number of pages into an array
+    // that contains each individual page number
+    // For Example: 4 => [0, 1, 2, 3]
+    return Array.apply(null, { length: numberOfPages })
+      .map(function (val, index) { return index; })
+  }
+
+  function getClassesForLink(link, currentPage, lastPage, ref) {
+    var prev = ref.prev;
+    var next = ref.next;
+
+    var liClass = []
+    if (link === prev) {
+      liClass.push('left-arrow')
+    } else if (link === next) {
+      liClass.push('right-arrow')
+    } else if (link === ELLIPSES) {
+      liClass.push('ellipses')
+    } else {
+      liClass.push('number')
+    }
+
+    if (link === currentPage) {
+      liClass.push('active')
+    }
+
+    if (link === prev && currentPage <= 0) {
+      liClass.push('disabled')
+    } else if (link === next && currentPage >= lastPage) {
+      liClass.push('disabled')
+    }
+    return liClass
+  }
+
+  function getTargetPageForLink (link, limit, currentPage, listOfPages, ref, metaData) {
+    var prev = ref.prev;
+    var next = ref.next;
+    if ( metaData === void 0 ) metaData = null;
+
+    var currentChunk = Math.floor(currentPage / limit)
+    if (link === prev) {
+      return (currentPage - 1) < 0 ? 0 : currentPage - 1
+    } else if (link === next) {
+      return (currentPage + 1 > listOfPages.length - 1)
+        ? listOfPages.length - 1
+        : currentPage + 1
+    } else if (metaData && metaData === 'right-ellipses') {
+      return (currentChunk + 1) * limit
+    } else if (metaData && metaData === 'left-ellipses') {
+      var chunkContent = listOfPages.slice(currentChunk * limit, currentChunk * limit + limit)
+      var isLastPage = currentPage === listOfPages.length - 1
+      if (isLastPage && chunkContent.length === 1) {
+        currentChunk--
+      }
+      return (currentChunk - 1) * limit + limit - 1
+    }
+    // which is number
+    return link
+  }
+
+  /**
+   * Mainly used here to check whether the displayed
+   * ellipses is for showing previous or next links
+   */
+  function getLimitedLinksMetadata (limitedLinks) {
+    return limitedLinks.map(function (link, index) {
+      if (link === ELLIPSES && limitedLinks[index - 1] === 0) {
+        return 'left-ellipses'
+      } else if (link === ELLIPSES && limitedLinks[index - 1] !== 0) {
+        return 'right-ellipses'
+      }
+      return link
+    })
+  }
+
+  function addAdditionalClasses (linksContainer, classes) {
+    Object.keys(classes).forEach(function (selector) {
+      if (selector === 'ul') {
+        var selectorValue = classes['ul']
+        if (Array.isArray(selectorValue)) {
+          selectorValue.forEach(function (c) { return linksContainer.classList.add(c); })
+        } else {
+          linksContainer.classList.add(selectorValue)
+        }
+      }
+      linksContainer.querySelectorAll(selector).forEach(function (node) {
+        var selectorValue = classes[selector]
+        if (Array.isArray(selectorValue)) {
+          selectorValue.forEach(function (c) { return node.classList.add(c); })
+        } else {
+          node.classList.add(selectorValue)
+        }
+      })
+    })
+  }
+
+  function paginateDataGenerator (listNames) {
+    if ( listNames === void 0 ) listNames = [];
+
+    return listNames.reduce(function (curr, listName) {
+      curr[listName] = {
+        list: [],
+        page: 0
+      }
+      return curr
+    }, {})
+  }
+
+  var vuePaginate = {}
+
+  vuePaginate.install = function (Vue) {
+    Vue.mixin({
+      created: function created () {
+        if (this.paginate !== 'undefined' && this.paginate instanceof Array) {
+          this.paginate = paginateDataGenerator(this.paginate)
+        }
+      },
+      methods: {
+        paginated: function paginated (listName) {
+          if (!this.paginate || !this.paginate[listName]) {
+            warn(("'" + listName + "' is not registered in 'paginate' array."), this)
+            return
+          }
+          return this.paginate[listName].list
+        }
+      }
+    })
+    Vue.component('paginate', Paginate)
+    Vue.component('paginate-links', PaginateLinks)
+  }
+
+  if (typeof window !== 'undefined' && window.Vue) {
+    window.Vue.use(vuePaginate)
+  }
+
+  return vuePaginate;
+
+}));
 
 /***/ }),
 
@@ -81230,6 +82933,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @voerro/vue-tagsinput */ "./node_modules/@voerro/vue-tagsinput/src/main.js");
 /* harmony import */ var v_calendar__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! v-calendar */ "./node_modules/v-calendar/lib/v-calendar.umd.min.js");
 /* harmony import */ var v_calendar__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(v_calendar__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var vue_paginate__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-paginate */ "./node_modules/vue-paginate/dist/vue-paginate.js");
+/* harmony import */ var vue_paginate__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(vue_paginate__WEBPACK_IMPORTED_MODULE_8__);
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -81243,6 +82948,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 
  // get the data source
+
 
 
 
@@ -81275,6 +82981,7 @@ Vue.use(_eli5_vue_lang_js__WEBPACK_IMPORTED_MODULE_3___default.a, {
 });
 Vue.use(__webpack_require__(/*! vue-cookies */ "./node_modules/vue-cookies/vue-cookies.js"));
 Vue.use(vue_localstorage__WEBPACK_IMPORTED_MODULE_1___default.a);
+Vue.use(vue_paginate__WEBPACK_IMPORTED_MODULE_8___default.a);
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -81482,7 +83189,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _PostPpalTabComponent_vue_vue_type_template_id_0c7443da___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./PostPpalTabComponent.vue?vue&type=template&id=0c7443da& */ "./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=template&id=0c7443da&");
 /* harmony import */ var _PostPpalTabComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./PostPpalTabComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _PostPpalTabComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./PostPpalTabComponent.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
 
 
 
@@ -81490,7 +83199,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
   _PostPpalTabComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
   _PostPpalTabComponent_vue_vue_type_template_id_0c7443da___WEBPACK_IMPORTED_MODULE_0__["render"],
   _PostPpalTabComponent_vue_vue_type_template_id_0c7443da___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
@@ -81519,6 +83228,22 @@ component.options.__file = "resources/js/components/admin/posts/PostPpalTabCompo
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PostPpalTabComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PostPpalTabComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=script&lang=js&");
 /* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_PostPpalTabComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=style&index=0&lang=css&":
+/*!*******************************************************************************************************!*\
+  !*** ./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \*******************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostPpalTabComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./PostPpalTabComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/posts/PostPpalTabComponent.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostPpalTabComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostPpalTabComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostPpalTabComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_PostPpalTabComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+
 
 /***/ }),
 

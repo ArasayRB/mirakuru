@@ -17,6 +17,7 @@ import moment from 'moment';
 import translations from './vue-translations.js';
 import VoerroTagsInput from '@voerro/vue-tagsinput';
 import VCalendar from 'v-calendar';
+import VuePaginate from 'vue-paginate';
 var Vue = require('vue');
 require('lang.js');
 
@@ -41,6 +42,7 @@ Vue.use(VueLang, {
 });
 Vue.use(require('vue-cookies'));
 Vue.use(VueLocalStorage);
+Vue.use(VuePaginate);
 
 /**
  * The following block of code may be used to automatically register your

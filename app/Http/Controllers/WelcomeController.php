@@ -26,7 +26,7 @@ class WelcomeController extends Controller
 
     public function welcome()
     {
-      $posts=$this->getPosts();
+      $posts=$this->existPost();
         return view('home',['posts'=>$posts]);
     }
 
@@ -34,7 +34,8 @@ class WelcomeController extends Controller
       $posts_more_liked=$this->getPostsMoreLikes(3);
       $posts_more_read=$this->getPostsMoreRead(3);
       $latest_posts=$this->getLatestPosts(3);
-      return ['posts_more_liked'=>$posts_more_liked,'posts_more_read'=>$posts_more_read,'latest_posts'=>$latest_posts];
+      $posts=$this->getPosts();
+      return ['posts'=>$posts,'posts_more_liked'=>$posts_more_liked,'posts_more_read'=>$posts_more_read,'latest_posts'=>$latest_posts];
     }
 
     public function showPost($id){

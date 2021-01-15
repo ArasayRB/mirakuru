@@ -209,35 +209,11 @@
 </div>
 </div>
 </div><!--Fin SECTION TESTIMONIOS-->
-@if ( $posts ?? '')
+@if ( isset($posts) && $posts>0)
 <section class="container-fluid col-12 pt-5" id="blog" name="blog"><h1 id="post" class="text-center pb-2 pt-5 text-uppercase animate__animated animate__zoomIn">{{ __('Posts') }}</h1><!--Section Blog-->
-  <nav>
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-      <a class="nav-item nav-link active" id="nav-readed-tab" data-toggle="tab" href="#nav-readed" role="tab" aria-controls="nav-readed" aria-selected="true"><strong class="d-inline-block mb-2 text-primary">More Read</strong></a>
-      <a class="nav-item nav-link" id="nav-liked-tab" data-toggle="tab" href="#nav-liked" role="tab" aria-controls="nav-liked" aria-selected="false"><strong class="d-inline-block mb-2 text-primary">More Liked</strong></a>
-      <a class="nav-item nav-link" id="nav-last-tab" data-toggle="tab" href="#nav-last" role="tab" aria-controls="nav-last" aria-selected="false"><strong class="d-inline-block mb-2 text-primary">Last</strong></a>
-    </div>
-  </nav>
-  <div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active" id="nav-readed" role="tabpanel" aria-labelledby="nav-readed-tab">
-      <post-ppal-tab-component post="readed">
-      </post-ppal-tab-component>
-    </div>
-    <div class="tab-pane fade" id="nav-liked" role="tabpanel" aria-labelledby="nav-liked-tab">
-        <post-ppal-tab-component post="liked">
-        </post-ppal-tab-component>
-    </div>
-    <div class="tab-pane fade" id="nav-last" role="tabpanel" aria-labelledby="nav-last-tab">
-        <post-ppal-tab-component post="latest">
-        </post-ppal-tab-component>
-    </div>
-  </div>
-  <div class="row mb-2">
+  <post-ppal-tab-component>
+  </post-ppal-tab-component>
 
-
-
-
-  </div>
 </section><!--END Section Blog-->
 @endif
 <section class="mb-5 mt-5 pt-5 pb-5" id="contacto" name="contacto"><!--Section Contacto-->
