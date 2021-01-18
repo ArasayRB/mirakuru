@@ -65,7 +65,7 @@ trait PostTrait {
 
     }
 
-    public function show($idPost){
+    public function show($idPost,$type){
       $post=Post::with('users')
                   ->find($idPost);
                   if(Cache::has($idPost)==false){
@@ -73,7 +73,10 @@ trait PostTrait {
         $post->cant_access_read++;
         $post->save();
     }
+    if($type==="real"){
       return view('/posts/show',['post'=>$post]);
+    }
+     return view('/posts/show',['post'=>$post,'preview'=>'vista previa']);
     }
 
     public function relationedPostByTags($id){

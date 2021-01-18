@@ -14,10 +14,11 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\File;
+use App\Traits\PostTrait;
 
 class PostController extends Controller
 {
-  use KeywordTrait; use CategoryPostTrait; use ImageTrait; use ContentTypeTrait; use TranslateTrait; use LanguageTrait;
+  use KeywordTrait; use CategoryPostTrait; use ImageTrait; use ContentTypeTrait; use TranslateTrait; use LanguageTrait;  use PostTrait;
   public function __construct()
   {
       $this->middleware('auth');
@@ -42,6 +43,10 @@ class PostController extends Controller
                    ->orderBy('created_at','asc')
                    ->get();
                    return $posts;
+    }
+
+    public function previewPost($id){
+      return $this->show($id,'preview');
     }
 
     public function getPost($post){
@@ -217,10 +222,7 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function show(Post $post)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.

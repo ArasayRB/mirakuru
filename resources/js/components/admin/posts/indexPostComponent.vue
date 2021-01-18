@@ -31,39 +31,27 @@
           <thead>
             <tr>
               <th>{{ $trans('messages.Tools') }}</th>
-              <th>{{ $trans('messages.ID') }}</th>
               <th>{{ $trans('messages.Title') }}</th>
-              <th>{{ $trans('messages.Content') }}</th>
               <th>{{ $trans('messages.Tags') }}</th>
               <th>{{ $trans('messages.Summary') }}</th>
               <th>{{ $trans('messages.Publication State') }}</th>
               <th>{{ $trans('messages.Image') }}</th>
-              <th>{{ $trans('messages.Video') }}</th>
               <th>{{ $trans('messages.QR') }}</th>
               <th>{{ $trans('messages.User') }}</th>
               <th>{{ $trans('messages.Category') }}</th>
-              <th>{{ $trans('messages.Read Access') }}</th>
-              <th>{{ $trans('messages.Likes') }}</th>
-              <th>{{ $trans('messages.Shared') }}</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
               <th>{{ $trans('messages.Tools') }}</th>
-              <th>{{ $trans('messages.ID') }}</th>
               <th>{{ $trans('messages.Title') }}</th>
-              <th>{{ $trans('messages.Content') }}</th>
               <th>{{ $trans('messages.Tags') }}</th>
               <th>{{ $trans('messages.Summary') }}</th>
               <th>{{ $trans('messages.Publication State') }}</th>
               <th>{{ $trans('messages.Image') }}</th>
-              <th>{{ $trans('messages.Video') }}</th>
               <th>{{ $trans('messages.QR') }}</th>
               <th>{{ $trans('messages.User') }}</th>
               <th>{{ $trans('messages.Category') }}</th>
-              <th>{{ $trans('messages.Read Access') }}</th>
-              <th>{{ $trans('messages.Likes') }}</th>
-              <th>{{ $trans('messages.Shared') }}</th>
             </tr>
           </tfoot>
           <tbody>
@@ -71,7 +59,7 @@
                 <tr v-for="(post, index) in posts" :post="post" :key="post.id">
                   <td>
                     <div class="dropdown">
-                      <a class="dropdown-toggle" title="Edit Transcription/Editar Transcripción" data-toggle="dropdown" @click="getTranslates(index,post)">
+                      <a class="dropdown-toggle" title="Edit Translate/Editar Traducción" data-toggle="dropdown" @click="getTranslates(index,post)">
                         <i class="fa fa-edit"></i>
                         <i class="fas fa-language"></i>
                       </a>
@@ -86,10 +74,9 @@
                       <a href="#" @click="openAddTranslate(index,post)"><i class="fas fa-language" title="Add Language/Añadir Lenguage"></i></a>
                       <a href="#" @click="openEditPost(index,post)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
                       <a href="#" @click="deletePost(index,post.id,post.title)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
+                      <a :href="hreff+post.id"><i title="Preview/Vista previa" class="fa fa-eye"></i></a>
                   </td>
-                  <td>{{post.id}}</td>
                   <td>{{post.title}}</td>
-                  <td>{{post.content}}</td>
                   <td>
                     <div class="" v-for="tag in post.tags ">
                     <p> <span class="badge badge-pill badge-primary">{{tag.name}}</span></p>
@@ -98,13 +85,9 @@
                   <td>{{post.summary}}</td>
                   <td>{{post.publicate_state}}</td>
                   <td><img :src="src+post.img_url"  width="100"></td>
-                  <td></td>
                   <td><img :src="src_qr+post.qr_img_url"  width="100"></td>
                   <td>{{user}}</td>
                   <td>{{post.categoria_posts.category_post}}</td>
-                  <td>{{post.cant_access_read}}</td>
-                  <td>{{post.cant_likes}}</td>
-                  <td>{{post.cant_shares}}</td>
                 </tr>
           </tbody>
         </table>
@@ -141,6 +124,7 @@
      },
           posts:[],
           post:[],
+          hreff:'/post-preview/',
           show_lang_div:false,
           postActualizar:false,
           idPostActualizar:-1,

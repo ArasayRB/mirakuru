@@ -3268,23 +3268,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3331,6 +3314,7 @@ __webpack_require__.r(__webpack_exports__);
       },
       posts: [],
       post: [],
+      hreff: '/post-preview/',
       show_lang_div: false,
       postActualizar: false,
       idPostActualizar: -1,
@@ -65539,7 +65523,7 @@ var render = function() {
                       [
                         _c("i", {
                           staticClass: "fa fa-eye",
-                          attrs: { title: "Show your love/ Muestra tu amor" }
+                          attrs: { title: "Reads/ Lecturas" }
                         }),
                         _vm._v(" " + _vm._s(pot.cant_access_read) + " | "),
                         _c("i", {
@@ -65631,7 +65615,7 @@ var render = function() {
                       [
                         _c("i", {
                           staticClass: "fa fa-eye",
-                          attrs: { title: "Show your love/ Muestra tu amor" }
+                          attrs: { title: "Reads/ Lecturas" }
                         }),
                         _vm._v(" " + _vm._s(pot.cant_access_read) + " | "),
                         _c("i", {
@@ -65723,7 +65707,7 @@ var render = function() {
                       [
                         _c("i", {
                           staticClass: "fa fa-eye",
-                          attrs: { title: "Show your love/ Muestra tu amor" }
+                          attrs: { title: "Reads/ Lecturas" }
                         }),
                         _vm._v(" " + _vm._s(pot_lat.cant_access_read) + " | "),
                         _c("i", {
@@ -65825,7 +65809,7 @@ var render = function() {
                         [
                           _c("i", {
                             staticClass: "fa fa-eye",
-                            attrs: { title: "Show your love/ Muestra tu amor" }
+                            attrs: { title: "Reads/ Lecturas" }
                           }),
                           _vm._v(
                             " " + _vm._s(post_all.cant_access_read) + " | "
@@ -67304,11 +67288,7 @@ var render = function() {
                   _c("tr", [
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Tools")))]),
                     _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.ID")))]),
-                    _vm._v(" "),
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Title")))]),
-                    _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Content")))]),
                     _vm._v(" "),
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Tags")))]),
                     _vm._v(" "),
@@ -67320,21 +67300,11 @@ var render = function() {
                     _vm._v(" "),
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Image")))]),
                     _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Video")))]),
-                    _vm._v(" "),
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.QR")))]),
                     _vm._v(" "),
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.User")))]),
                     _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Category")))]),
-                    _vm._v(" "),
-                    _c("th", [
-                      _vm._v(_vm._s(_vm.$trans("messages.Read Access")))
-                    ]),
-                    _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Likes")))]),
-                    _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Shared")))])
+                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Category")))])
                   ])
                 ]),
                 _vm._v(" "),
@@ -67342,11 +67312,7 @@ var render = function() {
                   _c("tr", [
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Tools")))]),
                     _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.ID")))]),
-                    _vm._v(" "),
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Title")))]),
-                    _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Content")))]),
                     _vm._v(" "),
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Tags")))]),
                     _vm._v(" "),
@@ -67358,21 +67324,11 @@ var render = function() {
                     _vm._v(" "),
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Image")))]),
                     _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Video")))]),
-                    _vm._v(" "),
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.QR")))]),
                     _vm._v(" "),
                     _c("th", [_vm._v(_vm._s(_vm.$trans("messages.User")))]),
                     _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Category")))]),
-                    _vm._v(" "),
-                    _c("th", [
-                      _vm._v(_vm._s(_vm.$trans("messages.Read Access")))
-                    ]),
-                    _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Likes")))]),
-                    _vm._v(" "),
-                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Shared")))])
+                    _c("th", [_vm._v(_vm._s(_vm.$trans("messages.Category")))])
                   ])
                 ]),
                 _vm._v(" "),
@@ -67387,8 +67343,7 @@ var render = function() {
                             {
                               staticClass: "dropdown-toggle",
                               attrs: {
-                                title:
-                                  "Edit Transcription/Editar Transcripción",
+                                title: "Edit Translate/Editar Traducción",
                                 "data-toggle": "dropdown"
                               },
                               on: {
@@ -67493,14 +67448,17 @@ var render = function() {
                               attrs: { title: "Delete/Eliminar" }
                             })
                           ]
-                        )
+                        ),
+                        _vm._v(" "),
+                        _c("a", { attrs: { href: _vm.hreff + post.id } }, [
+                          _c("i", {
+                            staticClass: "fa fa-eye",
+                            attrs: { title: "Preview/Vista previa" }
+                          })
+                        ])
                       ]),
                       _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(post.id))]),
-                      _vm._v(" "),
                       _c("td", [_vm._v(_vm._s(post.title))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(post.content))]),
                       _vm._v(" "),
                       _c(
                         "td",
@@ -67530,8 +67488,6 @@ var render = function() {
                         })
                       ]),
                       _vm._v(" "),
-                      _c("td"),
-                      _vm._v(" "),
                       _c("td", [
                         _c("img", {
                           attrs: {
@@ -67545,13 +67501,7 @@ var render = function() {
                       _vm._v(" "),
                       _c("td", [
                         _vm._v(_vm._s(post.categoria_posts.category_post))
-                      ]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(post.cant_access_read))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(post.cant_likes))]),
-                      _vm._v(" "),
-                      _c("td", [_vm._v(_vm._s(post.cant_shares))])
+                      ])
                     ])
                   }),
                   0
@@ -84329,6 +84279,7 @@ module.exports = {
     "Are you sure you would like to leave this team?": "Are you sure you would like to leave this team?",
     "Are you sure you would like to remove this person from the team?": "Are you sure you would like to remove this person from the team?",
     "At 180A Camilo Cienfuegos, between Jos\xE9 Mart\xED and Miguel Calzada street. Trinidad, Sancti Sp\xEDritus, Cuba. PC: 62600": "At 180A Camilo Cienfuegos, between Jos\xE9 Mart\xED and Miguel Calzada street. Trinidad, Sancti Sp\xEDritus, Cuba. PC: 62600",
+    "Back Dashboard": "Back Dashboard",
     "Beds": "Beds",
     "Before proceeding, please check your email for a verification link.": "Before proceeding, please check your email for a verification link.",
     "Blog": "Blog",
@@ -84626,6 +84577,7 @@ module.exports = {
     "Whoops!": "Whoops!",
     "Whoops! Something went wrong.": "Whoops! Something went wrong.",
     "Yes, delete": "Yes, delete",
+    "You are in Preview Post, the navbar no function, this is only for check how look before publish it": "You are in Preview Post, the navbar no function, this is only for check how look before publish it",
     "You are logged in!": "You are logged in!",
     "You are receiving a new contact email with content: ": "You are receiving a new contact email with content: ",
     "You are receiving this email because we received a password reset request for your account.": "You are receiving this email because we received a password reset request for your account.",
@@ -84822,6 +84774,7 @@ module.exports = {
     "Are you sure you would like to leave this team?": "\xBFEst\xE1 seguro que le gustar\xEDa abandonar este equipo?",
     "Are you sure you would like to remove this person from the team?": "\xBFEst\xE1 seguro que desea retirar a esta persona del equipo?",
     "At 180A Camilo Cienfuegos, between Jos\xE9 Mart\xED and Miguel Calzada street. Trinidad, Sancti Sp\xEDritus, Cuba. PC: 62600": "Camilo Cienfuegos #180A entre Jos\xE9 Mart\xED y Miguel Calzada. Trinidad, Sancti Sp\xEDritus, Cuba. CP-62600",
+    "Back Dashboard": "Regresar al Panel",
     "Beds": "Camas",
     "Before proceeding, please check your email for a verification link.": "Antes de continuar, por favor, confirme su correo electr\xF3nico con el enlace de verificaci\xF3n que le fue enviado.",
     "Blog": "Blog",
@@ -85119,6 +85072,7 @@ module.exports = {
     "Whoops!": "\xA1Vaya!",
     "Whoops! Something went wrong.": "\xA1Vaya! Algo sali\xF3 mal",
     "Yes, delete": "S\xED, elimiinar",
+    "You are in Preview Post, the navbar no function, this is only for check how look before publish it": "Est\xE1s en Vista previa del Post, la barra de men\xFA no funciona, esto es solo para que vea como luce antes de publicarlo",
     "You are logged in!": "\xA1Ya iniciaste sesi\xF3n!",
     "You are receiving a new contact email with content: ": "Usted est\xE1 reciviendo un nuevo email de contacto con el contenido: ",
     "You are receiving this email because we received a password reset request for your account.": "Ha recibido este mensaje porque se solicit\xF3 un restablecimiento de contrase\xF1a para su cuenta.",
@@ -85200,6 +85154,7 @@ module.exports = {
     "Are you sure you would like to remove this person from the team?": "\xBFEst\xE1 seguro que desea retirar a esta persona del equipo?",
     "At 180A Camilo Cienfuegos, between Jos\xE9 Mart\xED and Miguel Calzada street. Trinidad, Sancti Sp\xEDritus, Cuba. PC: 62600": "Camilo Cienfuegos #180A entre Jos\xE9 Mart\xED y Miguel Calzada. Trinidad, Sancti Sp\xEDritus, Cuba. CP-62600",
     "BREAKFAST": "DESAYUNO",
+    "Back Dashboard": "Regresar al Panel",
     "Beds": "Camas",
     "Before proceeding, please check your email for a verification link.": "Antes de continuar, por favor, confirme su correo electr\xF3nico con el enlace de verificaci\xF3n que le fue enviado.",
     "Blog": "Blog",
@@ -85467,6 +85422,7 @@ module.exports = {
     "Whoops! Something went wrong.": "\xA1Vaya! Algo sali\xF3 mal",
     "YOU DIDN'T THINK TO VISIT TRINIDAD": "NO PENSABA VISITAR TRINIDAD",
     "Yes, delete": "S\xED, elimiinar",
+    "You are in Preview Post, the navbar no function, this is only for check how look before publish it": "Est\xE1s en Vista previa del Post, la barra de men\xFA no funciona, esto es solo para que vea como luce antes de publicarlo",
     "You are logged in!": "\xA1Ya iniciaste sesi\xF3n!",
     "You are receiving a new contact email with content: ": "Usted est\xE1 reciviendo un nuevo email de contacto con el contenido: ",
     "You are receiving this email because we received a password reset request for your account.": "Ha recibido este mensaje porque se solicit\xF3 un restablecimiento de contrase\xF1a para su cuenta.",

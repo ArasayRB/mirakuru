@@ -16,7 +16,17 @@
 
   <div class="card align-content-center col-8 ml-2">
     <div class="box">
+      @if (isset($preview))
+      <div class="alert alert-primary" id='mensage'>
+        <ul>
+              <div class="alert alert-success font-weight-bold" role="alert">
+                  {{ __('You are in Preview Post, the navbar no function, this is only for check how look before publish it') }}
+              </div>
 
+          <a type="button" href="/posts" class="btn btn-primary">{{ __('Back Dashboard') }}</a>
+        </ul>
+      </div>
+@endif
 
     <h1 id="us_ttle" class="text-uppercase text-center pt-5 animate__animated animate__zoomIn card-title">{{$post->title}}</h1>
   </div>

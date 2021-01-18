@@ -39,7 +39,7 @@ class WelcomeController extends Controller
     }
 
     public function showPost($id){
-      return $this->show($id);
+      return $this->show($id,'real');
     }
 
     public function relationedPost($id){

@@ -17,7 +17,7 @@
           </div>
           <div class="col p-4 d-flex flex-column position-static">
             <strong class="d-inline-block mb-2 text-primary">{{ $trans('messages.Posted by: ') }}{{pot.users.name}}</strong>
-            <strong class="d-inline-block mb-2 text-primary"><i title="Show your love/ Muestra tu amor" class="fa fa-eye"></i> {{pot.cant_access_read}} | <i title="Show your love/ Muestra tu amor" class="fa fa-heart"></i> {{pot.cant_likes}}</strong>
+            <strong class="d-inline-block mb-2 text-primary"><i title="Reads/ Lecturas" class="fa fa-eye"></i> {{pot.cant_access_read}} | <i title="Show your love/ Muestra tu amor" class="fa fa-heart"></i> {{pot.cant_likes}}</strong>
             <h3 class="mb-0">{{pot.title}}</h3>
             <div class="mb-1 text-muted">{{pot.created_at}}</div>
             <p class="card-text mb-auto">{{pot.summary}}</p>
@@ -36,7 +36,7 @@
           </div>
           <div class="col p-4 d-flex flex-column position-static">
             <strong class="d-inline-block mb-2 text-primary">{{ $trans('messages.Posted by: ') }}{{pot.users.name}}</strong>
-            <strong class="d-inline-block mb-2 text-primary"><i title="Show your love/ Muestra tu amor" class="fa fa-eye"></i> {{pot.cant_access_read}} | <i title="Show your love/ Muestra tu amor" class="fa fa-heart"></i> {{pot.cant_likes}}</strong>
+            <strong class="d-inline-block mb-2 text-primary"><i title="Reads/ Lecturas" class="fa fa-eye"></i> {{pot.cant_access_read}} | <i title="Show your love/ Muestra tu amor" class="fa fa-heart"></i> {{pot.cant_likes}}</strong>
             <h3 class="mb-0">{{pot.title}}</h3>
             <div class="mb-1 text-muted">{{pot.created_at}}</div>
             <p class="card-text mb-auto">{{pot.summary}}</p>
@@ -55,7 +55,7 @@
           </div>
           <div class="col p-4 d-flex flex-column position-static">
             <strong class="d-inline-block mb-2 text-primary">{{ $trans('messages.Posted by: ') }}{{pot_lat.users.name}}</strong>
-            <strong class="d-inline-block mb-2 text-primary"><i title="Show your love/ Muestra tu amor" class="fa fa-eye"></i> {{pot_lat.cant_access_read}} | <i title="Show your love/ Muestra tu amor" class="fa fa-heart"></i> {{pot_lat.cant_likes}}</strong>
+            <strong class="d-inline-block mb-2 text-primary"><i title="Reads/ Lecturas" class="fa fa-eye"></i> {{pot_lat.cant_access_read}} | <i title="Show your love/ Muestra tu amor" class="fa fa-heart"></i> {{pot_lat.cant_likes}}</strong>
             <h3 class="mb-0">{{pot_lat.title}}</h3>
             <div class="mb-1 text-muted">{{pot_lat.created_at}}</div>
             <p class="card-text mb-auto">{{pot_lat.summary}}</p>
@@ -74,7 +74,7 @@
             </div>
             <div class="col p-4 d-flex flex-column position-static">
               <strong class="d-inline-block mb-2 text-primary">{{ $trans('messages.Posted by: ') }}{{post_all.users.name}}</strong>
-              <strong class="d-inline-block mb-2 text-primary"><i title="Show your love/ Muestra tu amor" class="fa fa-eye"></i> {{post_all.cant_access_read}} | <i title="Show your love/ Muestra tu amor" class="fa fa-heart"></i> {{post_all.cant_likes}}</strong>
+              <strong class="d-inline-block mb-2 text-primary"><i title="Reads/ Lecturas" class="fa fa-eye"></i> {{post_all.cant_access_read}} | <i title="Show your love/ Muestra tu amor" class="fa fa-heart"></i> {{post_all.cant_likes}}</strong>
               <h3 class="mb-0">{{post_all.title}}</h3>
               <div class="mb-1 text-muted">{{post_all.created_at}}</div>
               <p class="card-text mb-auto">{{post_all.summary}}</p>
