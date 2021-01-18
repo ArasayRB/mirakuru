@@ -27,6 +27,7 @@
     <div class="card-body">
 
       <div class="table-responsive">
+        <paginate class="pt-5 mt-3" ref="paginator" name = "posts" :list = "posts" :per = "2">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
@@ -56,47 +57,87 @@
           </tfoot>
           <tbody>
 
-                <tr v-for="(post, index) in posts" :post="post" :key="post.id">
-                  <td>
-                    <div class="dropdown">
-                      <a class="dropdown-toggle" title="Edit Translate/Editar Traducción" data-toggle="dropdown" @click="getTranslates(index,post)">
-                        <i class="fa fa-edit"></i>
-                        <i class="fas fa-language"></i>
-                      </a>
-                      <div class="dropdown-menu">
 
-                        <a class="dropdown-item" type="button" v-for="lang_available in translated_languages" @click="openEditTranslated(post, lang_available)">
-                            {{lang_available}}
+                <tr v-for="(post,index) in paginated('posts')" :post="post" :key="post.id">
+
+                    <td>
+                      <div class="dropdown">
+                        <a class="dropdown-toggle" title="Edit Translate/Editar Traducción" data-toggle="dropdown" @click="getTranslates(index,post)">
+                          <i class="fa fa-edit"></i>
+                          <i class="fas fa-language"></i>
                         </a>
+                        <div class="dropdown-menu">
 
-                        </div>
-                    </div>
-                      <a href="#" @click="openAddTranslate(index,post)"><i class="fas fa-language" title="Add Language/Añadir Lenguage"></i></a>
-                      <a href="#" @click="openEditPost(index,post)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
-                      <a href="#" @click="deletePost(index,post.id,post.title)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
-                      <a :href="hreff+post.id"><i title="Preview/Vista previa" class="fa fa-eye"></i></a>
-                  </td>
-                  <td>{{post.title}}</td>
-                  <td>
-                    <div class="" v-for="tag in post.tags ">
-                    <p> <span class="badge badge-pill badge-primary">{{tag.name}}</span></p>
-                    </div>
-                  </td>
-                  <td>{{post.summary}}</td>
-                  <td>{{post.publicate_state}}</td>
-                  <td><img :src="src+post.img_url"  width="100"></td>
-                  <td><img :src="src_qr+post.qr_img_url"  width="100"></td>
-                  <td>{{user}}</td>
-                  <td>{{post.categoria_posts.category_post}}</td>
+                          <a class="dropdown-item" type="button" v-for="lang_available in translated_languages" @click="openEditTranslated(post, lang_available)">
+                              {{lang_available}}
+                          </a>
+
+                          </div>
+                      </div>
+                        <a href="#" @click="openAddTranslate(index,post)"><i class="fas fa-language" title="Add Language/Añadir Lenguage"></i></a>
+                        <a href="#" @click="openEditPost(index,post)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
+                        <a href="#" @click="deletePost(index,post.id,post.title)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
+                        <a :href="hreff+post.id"><i title="Preview/Vista previa" class="fa fa-eye"></i></a>
+                    </td>
+                    <td>{{post.title}}</td>
+                    <td>
+                      <div class="" v-for="tag in post.tags ">
+                      <p> <span class="badge badge-pill badge-primary">{{tag.name}}</span></p>
+                      </div>
+                    </td>
+                    <td>{{post.summary}}</td>
+                    <td>{{post.publicate_state}}</td>
+                    <td><img :src="src+post.img_url"  width="100"></td>
+                    <td><img :src="src_qr+post.qr_img_url"  width="100"></td>
+                    <td>{{user}}</td>
+                    <td>{{post.categoria_posts.category_post}}</td>
+
                 </tr>
+
+
+
           </tbody>
         </table>
+      </paginate>
+           <strong class="text-primary">
+             <paginate-links for="posts" :show-step-links="true"></paginate-links>
+             <paginate-links
+            for="posts"
+            :show-step-links="true"
+            :simple="{
+                prev: $trans('messages.Previous'),
+                next: $trans('messages.Next')
+            }"
+           ></paginate-links>
+
+      </strong>
       </div>
     </div>
   </div>
   </div>
 </template>
-
+<style>
+  .paginate-links{
+    width:100%;
+    list-style: none;
+    text-align: center;
+}
+.paginate-links li {
+    display: inline;
+    background-color:#1fa9ed;
+    color:white;
+    padding:0.5rem;
+    margin-left:0.3rem;
+    margin-right: 0.3rem;
+    cursor:pointer;
+    border-radius: 3px;
+}
+.paginate-result{
+    width: 100%;
+    text-align:center;
+    margin-bottom: 1rem;
+}
+</style>
 <script>
   import VueCkeditor from 'vue-ckeditor2';
   export default {
@@ -124,6 +165,7 @@
      },
           posts:[],
           post:[],
+          paginate:['posts'],
           hreff:'/post-preview/',
           show_lang_div:false,
           postActualizar:false,
