@@ -42,6 +42,10 @@ class WelcomeController extends Controller
       return $this->show($id);
     }
 
+    public function relationedPost($id){
+      return $this->relationedPostByTags($id);
+    }
+
     public function addLove($id){
       return $this->addLovePost($id);
     }

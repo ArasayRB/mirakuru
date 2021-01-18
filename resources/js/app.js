@@ -71,6 +71,7 @@ Vue.component('add-post-form-component', require('./components/admin/posts/forms
 Vue.component('edit-post-form-component', require('./components/admin/posts/forms/EditPostFormComponent.vue').default);
 Vue.component('index-post-component', require('./components/admin/posts/indexPostComponent.vue').default);
 Vue.component('post-ppal-tab-component', require('./components/admin/posts/PostPpalTabComponent.vue').default);
+Vue.component('relationed-tags-component', require('./components/admin/posts/RelationedTagsComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

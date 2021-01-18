@@ -24,6 +24,7 @@ Route::get('/', [App\Http\Controllers\WelcomeController::class, 'welcome'])->nam
 
 
 Route::get('/post-list/{id}', [App\Http\Controllers\WelcomeController::class, 'showPost']);
+Route::get('/relationed-post/{id}', [App\Http\Controllers\WelcomeController::class, 'relationedPost']);
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('language/{language}', [App\Http\Controllers\LanguageController::class, 'switchLang'])->name('language.select');
 Route::post('/suscripcion', [App\Http\Controllers\SuscripcionController::class, 'store']);

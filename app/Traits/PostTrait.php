@@ -76,6 +76,24 @@ trait PostTrait {
       return view('/posts/show',['post'=>$post]);
     }
 
+    public function relationedPostByTags($id){
+      $post=Post::with('users')
+                ->find($id);
+      $relationed_posts=[];
+      $tags=$post->tags;
+      $posts=$this->getPosts();
+      foreach ($posts as $poste) {
+        foreach ($poste->tags as $tagg) {
+      foreach ($tags as $tag) {
+        if(($tagg->id===$tag->id) && ($post->id!=$poste->id) && (in_array($poste,$relationed_posts)===false)){
+          $relationed_posts[]=$poste;
+        }
+      }
+      }
+      }
+                return ['tags'=>$tags,'relationed_posts'=>$relationed_posts];
+    }
+
     public function addLovePost($idPost){
       $post=Post::with('users')
                   ->find($idPost);
