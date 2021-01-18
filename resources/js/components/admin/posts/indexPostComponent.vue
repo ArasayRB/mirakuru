@@ -78,6 +78,8 @@
                         <a href="#" @click="openEditPost(index,post)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
                         <a href="#" @click="deletePost(index,post.id,post.title)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
                         <a :href="hreff+post.id"><i title="Preview/Vista previa" class="fa fa-eye"></i></a>
+                        <a @click="publishIt(index,post)" v-if="post.publicate_state===1"><i title="Publish it/Publicar" class="fa fa-toggle-on"></i></a>
+                        <a @click="publishIt(index,post)" v-else="post.publicate_state===0"><i title="Publish it/Publicar" class="fa fa-toggle-off"></i></a>
                     </td>
                     <td>{{post.title}}</td>
                     <td>
@@ -228,6 +230,70 @@
           this.posts[position]=postUpd;
           this.ventanaEditPost=false;
           this.lan_to_edit=act_lan_to_edit;
+        },
+        publishIt:function(index,post){
+          if(post.publicate_state===0){
+            this.post.publicate_state=1;
+          }
+          else{
+          this.post.publicate_state=0;
+        }
+          swal({title:this.$trans('messages.Publish Post'),
+                text:this.$trans('messages.Do you want publish the post')+': '+post.name+'?',
+                icon:'alert',
+                closeOnClickOutside:false,
+                closeOnEsc:false,
+                buttons:true,
+                dangerMode:true,
+                showCancelButton: true,
+                confirmButtonText: this.$trans('messages.Yes'),
+                cancelButtonText: this.$trans('messages.Cancel'),
+              }).then(select=>{
+                if (select){
+                  let  url='/publicate-post/'+post.id+'/'+this.post.publicate_state;
+
+                  axios.post(url)
+                       .then(response=>{
+                         let publicated_post=response.data;
+                         swal({title:this.$trans('messages.Correct data'),
+                               text:this.$trans('messages.The Post had been publicate'),
+                               icon:'success',
+                               closeOnClickOutside:false,
+                               closeOnEsc:false
+                             }).then(select=>{
+                               if (select){
+                               console.log(index);
+                                 this.posts[index]=publicated_post;
+                                 //this.likes=lik.cant_likes;
+                               }
+                             });
+                       })
+                       .catch(error=>{
+                         console.log(error.response.data.errors);
+                         let wrong=error.response.data.errors;
+                         if(wrong.hasOwnProperty('title')){
+                           mensaje+='-'+wrong.title[0];
+                         }
+                         if(wrong.hasOwnProperty('image')){
+                           mensaje+='-'+wrong.image[0];
+                         }
+                        if (wrong.hasOwnProperty('categoria')) {
+                           mensaje+='-'+wrong.categoria[0];
+                         }
+                         if(wrong.hasOwnProperty('checkEditSummary')){
+                           mensaje+='-'+wrong.checkEditSummary[0];
+                         }
+                        if (wrong.hasOwnProperty('checkEditContent')) {
+                           mensaje+='-'+wrong.checkEditContent[0];
+                         }
+                         else if (wrong.hasOwnProperty('login')){
+                           mensaje+='-'+wrong.login[0];
+                         }
+                         swal('Error',mensaje,'error');
+                       });
+                }
+              });
+
         },
         deletePost:function(index,post,post_name){
           let post_id=post;

@@ -49,6 +49,13 @@ class PostController extends Controller
       return $this->show($id,'preview');
     }
 
+    public function publicatePost($idPost,$state){
+      $post=Post::find($idPost);
+      $post->publicate_state=$state;
+      $post->update();
+      return $post;
+    }
+
     public function getPost($post){
       $posts=Post::with('categoriaPosts')
                    ->with('keywords')

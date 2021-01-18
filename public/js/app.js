@@ -3309,6 +3309,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3419,8 +3421,76 @@ __webpack_require__.r(__webpack_exports__);
       this.ventanaEditPost = false;
       this.lan_to_edit = act_lan_to_edit;
     },
-    deletePost: function deletePost(index, post, post_name) {
+    publishIt: function publishIt(index, post) {
       var _this = this;
+
+      if (post.publicate_state === 0) {
+        this.post.publicate_state = 1;
+      } else {
+        this.post.publicate_state = 0;
+      }
+
+      swal({
+        title: this.$trans('messages.Publish Post'),
+        text: this.$trans('messages.Do you want publish the post') + ': ' + post.name + '?',
+        icon: 'alert',
+        closeOnClickOutside: false,
+        closeOnEsc: false,
+        buttons: true,
+        dangerMode: true,
+        showCancelButton: true,
+        confirmButtonText: this.$trans('messages.Yes'),
+        cancelButtonText: this.$trans('messages.Cancel')
+      }).then(function (select) {
+        if (select) {
+          var url = '/publicate-post/' + post.id + '/' + _this.post.publicate_state;
+          axios.post(url).then(function (response) {
+            var publicated_post = response.data;
+            swal({
+              title: _this.$trans('messages.Correct data'),
+              text: _this.$trans('messages.The Post had been publicate'),
+              icon: 'success',
+              closeOnClickOutside: false,
+              closeOnEsc: false
+            }).then(function (select) {
+              if (select) {
+                console.log(index);
+                _this.posts[index] = publicated_post; //this.likes=lik.cant_likes;
+              }
+            });
+          })["catch"](function (error) {
+            console.log(error.response.data.errors);
+            var wrong = error.response.data.errors;
+
+            if (wrong.hasOwnProperty('title')) {
+              mensaje += '-' + wrong.title[0];
+            }
+
+            if (wrong.hasOwnProperty('image')) {
+              mensaje += '-' + wrong.image[0];
+            }
+
+            if (wrong.hasOwnProperty('categoria')) {
+              mensaje += '-' + wrong.categoria[0];
+            }
+
+            if (wrong.hasOwnProperty('checkEditSummary')) {
+              mensaje += '-' + wrong.checkEditSummary[0];
+            }
+
+            if (wrong.hasOwnProperty('checkEditContent')) {
+              mensaje += '-' + wrong.checkEditContent[0];
+            } else if (wrong.hasOwnProperty('login')) {
+              mensaje += '-' + wrong.login[0];
+            }
+
+            swal('Error', mensaje, 'error');
+          });
+        }
+      });
+    },
+    deletePost: function deletePost(index, post, post_name) {
+      var _this2 = this;
 
       var post_id = post;
       swal({
@@ -3439,14 +3509,14 @@ __webpack_require__.r(__webpack_exports__);
           var url = '/posts/' + post_id;
           axios["delete"](url).then(function (response) {
             swal({
-              title: _this.$trans('messages.Correct data'),
-              text: _this.$trans('messages.Post deleted successfully'),
+              title: _this2.$trans('messages.Correct data'),
+              text: _this2.$trans('messages.Post deleted successfully'),
               icon: 'success',
               closeOnClickOutside: false,
               closeOnEsc: false
             }).then(function (select) {
               if (select) {
-                _this.posts.splice(index, 1);
+                _this2.posts.splice(index, 1);
               }
             });
           })["catch"](function (error) {
@@ -3490,28 +3560,28 @@ __webpack_require__.r(__webpack_exports__);
       this.ventanaCreatPost = true;
     },
     getTranslates: function getTranslates(index, post) {
-      var _this2 = this;
+      var _this3 = this;
 
       axios.get('/translated-language-post/' + post.id).then(function (response) {
-        _this2.lang = false;
+        _this3.lang = false;
 
         if (response.data === 'no-language-added') {
-          _this2.translated_languages = [];
+          _this3.translated_languages = [];
 
-          var mensageLang = _this2.$trans('messages.None language added yet');
+          var mensageLang = _this3.$trans('messages.None language added yet');
 
           swal({
-            title: _this2.$trans('messages.Warning!'),
+            title: _this3.$trans('messages.Warning!'),
             text: mensageLang,
             icon: 'warning',
             closeOnClickOutside: false,
             closeOnEsc: false
           });
         } else {
-          _this2.translated_languages = response.data;
+          _this3.translated_languages = response.data;
         }
       })["catch"](function (error) {
-        return _this2.errors.push(error);
+        return _this3.errors.push(error);
       });
     },
     openEditPost: function openEditPost(index, post) {
@@ -3519,39 +3589,39 @@ __webpack_require__.r(__webpack_exports__);
       this.ventanaEditPost = true;
     },
     openEditTranslated: function openEditTranslated(post, lang_available) {
-      var _this3 = this;
+      var _this4 = this;
 
       var post_translated_array;
       axios.get('/get-translated-post-by-lang/' + lang_available + '/' + post.id).then(function (response) {
         post_translated_array = response.data;
-        _this3.post = post_translated_array;
-        _this3.ventanaEditPost = true;
-        _this3.lan_to_edit = lang_available;
+        _this4.post = post_translated_array;
+        _this4.ventanaEditPost = true;
+        _this4.lan_to_edit = lang_available;
 
         if (response.data == '') {
-          _this3.mensage = _this3.$trans('messages.None Post added yet');
+          _this4.mensage = _this4.$trans('messages.None Post added yet');
         }
       })["catch"](function (error) {
-        return _this3.errors.push(error);
+        return _this4.errors.push(error);
       });
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
 
     axios.get('/postsTable').then(function (response) {
-      _this4.posts = response.data;
+      _this5.posts = response.data;
 
       if (response.data == '') {
-        _this4.mensage = _this4.$trans('messages.None Post added yet');
+        _this5.mensage = _this5.$trans('messages.None Post added yet');
       }
     })["catch"](function (error) {
-      return _this4.errors.push(error);
+      return _this5.errors.push(error);
     });
     axios.get('/categoriesList').then(function (response) {
-      _this4.categories = response.data;
+      _this5.categories = response.data;
     })["catch"](function (error) {
-      return _this4.errors.push(error);
+      return _this5.errors.push(error);
     });
   },
   mounted: function mounted() {
@@ -67605,7 +67675,45 @@ var render = function() {
                                       attrs: { title: "Preview/Vista previa" }
                                     })
                                   ]
-                                )
+                                ),
+                                _vm._v(" "),
+                                post.publicate_state === 1
+                                  ? _c(
+                                      "a",
+                                      {
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.publishIt(index, post)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "fa fa-toggle-on",
+                                          attrs: {
+                                            title: "Publish it/Publicar"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  : _c(
+                                      "a",
+                                      {
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.publishIt(index, post)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("i", {
+                                          staticClass: "fa fa-toggle-off",
+                                          attrs: {
+                                            title: "Publish it/Publicar"
+                                          }
+                                        })
+                                      ]
+                                    )
                               ]),
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(post.title))]),
@@ -84525,6 +84633,7 @@ module.exports = {
     "Delete Team": "Delete Team",
     "Delete notification- ": "Delete notification- ",
     "Disable": "Disable",
+    "Do you want publish the post": "Do you want publish the post",
     "Done.": "Done.",
     "E-Mail Address": "E-Mail Address",
     "Editor": "Editor",
@@ -84654,6 +84763,7 @@ module.exports = {
     "Profile": "Profile",
     "Profile Information": "Profile Information",
     "Publication State": "Publication state",
+    "Publish Post": "Publish Post",
     "QR": "QR",
     "Read Access": "Read Access",
     "Recovery Code": "Recovery Code",
@@ -84728,6 +84838,7 @@ module.exports = {
     "The :attribute must be at least :length characters and contain at least one uppercase character.": "The :attribute must be at least :length characters and contain at least one uppercase character.",
     "The :attribute must be at least :length characters.": "The :attribute must be at least :length characters.",
     "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba": "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba",
+    "The Post had been publicate": "The Post had been publicate",
     "The latest posts": "The latest posts",
     "The most liked": "The most liked",
     "The most readed": "The most readed",
@@ -84777,6 +84888,7 @@ module.exports = {
     "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.": "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.",
     "Whoops!": "Whoops!",
     "Whoops! Something went wrong.": "Whoops! Something went wrong.",
+    "Yes": "Yes",
     "Yes, delete": "Yes, delete",
     "You are in Preview Post, the navbar no function, this is only for check how look before publish it": "You are in Preview Post, the navbar no function, this is only for check how look before publish it",
     "You are logged in!": "You are logged in!",
@@ -85020,6 +85132,7 @@ module.exports = {
     "Delete Team": "Borrar equipo",
     "Delete notification- ": "Notificaci\xF3n de eliminaci\xF3n- ",
     "Disable": "Inhabilitar",
+    "Do you want publish the post": "Desea publicar el post",
     "Done.": "Hecho.",
     "E-Mail Address": "Correo Electr\xF3nico",
     "Editor": "Editor",
@@ -85149,6 +85262,7 @@ module.exports = {
     "Profile": "Perfil",
     "Profile Information": "Informaci\xF3n de Perfil",
     "Publication State": "Estado de Publicacion",
+    "Publish Post": "Publicar Post",
     "QR": "QR",
     "Read Access": "Accesos a Lectura",
     "Recovery Code": "C\xF3digo de recuperaci\xF3n",
@@ -85223,6 +85337,7 @@ module.exports = {
     "The :attribute must be at least :length characters and contain at least one uppercase character.": "La :attribute debe tener al menos :length caracteres y contener por lo menos una letra may\xFAscula",
     "The :attribute must be at least :length characters.": "La :attribute debe tener al menos :length caracteres.",
     "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba": "El Hostal MIRAKURU Gran Familia es parte de la cultura patrimonial de la ciudad de Trinidad en Cuba",
+    "The Post had been publicate": "El Post ha sido publicado",
     "The latest posts": "\xDAltimos Posts",
     "The most liked": "Lo m\xE1s gustado",
     "The most readed": "Lo m\xE1s le\xEDdo",
@@ -85272,6 +85387,7 @@ module.exports = {
     "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.": "Cuando la autenticaci\xF3n de dos factores est\xE9 habilitada, le pediremos un token aleatorio seguro durante la autenticaci\xF3n. Puede recuperar este token desde la aplicaci\xF3n Google Authenticator de su tel\xE9fono.",
     "Whoops!": "\xA1Vaya!",
     "Whoops! Something went wrong.": "\xA1Vaya! Algo sali\xF3 mal",
+    "Yes": "S\xED",
     "Yes, delete": "S\xED, elimiinar",
     "You are in Preview Post, the navbar no function, this is only for check how look before publish it": "Est\xE1s en Vista previa del Post, la barra de men\xFA no funciona, esto es solo para que vea como luce antes de publicarlo",
     "You are logged in!": "\xA1Ya iniciaste sesi\xF3n!",
@@ -85400,6 +85516,7 @@ module.exports = {
     "Delete notification- ": "Notificaci\xF3n de eliminaci\xF3n- ",
     "Disable": "Inhabilitar",
     "Do you know what differentiates us from the rest of the great community of hostels that exist in Trinidad? Surely you will think that there we go with new old women that everyone says": "Sabe qu\xE9 nos diferencia del resto de la gran comunidad de hostales que existen en Trinidad? Seguro pensar\xE1s que all\xE1 vamos con nuevas viejas que todos dicen",
+    "Do you want publish the post": "Desea publicar el post",
     "Don't forget the": "No olvide la",
     "Done.": "Hecho.",
     "E-Mail Address": "Correo Electr\xF3nico",
@@ -85501,6 +85618,7 @@ module.exports = {
     "Previous": "Anterior",
     "Profile": "Perfil",
     "Profile Information": "Informaci\xF3n de Perfil",
+    "Publish Post": "Publicar Post",
     "REASONS TO VISIT THE ISLAND MUSEUM OF THE CARIBBEAN": "RAZONES PARA VISITAR LA ISLA MUSEO DEL CARIBE",
     "Recovery Code": "C\xF3digo de recuperaci\xF3n",
     "Regards": "Saludos",
@@ -85574,6 +85692,7 @@ module.exports = {
     "The :attribute must be at least :length characters and contain at least one uppercase character.": "La :attribute debe tener al menos :length caracteres y contener por lo menos una letra may\xFAscula",
     "The :attribute must be at least :length characters.": "La :attribute debe tener al menos :length caracteres.",
     "The MIRAKURU Gran Familia Hostal is part of the cultural patrimony of the Trinidad city in Cuba": "El Hostal MIRAKURU Gran Familia es parte de la cultura patrimonial de la ciudad de Trinidad en Cuba",
+    "The Post had been publicate": "El Post ha sido publicado",
     "The latest posts": "\xDAltimos Posts",
     "The most liked": "Lo m\xE1s gustado",
     "The most readed": "Lo m\xE1s le\xEDdo",
@@ -85622,6 +85741,7 @@ module.exports = {
     "Whoops!": "\xA1Vaya!",
     "Whoops! Something went wrong.": "\xA1Vaya! Algo sali\xF3 mal",
     "YOU DIDN'T THINK TO VISIT TRINIDAD": "NO PENSABA VISITAR TRINIDAD",
+    "Yes": "S\xED",
     "Yes, delete": "S\xED, elimiinar",
     "You are in Preview Post, the navbar no function, this is only for check how look before publish it": "Est\xE1s en Vista previa del Post, la barra de men\xFA no funciona, esto es solo para que vea como luce antes de publicarlo",
     "You are logged in!": "\xA1Ya iniciaste sesi\xF3n!",
