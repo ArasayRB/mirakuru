@@ -3,7 +3,7 @@
   @include('posts.subview.head')
 @stop
 @section('sidebar')
-  @include('subview.navbar')
+  @include('posts.subview.navbar')
 @stop
 @section('content')
   <div class="row">
@@ -15,7 +15,7 @@
   </aside>
 
   <div class="card align-content-center col-8 ml-2">
-    <div class="box"><img src="{{ asset('/storage/img_web/posts_img/'.$post->img_url) }}" title="Image: {{$post->title}}" class="img-fluid mx-auto d-block mt-5">
+    <div class="box">
 
 
     <h1 id="us_ttle" class="text-uppercase text-center pt-5 animate__animated animate__zoomIn card-title">{{$post->title}}</h1>

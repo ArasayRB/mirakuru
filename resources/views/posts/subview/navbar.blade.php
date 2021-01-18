@@ -1,5 +1,5 @@
 <header>
-  <img src="{{ asset('/storage/img_web/posts_img/'.$post->img_url) }}" class="img-fluid mx-auto d-block">
+  <img src="{{ asset('/storage/img_web/posts_img/'.$post->img_url) }}" title="Image: {{$post->title}}" class="img-fluid mx-auto d-block">
 </header>
 <nav class="navbar sticky-top navbar-expand-md bg-primary navbar-dark">
 <a href="#" class="navbar-brand"><img src="/images/img/favicon_white.ico" alt=""></a>
@@ -15,13 +15,13 @@
 
     @guest
         <li class="nav-item">
-            <a class="nav-link text-light" href="#" id="show-modal" @click="ventanaLogin = true">{{ __('Login') }}</a>
+            <a class="nav-link text-light" href="/#home" title="Go Home to Login/Vaya a Inicio para entrar">{{ __('Login') }}</a>
         </li>
 
 
         @if (Route::has('register'))
             <li class="nav-item">
-                <a class="nav-link text-light" href="#" id="show-register-modal" @click="ventanaRegister = true">{{ __('Register') }}</a>
+                <a class="nav-link text-light" href="/#home" title="Go Home to Register/Vaya a Inicio para registro">{{ __('Register') }}</a>
             </li>
 
         @endif

@@ -15,13 +15,13 @@
 
     @guest
         <li class="nav-item">
-            <a class="nav-link text-light" href="#" id="show-modal" @click="ventanaLogin = true">{{ __('Login') }}</a>
+            <a class="nav-link text-light btn"  id="show-modal" @click="ventanaLogin = true">{{ __('Login') }}</a>
         </li>
 
 
         @if (Route::has('register'))
             <li class="nav-item">
-                <a class="nav-link text-light" href="#" id="show-register-modal" @click="ventanaRegister = true">{{ __('Register') }}</a>
+                <a class="nav-link text-light btn" id="show-register-modal" @click="ventanaRegister = true">{{ __('Register') }}</a>
             </li>
 
         @endif
