@@ -78,8 +78,9 @@
                         <a href="#" @click="openEditPost(index,post)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
                         <a href="#" @click="deletePost(index,post.id,post.title)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
                         <a :href="hreff+post.id"><i title="Preview/Vista previa" class="fa fa-eye"></i></a>
-                        <a @click="publishIt(index,post)" v-if="post.publicate_state===1"><i title="Publish it/Publicar" class="fa fa-toggle-on"></i></a>
-                        <a @click="publishIt(index,post)" v-else="post.publicate_state===0"><i title="Publish it/Publicar" class="fa fa-toggle-off"></i></a>
+                        <a>
+                          <i :id="'publish-'+index" @click="publishIt(index,post)" v-if="post.publicate_state===0" title="Publish it/Publicar" class="fa fa-toggle-off"></i>
+                        </a>
                     </td>
                     <td>{{post.title}}</td>
                     <td>
@@ -167,6 +168,7 @@
      },
           posts:[],
           post:[],
+          post_state:[],
           paginate:['posts'],
           hreff:'/post-preview/',
           show_lang_div:false,
@@ -232,15 +234,21 @@
           this.lan_to_edit=act_lan_to_edit;
         },
         publishIt:function(index,post){
+          //alert($("#publish-"+index).removeClass('fa-toggle-on'));
+          let mssg;
+          let state_act;
+
           if(post.publicate_state===0){
-            this.post.publicate_state=1;
+            mssg=this.$trans('messages.Do you want publish the post');
+            state_act=1;
           }
           else{
-          this.post.publicate_state=0;
+          mssg=this.$trans('messages.Do you want unpublish the post');
+          state_act=0;
         }
           swal({title:this.$trans('messages.Publish Post'),
-                text:this.$trans('messages.Do you want publish the post')+': '+post.name+'?',
-                icon:'alert',
+                text:mssg+': '+post.title+'?',
+                icon:'warning',
                 closeOnClickOutside:false,
                 closeOnEsc:false,
                 buttons:true,
@@ -250,7 +258,7 @@
                 cancelButtonText: this.$trans('messages.Cancel'),
               }).then(select=>{
                 if (select){
-                  let  url='/publicate-post/'+post.id+'/'+this.post.publicate_state;
+                  let  url='/publicate-post/'+post.id+'/'+state_act;
 
                   axios.post(url)
                        .then(response=>{
@@ -262,9 +270,10 @@
                                closeOnEsc:false
                              }).then(select=>{
                                if (select){
-                               console.log(index);
-                                 this.posts[index]=publicated_post;
-                                 //this.likes=lik.cant_likes;
+
+                                   $("#publish-"+index).hide(true);
+
+                               //location.reload();
                                }
                              });
                        })
@@ -405,6 +414,8 @@
          axios.get('/postsTable')
               .then(response =>{
                 this.posts = response.data;
+                console.log('Son -');
+                console.log(this.posts);
                 if (response.data==''){
                   this.mensage=this.$trans('messages.None Post added yet');
                 }

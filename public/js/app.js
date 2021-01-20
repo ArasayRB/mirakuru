@@ -3311,6 +3311,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3357,6 +3358,7 @@ __webpack_require__.r(__webpack_exports__);
       },
       posts: [],
       post: [],
+      post_state: [],
       paginate: ['posts'],
       hreff: '/post-preview/',
       show_lang_div: false,
@@ -3424,16 +3426,22 @@ __webpack_require__.r(__webpack_exports__);
     publishIt: function publishIt(index, post) {
       var _this = this;
 
+      //alert($("#publish-"+index).removeClass('fa-toggle-on'));
+      var mssg;
+      var state_act;
+
       if (post.publicate_state === 0) {
-        this.post.publicate_state = 1;
+        mssg = this.$trans('messages.Do you want publish the post');
+        state_act = 1;
       } else {
-        this.post.publicate_state = 0;
+        mssg = this.$trans('messages.Do you want unpublish the post');
+        state_act = 0;
       }
 
       swal({
         title: this.$trans('messages.Publish Post'),
-        text: this.$trans('messages.Do you want publish the post') + ': ' + post.name + '?',
-        icon: 'alert',
+        text: mssg + ': ' + post.title + '?',
+        icon: 'warning',
         closeOnClickOutside: false,
         closeOnEsc: false,
         buttons: true,
@@ -3443,7 +3451,7 @@ __webpack_require__.r(__webpack_exports__);
         cancelButtonText: this.$trans('messages.Cancel')
       }).then(function (select) {
         if (select) {
-          var url = '/publicate-post/' + post.id + '/' + _this.post.publicate_state;
+          var url = '/publicate-post/' + post.id + '/' + state_act;
           axios.post(url).then(function (response) {
             var publicated_post = response.data;
             swal({
@@ -3454,8 +3462,7 @@ __webpack_require__.r(__webpack_exports__);
               closeOnEsc: false
             }).then(function (select) {
               if (select) {
-                console.log(index);
-                _this.posts[index] = publicated_post; //this.likes=lik.cant_likes;
+                $("#publish-" + index).hide(true); //location.reload();
               }
             });
           })["catch"](function (error) {
@@ -3611,6 +3618,8 @@ __webpack_require__.r(__webpack_exports__);
 
     axios.get('/postsTable').then(function (response) {
       _this5.posts = response.data;
+      console.log('Son -');
+      console.log(_this5.posts);
 
       if (response.data == '') {
         _this5.mensage = _this5.$trans('messages.None Post added yet');
@@ -67677,43 +67686,22 @@ var render = function() {
                                   ]
                                 ),
                                 _vm._v(" "),
-                                post.publicate_state === 1
-                                  ? _c(
-                                      "a",
-                                      {
+                                _c("a", [
+                                  post.publicate_state === 0
+                                    ? _c("i", {
+                                        staticClass: "fa fa-toggle-off",
+                                        attrs: {
+                                          id: "publish-" + index,
+                                          title: "Publish it/Publicar"
+                                        },
                                         on: {
                                           click: function($event) {
                                             return _vm.publishIt(index, post)
                                           }
                                         }
-                                      },
-                                      [
-                                        _c("i", {
-                                          staticClass: "fa fa-toggle-on",
-                                          attrs: {
-                                            title: "Publish it/Publicar"
-                                          }
-                                        })
-                                      ]
-                                    )
-                                  : _c(
-                                      "a",
-                                      {
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.publishIt(index, post)
-                                          }
-                                        }
-                                      },
-                                      [
-                                        _c("i", {
-                                          staticClass: "fa fa-toggle-off",
-                                          attrs: {
-                                            title: "Publish it/Publicar"
-                                          }
-                                        })
-                                      ]
-                                    )
+                                      })
+                                    : _vm._e()
+                                ])
                               ]),
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(post.title))]),
@@ -84634,6 +84622,7 @@ module.exports = {
     "Delete notification- ": "Delete notification- ",
     "Disable": "Disable",
     "Do you want publish the post": "Do you want publish the post",
+    "Do you want unpublish the post": "Do you want unpublish the post",
     "Done.": "Done.",
     "E-Mail Address": "E-Mail Address",
     "Editor": "Editor",
@@ -85133,6 +85122,7 @@ module.exports = {
     "Delete notification- ": "Notificaci\xF3n de eliminaci\xF3n- ",
     "Disable": "Inhabilitar",
     "Do you want publish the post": "Desea publicar el post",
+    "Do you want unpublish the post": "Desea dejar de publicar el post",
     "Done.": "Hecho.",
     "E-Mail Address": "Correo Electr\xF3nico",
     "Editor": "Editor",
@@ -85517,6 +85507,7 @@ module.exports = {
     "Disable": "Inhabilitar",
     "Do you know what differentiates us from the rest of the great community of hostels that exist in Trinidad? Surely you will think that there we go with new old women that everyone says": "Sabe qu\xE9 nos diferencia del resto de la gran comunidad de hostales que existen en Trinidad? Seguro pensar\xE1s que all\xE1 vamos con nuevas viejas que todos dicen",
     "Do you want publish the post": "Desea publicar el post",
+    "Do you want unpublish the post": "Desea dejar de publicar el post",
     "Don't forget the": "No olvide la",
     "Done.": "Hecho.",
     "E-Mail Address": "Correo Electr\xF3nico",

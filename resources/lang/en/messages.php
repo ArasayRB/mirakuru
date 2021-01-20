@@ -84,6 +84,7 @@ return [
   "Disable"=> "Disable",
   "Done."=> "Done.",
   "Do you want publish the post"=>"Do you want publish the post",
+  "Do you want unpublish the post"=>"Do you want unpublish the post",
   "E-Mail Address"=> "E-Mail Address",
   "Editor"=> "Editor",
   "Editor users have the ability to read, create, and update."=> "Editor users have the ability to read, create, and update.",

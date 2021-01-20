@@ -42,6 +42,14 @@ class PostController extends Controller
                    ->where('user_id',auth()->user()->id)
                    ->orderBy('created_at','asc')
                    ->get();
+      for($i=0;$i<count($posts);$i++){
+        if($posts[$i]->publicate_state===0){
+          $posts[$i]->show=false;
+        }
+        else{
+          $posts[$i]->show=true;
+        }
+      }
                    return $posts;
     }
 
@@ -53,6 +61,13 @@ class PostController extends Controller
       $post=Post::find($idPost);
       $post->publicate_state=$state;
       $post->update();
+      if($post->publicate_state===0){
+      $post->show=false;
+    }
+    else{
+
+      $post->show=true;
+    }
       return $post;
     }
 

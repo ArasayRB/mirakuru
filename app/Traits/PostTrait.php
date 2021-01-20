@@ -7,7 +7,8 @@ use Illuminate\Support\Facades\Cache;
 trait PostTrait {
     public function getPosts() {
     $posts=Post::with('users')
-    ->get();
+                ->where('publicate_state',1)
+                ->get();
     return $posts;
     }
 
@@ -15,11 +16,13 @@ trait PostTrait {
       $posts_more_read;
       if($cant===''){
       $posts_more_read=Post::with('users')
+                           ->where('publicate_state',1)
                            ->orderBy('cant_access_read','DESC')
                            ->get();
                     }
       else {
         $posts_more_read=Post::with('users')
+                             ->where('publicate_state',1)
                              ->take($cant)
                              ->orderBy('cant_access_read','DESC')
                              ->get();
@@ -31,11 +34,13 @@ trait PostTrait {
       $posts_more_liked;
       if($cant===''){
       $posts_more_liked=Post::with('users')
+                           ->where('publicate_state',1)
                            ->orderBy('cant_likes','DESC')
                            ->get();
                     }
       else {
         $posts_more_liked=Post::with('users')
+                             ->where('publicate_state',1)
                              ->take($cant)
                              ->orderBy('cant_likes','DESC')
                              ->get();
@@ -47,11 +52,13 @@ trait PostTrait {
       $latest_posts;
       if($cant===''){
       $latest_posts=Post::with('users')
+                           ->where('publicate_state',1)
                            ->orderBy('created_at','DESC')
                            ->get();
                     }
       else {
         $latest_posts=Post::with('users')
+                             ->where('publicate_state',1)
                              ->take($cant)
                              ->orderBy('created_at','DESC')
                              ->get();
