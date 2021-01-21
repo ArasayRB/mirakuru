@@ -83,14 +83,17 @@
 
           </div>
           </paginate>
-             <strong class="text-primary"><paginate-links
+             <strong class="text-primary">
+               <paginate-links for="posts_all" :show-step-links="true"></paginate-links>
+               <paginate-links
               for="posts_all"
               :show-step-links="true"
               :simple="{
                   prev: $trans('messages.Previous'),
                   next: $trans('messages.Next')
               }"
-             ></paginate-links></strong>
+             ></paginate-links>
+           </strong>
     </div>
   </div>
 
