@@ -121,6 +121,17 @@ const app = new Vue({
           $("#blog-menu").hide(true);
              }
            });
+
+
+      let hostal='Hostal Mirakuru Gran Familia';
+
+      axios.get('/verify-testimonial/'+hostal)
+          .then(response =>{
+            let comment_exist=response.data;
+            if(comment_exist===0){
+         $("#testimonial").hide(true);
+            }
+          });
      /*Vue.localStorage.set('openLogin', 'no');
      if(Vue.localStorage.get('openLogin')==='no'){
      console.log(Vue.localStorage.get('openLogin'));

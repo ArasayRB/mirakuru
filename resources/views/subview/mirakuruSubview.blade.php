@@ -109,7 +109,7 @@
 </div>
 </section>
 </div><!--END Section Servicios-->
-<div hidden="true" class="contenedor-testimonios"><!--SECTION TESTIMONIOS-->
+<div id="testimonial" class="contenedor-testimonios"><!--SECTION TESTIMONIOS-->
   <div class="contenedor-slider-testimonios">
     <div class="testimonial-slider">
       <div class="slider-overflow"><h1 class="text-center text-light text-uppercase">{{ __('Testimonials') }}</h1>

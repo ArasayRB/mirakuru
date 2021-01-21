@@ -55,3 +55,4 @@ Route::post('/share/{id}/{media}', [App\Http\Controllers\WelcomeController::clas
 Route::get('/gallery', function(){
   return view('galeria');
 });
+Route::get('/verify-testimonial/{hostal_name}', [App\Http\Controllers\ComentarioHostalController::class, 'verifyTestimonial']);
