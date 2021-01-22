@@ -3714,6 +3714,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -68136,6 +68139,17 @@ var render = function() {
               _vm._m(1)
             ])
           ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "text-center" }, [
+          _c(
+            "a",
+            {
+              staticClass: "btn w-20 rounded btn-warning btn-lg mt-5 text-dark",
+              attrs: { href: "/gallery" }
+            },
+            [_vm._v(_vm._s(_vm.$trans("messages.See More Comments")))]
+          )
         ])
       ])
     ]
@@ -85221,6 +85235,7 @@ module.exports = {
     "Save": "Save",
     "Saved.": "Saved.",
     "Searching hostal": "Searching hostal",
+    "See More Comments": "See More Comments",
     "Select A New Photo": "Select A New Photo",
     "Select Category": "Select Category",
     "Select Country": "Select Country",
@@ -85721,6 +85736,7 @@ module.exports = {
     "Save": "Guardar",
     "Saved.": "Guardado.",
     "Searching hostal": "En busca de un hostal",
+    "See More Comments": "Ver M\xE1s Comentarios",
     "Select A New Photo": "Seleccione una nueva foto",
     "Select Category": "Seleccione Categor\xEDa",
     "Select Country": "Seleccione un pa\xEDs",
@@ -86079,6 +86095,7 @@ module.exports = {
     "Save": "Guardar",
     "Saved.": "Guardado.",
     "Searching hostal": "En busca de un hostal",
+    "See More Comments": "Ver M\xE1s Comentarios",
     "Select A New Photo": "Seleccione una nueva foto",
     "Select Category": "Seleccione Categor\xEDa",
     "Select Country": "Seleccione un pa\xEDs",

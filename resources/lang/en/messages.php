@@ -241,6 +241,7 @@ return [
   "Role"=> "Role",
   "Save"=> "Save",
   "Saved."=> "Saved.",
+  "See More Comments"=>"See More Comments",
   "Searching hostal"=>"Searching hostal",
   "Select A New Photo"=> "Select A New Photo",
   "Select Country"=>"Select Country",

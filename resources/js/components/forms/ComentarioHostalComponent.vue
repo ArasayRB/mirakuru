@@ -51,6 +51,9 @@
 </div>
 </div>
 </div>
+<div class="text-center">
+<a href="/gallery" class="btn w-20 rounded btn-warning btn-lg mt-5 text-dark">{{ $trans('messages.See More Comments') }}</a>
+</div>
 </div>
 </div>
 </div>
