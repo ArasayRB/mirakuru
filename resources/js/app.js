@@ -61,6 +61,7 @@ Vue.component('keywords-input', VoerroTagsInput);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('cont-view-share-like-component', require('./components/forms/ContViewShareLikeComponent.vue').default);
 Vue.component('reservar-hostal-component', require('./components/forms/ReservarHostalComponent.vue').default);
+Vue.component('comentario-hostal-component', require('./components/forms/ComentarioHostalComponent.vue').default);
 Vue.component('contacto-hostal-component', require('./components/forms/ContactoHostalComponent.vue').default);
 Vue.component('reservado-hostal-component', require('./components/forms/ReservadoHostalComponent.vue').default);
 Vue.component('newsletter-component', require('./components/forms/NewsletterComponent.vue').default);
@@ -123,15 +124,6 @@ const app = new Vue({
            });
 
 
-      let hostal='Hostal Mirakuru Gran Familia';
-
-      axios.get('/verify-testimonial/'+hostal)
-          .then(response =>{
-            let comment_exist=response.data;
-            if(comment_exist===0){
-         $("#testimonial").hide(true);
-            }
-          });
      /*Vue.localStorage.set('openLogin', 'no');
      if(Vue.localStorage.get('openLogin')==='no'){
      console.log(Vue.localStorage.get('openLogin'));

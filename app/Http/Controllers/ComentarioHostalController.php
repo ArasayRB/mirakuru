@@ -4,17 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\ComentarioHostal;
 use App\Traits\HostalTrait;
+use App\Traits\UserTrait;
 use Illuminate\Http\Request;
 
 class ComentarioHostalController extends Controller
 {
-  use HostalTrait;
+  use HostalTrait; use UserTrait;
 
   public function verifyTestimonial($hostal_name){
     $find_id_hostal=$this->getHostalIdByName($hostal_name);
     $find_coment=ComentarioHostal::where('hostal_id',$find_id_hostal)
+                                 ->take('3')
                                  ->get();
-                                 return count($find_coment);
+    for($i=0;$i<count($find_coment);$i++){
+      $user=$this->getUserById($find_coment[$i]->user_id);
+      $find_coment[$i]->user=$user;
+    }
+                                 return $find_coment;
   }
     /**
      * Display a listing of the resource.

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\CalificacionCommentHostal;
 use App\Models\Hostal;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,10 +20,14 @@ class ComentarioHostal extends Model
     ];
 
     public function hostales(){
-      return belongsTo(Hostal::class)->withTimestamps();
+      return $this->belongsTo(Hostal::class)->withTimestamps();
+    }
+
+    public function users(){
+      return $this->belongsTo(User::class)->withTimestamps();
     }
 
     public function CalificacionCommentHostals(){
-      return belongsTo(CalificacionCommentHostal::class)->withTimestamps();
+      return $this->belongsTo(CalificacionCommentHostal::class)->withTimestamps();
     }
 }

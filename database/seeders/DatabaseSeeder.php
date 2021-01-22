@@ -28,5 +28,7 @@ class DatabaseSeeder extends Seeder
       $this->call(HabitacionTableSeeder::class);
       $this->call(ContentTypeTableSeeder::class);
       $this->call(LanguageTableSeeder::class);
+      $this->call(CalificacionCommentPostTableSeeder::class);
+      $this->call(CalificacionCommentHostalTableSeeder::class);
     }
 }

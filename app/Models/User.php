@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Cuenta;
 use App\Models\File;
+use App\Models\ComentarioHostal;
 use App\Models\Hostal;
 use App\Models\Pago;
 use App\Models\Post;
@@ -59,6 +60,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hostales(){
       return $this->hasOne(Hostal::class)->withTimestamps();
+    }
+
+    public function hostalComentarios(){
+      return $this->hasMany(ComentarioHostal::class)->withTimestamps();
     }
 
     public function reservas(){
