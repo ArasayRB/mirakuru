@@ -57,3 +57,4 @@ Route::get('/gallery', function(){
 });
 Route::get('/verify-testimonial/{hostal_name}/{cant}', [App\Http\Controllers\ComentarioHostalController::class, 'verifyTestimonial']);
 Route::get('/view-testimonial', [App\Http\Controllers\ComentarioHostalController::class, 'index']);
+Route::get('/comment-book', [App\Http\Controllers\HomeController::class, 'showMsgMakeComent']);

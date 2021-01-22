@@ -53,7 +53,8 @@
     <header>
       <img src="{{ asset('images/img/topeheader.jpg') }}" class="img-fluid mx-auto d-block">
     </header>
-    <nav class="navbar sticky-top navbar-expand-md bg-primary navbar-dark">
+    <div class="sticky-top">
+    <nav class="navbar navbar-expand-md bg-primary navbar-dark">
   <a href="#" class="navbar-brand"><img src="/images/img/favicon_white.ico" alt=""></a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#uno"><span class="navbar-toggler-icon"></span></button>
       <div class="collapse navbar-collapse" id="uno">
@@ -147,6 +148,12 @@
         </div>
        </ul>
     </nav>
+    @auth
+    <msg-make-review-component>
+    </msg-make-review-component>
+    @endauth
+
+    </div>
   @show
    <div class="clearfix"></div>
 
