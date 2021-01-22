@@ -52,7 +52,7 @@
 </div>
 </div>
 <div class="text-center">
-<a href="/gallery" class="btn w-20 rounded btn-warning btn-lg mt-5 text-dark">{{ $trans('messages.See More Comments') }}</a>
+<a href="/view-testimonial" class="btn w-20 rounded btn-warning btn-lg mt-5 text-dark">{{ $trans('messages.See More Comments') }}</a>
 </div>
 </div>
 </div>
@@ -75,8 +75,8 @@
         mounted() {
 
                 let hostal='Hostal Mirakuru Gran Familia';
-
-                axios.get('/verify-testimonial/'+hostal)
+                let cant=3;
+                axios.get('/verify-testimonial/'+hostal+'/'+cant)
                     .then(response =>{
                       this.comentarios=response.data;
                       if(this.comentarios.length===0){
