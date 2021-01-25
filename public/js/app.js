@@ -68918,7 +68918,11 @@ var render = function() {
                 { staticClass: "font-weght-bold text-center text-light" },
                 [
                   _vm._v(
-                    "Could be awsome if you want leave a comment about your last visit clicking below!"
+                    _vm._s(
+                      _vm.$trans(
+                        "messages.Could be awsome if you want leave a comment about your last visit clicking below!"
+                      )
+                    )
                   )
                 ]
               )
@@ -68926,30 +68930,23 @@ var render = function() {
             { clss: "panel-body" }
           ),
           _vm._v(" "),
-          _vm._m(0)
+          _c("div", { staticClass: "text-center panel-footer" }, [
+            _c(
+              "a",
+              {
+                staticClass:
+                  "btn btn-warning  wow animate__animated animate__heartBeat animate__infinite",
+                attrs: { href: "#", type: "button" }
+              },
+              [_vm._v(_vm._s(_vm.$trans("messages.Leave your review")))]
+            )
+          ])
         ],
         2
       )
     : _vm._e()
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "text-center panel-footer" }, [
-      _c(
-        "a",
-        {
-          staticClass:
-            "btn btn-warning  wow animate__animated animate__heartBeat animate__infinite",
-          attrs: { href: "#", type: "button" }
-        },
-        [_vm._v("Leave your review")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -85598,6 +85595,7 @@ module.exports = {
     "Content": "Content",
     "Continue reading": "Continue reading",
     "Correct data": "Correct data",
+    "Could be awsome if you want leave a comment about your last visit clicking below!": "Could be awsome if you want leave a comment about your last visit clicking below!",
     "Country": "Country",
     "Create": "Create",
     "Create API Token": "Create API Token",
@@ -85669,6 +85667,7 @@ module.exports = {
     "Leave": "Leave",
     "Leave Team": "Leave Team",
     "Leave us your email": "Leave us your email",
+    "Leave your review": "Leave your review",
     "Likes": "Likes",
     "List": "List",
     "Login": "Login",
@@ -86099,6 +86098,7 @@ module.exports = {
     "Content": "Contenido",
     "Continue reading": "Contin\xFAe leyendo",
     "Correct data": "Datos correctos",
+    "Could be awsome if you want leave a comment about your last visit clicking below!": "Ser\xEDa incre\xEDble si usted compartiera uun comentario acerca de su \xFAltima visita haciendo click en el bot\xF3n que ve debajo de este mensage!",
     "Country": "Pa\xEDs",
     "Create": "Crear",
     "Create API Token": "Crear Token API",
@@ -86170,6 +86170,7 @@ module.exports = {
     "Leave": "Abandonar",
     "Leave Team": "Abandonar equipo",
     "Leave us your email": "D\xE9janos tu email",
+    "Leave your review": "Deje su opini\xF3n",
     "Likes": "Me Gusta",
     "List": "Lista",
     "Login": "Iniciar Sesi\xF3n",
@@ -86484,6 +86485,7 @@ module.exports = {
     "Content": "Contenido",
     "Continue reading": "Contin\xFAe leyendo",
     "Correct data": "Datos correctos",
+    "Could be awsome if you want leave a comment about your last visit clicking below!": "Ser\xEDa incre\xEDble si usted compartiera uun comentario acerca de su \xFAltima visita haciendo click en el bot\xF3n que ve debajo de este mensage!",
     "Country": "Pa\xEDs",
     "Create": "Crear",
     "Create API Token": "Crear Token API",
@@ -86554,6 +86556,7 @@ module.exports = {
     "Leave": "Abandonar",
     "Leave Team": "Abandonar equipo",
     "Leave us your email": "D\xE9janos tu email",
+    "Leave your review": "Deje su opini\xF3n",
     "Login": "Iniciar Sesi\xF3n",
     "Logout": "Cerrar sesi\xF3n",
     "Logout Other Browser Sessions": "Cerrar las dem\xE1s sesiones",
