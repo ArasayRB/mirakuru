@@ -55,6 +55,8 @@ Route::post('/share/{id}/{media}', [App\Http\Controllers\WelcomeController::clas
 Route::get('/gallery', function(){
   return view('galeria');
 });
-Route::get('/verify-testimonial/{hostal_name}/{cant}', [App\Http\Controllers\ComentarioHostalController::class, 'verifyTestimonial']);
-Route::get('/view-testimonial', [App\Http\Controllers\ComentarioHostalController::class, 'index']);
+Route::get('/verify-testimonial/{hostal_name}/{cant}', [App\Http\Controllers\WelcomeController::class, 'verifyTestimonialComent']);
+Route::get('/view-testimonial', [App\Http\Controllers\WelcomeController::class, 'indexComentarioHostal']);
 Route::get('/comment-book', [App\Http\Controllers\HomeController::class, 'showMsgMakeComent']);
+Route::get('/mails-review-advice', [App\Http\Controllers\WelcomeController::class, 'sendEmailForReview']);
+Route::resource('/comentario-hostal', App\Http\Controllers\ComentarioHostalController::class,['only'=>['store','destroy']]);

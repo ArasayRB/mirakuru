@@ -3989,6 +3989,224 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=script&lang=js&":
+/*!********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=script&lang=js& ***!
+  \********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['books'],
+  data: function data() {
+    return {
+      review_value: '',
+      hoster_atention_value: 0,
+      services_value: 0,
+      confort_value: 0,
+      location_value: 0,
+      ventanaReview: false,
+      clean_value: 0,
+      src: '/storage/img_web/login_img/',
+      token: window.CSRF_TOKEN
+    };
+  },
+  methods: {
+    sendReview: function sendReview() {
+      var _this = this;
+
+      var url = "/comentario-hostal";
+      var mensaje = this.$trans('messages.Unidentified error');
+
+      if (this.review_value == '' || this["this"] == 0 || this.services_value == 0 || this.confort_value == 0 || this.location_value == 0 || this.clean_value == 0) {
+        mensaje = this.$trans('messages.You cannot leave empty fields, please check');
+      }
+
+      var data = new FormData();
+      data.append("review_value", this.review_value);
+      data.append("hoster_atention_value", this.hoster_atention_value);
+      data.append("services_value", this.services_value);
+      data.append("confort_value", this.confort_value);
+      data.append("location_value", this.location_value);
+      data.append("clean_value", this.clean_value);
+      data.append("hostal_name", this.books[0].hostal_name);
+      axios.post(url, data).then(function (response) {
+        swal({
+          title: _this.$trans('messages.Correct data'),
+          text: _this.$trans('messages.Thanks!'),
+          icon: 'success',
+          closeOnClickOutside: false,
+          closeOnEsc: false
+        });
+
+        _this.$emit('closereviewmodal');
+      })["catch"](function (error) {
+        if (error.response.data.message) {
+          swal('Error', '' + error.response.data.message, 'error');
+        }
+
+        var wrong = error.response.data.errors;
+
+        if (wrong.hasOwnProperty('review_value')) {
+          mensaje += '-' + wrong.review_value[0];
+        }
+
+        if (wrong.hasOwnProperty('hoster_atention_value')) {
+          mensaje += '-' + wrong.hoster_atention_value[0];
+        }
+
+        if (wrong.hasOwnProperty('services_value')) {
+          mensaje += '-' + wrong.services_value[0];
+        }
+
+        if (wrong.hasOwnProperty('confort_value')) {
+          mensaje += '-' + wrong.confort_value[0];
+        }
+
+        if (wrong.hasOwnProperty('location_value')) {
+          mensaje += '-' + wrong.location_value[0];
+        }
+
+        if (wrong.hasOwnProperty('clean_value')) {
+          mensaje += '-' + wrong.clean_value[0];
+        }
+
+        swal('Error', mensaje, 'error'); //console.log(error.response.data);
+      });
+    }
+  },
+  mounted: function mounted() {
+    console.log(this.books);
+
+    if (this.$attrs.locale) {
+      this.$lang.setLocale(this.$attrs.locale);
+    } else {
+      this.$lang.setLocale('en');
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ListComentariosHostalComponent.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/ListComentariosHostalComponent.vue?vue&type=script&lang=js& ***!
@@ -4095,24 +4313,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       booksForReview: [],
+      ventanaReview: false,
       token: window.CSRF_TOKEN
     };
   },
   methods: {
     closeLeaveComment: function closeLeaveComment() {
       $('#leave-comment').hide(true);
+    },
+    closeReviewModal: function closeReviewModal() {
+      this.ventanaReview = false;
+      this.noMakedReviews();
+    },
+    noMakedReviews: function noMakedReviews() {
+      var _this = this;
+
+      axios.get('/comment-book').then(function (response) {
+        _this.booksForReview = response.data;
+      });
     }
   },
   created: function created() {
-    var _this = this;
-
-    axios.get('/comment-book').then(function (response) {
-      _this.booksForReview = response.data;
-    });
+    this.noMakedReviews();
   },
   mounted: function mounted() {
     if (this.$attrs.locale) {
@@ -68694,6 +68922,1001 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=template&id=0e94b8e9&":
+/*!************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=template&id=0e94b8e9& ***!
+  \************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "transition",
+    { staticClass: "modal fade pt-5", attrs: { id: "reviewModal" } },
+    [
+      _c("div", { staticClass: "modal-mask" }, [
+        _c("div", { staticClass: "modal-wrapper" }, [
+          _c("div", { staticClass: "modal-container bg-primary" }, [
+            _c("form", { staticClass: "text-center", attrs: { id: "form3" } }, [
+              _c(
+                "div",
+                { staticClass: "modal-header" },
+                [
+                  _vm._t("default", [
+                    _c("div", { staticClass: "col justify-content-center" }, [
+                      _c("div", { staticClass: " bg-primary" }, [
+                        _c("h1", { staticClass: "text-center text-light" }, [
+                          _vm._v('"' + _vm._s(_vm.books[0].hostal_name) + '" '),
+                          _c("br"),
+                          _vm._v(
+                            " " +
+                              _vm._s(_vm.$trans("messages.Leave your review")) +
+                              "!"
+                          )
+                        ])
+                      ])
+                    ])
+                  ])
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "modal-body bg-primary" },
+                [
+                  _vm._t("default", [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "panel-header row justify-content-center"
+                      },
+                      [
+                        _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass: "font-weight-bold text-light",
+                              attrs: { for: "estrellas1" }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(_vm.$trans("messages.Clean")) +
+                                  " " +
+                                  _vm._s(_vm.$trans("messages.Value")) +
+                                  "\n  "
+                              ),
+                              _c("p", { staticClass: "clasificacion" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.clean_value,
+                                      expression: "clean_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio1",
+                                    type: "radio",
+                                    name: "estrellas1",
+                                    value: "5"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.clean_value, "5")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.clean_value = "5"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio1" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.clean_value,
+                                      expression: "clean_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio2",
+                                    type: "radio",
+                                    name: "estrellas1",
+                                    value: "4"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.clean_value, "4")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.clean_value = "4"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio2" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.clean_value,
+                                      expression: "clean_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio3",
+                                    type: "radio",
+                                    name: "estrellas1",
+                                    value: "3"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.clean_value, "3")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.clean_value = "3"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio3" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.clean_value,
+                                      expression: "clean_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio4",
+                                    type: "radio",
+                                    name: "estrellas1",
+                                    value: "2"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.clean_value, "2")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.clean_value = "2"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio4" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.clean_value,
+                                      expression: "clean_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio5",
+                                    type: "radio",
+                                    name: "estrellas1",
+                                    value: "1"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.clean_value, "1")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.clean_value = "1"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio5" } }, [
+                                  _vm._v("★")
+                                ])
+                              ])
+                            ]
+                          ),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            {
+                              staticClass: "font-weight-bold text-light",
+                              attrs: { for: "estrellas2" }
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(_vm.$trans("messages.Location")) +
+                                  " " +
+                                  _vm._s(_vm.$trans("messages.Value")) +
+                                  "\n  "
+                              ),
+                              _c("p", { staticClass: "clasificacion" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.location_value,
+                                      expression: "location_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio6",
+                                    type: "radio",
+                                    name: "estrellas2",
+                                    value: "5"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.location_value, "5")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.location_value = "5"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio6" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.location_value,
+                                      expression: "location_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio7",
+                                    type: "radio",
+                                    name: "estrellas2",
+                                    value: "4"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.location_value, "4")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.location_value = "4"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio7" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.location_value,
+                                      expression: "location_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio8",
+                                    type: "radio",
+                                    name: "estrellas2",
+                                    value: "3"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.location_value, "3")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.location_value = "3"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio8" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.location_value,
+                                      expression: "location_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio9",
+                                    type: "radio",
+                                    name: "estrellas2",
+                                    value: "2"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.location_value, "2")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.location_value = "2"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio9" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.location_value,
+                                      expression: "location_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio10",
+                                    type: "radio",
+                                    name: "estrellas2",
+                                    value: "1"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.location_value, "1")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.location_value = "1"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio10" } }, [
+                                  _vm._v("★")
+                                ])
+                              ])
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-6 col-sm-12" }, [
+                          _c(
+                            "label",
+                            { staticClass: "font-weight-bold text-light" },
+                            [
+                              _vm._v(
+                                _vm._s(_vm.$trans("messages.Confort")) +
+                                  " " +
+                                  _vm._s(_vm.$trans("messages.Value")) +
+                                  "\n "
+                              ),
+                              _c("p", { staticClass: "clasificacion" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.confort_value,
+                                      expression: "confort_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio11",
+                                    type: "radio",
+                                    name: "estrellas3",
+                                    value: "5"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.confort_value, "5")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.confort_value = "5"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio11" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.confort_value,
+                                      expression: "confort_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio12",
+                                    type: "radio",
+                                    name: "estrellas3",
+                                    value: "4"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.confort_value, "4")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.confort_value = "4"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio12" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.confort_value,
+                                      expression: "confort_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio13",
+                                    type: "radio",
+                                    name: "estrellas3",
+                                    value: "3"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.confort_value, "3")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.confort_value = "3"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio13" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.confort_value,
+                                      expression: "confort_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio14",
+                                    type: "radio",
+                                    name: "estrellas3",
+                                    value: "2"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.confort_value, "2")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.confort_value = "2"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio14" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.confort_value,
+                                      expression: "confort_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio15",
+                                    type: "radio",
+                                    name: "estrellas3",
+                                    value: "1"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.confort_value, "1")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.confort_value = "1"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio15" } }, [
+                                  _vm._v("★")
+                                ])
+                              ])
+                            ]
+                          ),
+                          _c("br"),
+                          _vm._v(" "),
+                          _c(
+                            "label",
+                            { staticClass: "font-weight-bold text-light" },
+                            [
+                              _vm._v(
+                                _vm._s(_vm.$trans("messages.Services")) +
+                                  " " +
+                                  _vm._s(_vm.$trans("messages.Value")) +
+                                  "\n "
+                              ),
+                              _c("p", { staticClass: "clasificacion" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.services_value,
+                                      expression: "services_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio16",
+                                    type: "radio",
+                                    name: "estrellas4",
+                                    value: "5"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.services_value, "5")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.services_value = "5"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio16" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.services_value,
+                                      expression: "services_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio17",
+                                    type: "radio",
+                                    name: "estrellas4",
+                                    value: "4"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.services_value, "4")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.services_value = "4"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio17" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.services_value,
+                                      expression: "services_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio18",
+                                    type: "radio",
+                                    name: "estrellas4",
+                                    value: "3"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.services_value, "3")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.services_value = "3"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio18" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.services_value,
+                                      expression: "services_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio19",
+                                    type: "radio",
+                                    name: "estrellas4",
+                                    value: "2"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.services_value, "2")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.services_value = "2"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio19" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.services_value,
+                                      expression: "services_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio20",
+                                    type: "radio",
+                                    name: "estrellas4",
+                                    value: "1"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(_vm.services_value, "1")
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.services_value = "1"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio20" } }, [
+                                  _vm._v("★")
+                                ])
+                              ])
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "col-md-12 col-sm-12" }, [
+                          _c(
+                            "label",
+                            {
+                              staticClass:
+                                "mb-md-2 pt-md-5 font-weight-bold text-light"
+                            },
+                            [
+                              _vm._v(
+                                _vm._s(
+                                  _vm.$trans("messages.Hosters Atention")
+                                ) +
+                                  " " +
+                                  _vm._s(_vm.$trans("messages.Value")) +
+                                  "\n "
+                              ),
+                              _c("p", { staticClass: "clasificacion" }, [
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.hoster_atention_value,
+                                      expression: "hoster_atention_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio21",
+                                    type: "radio",
+                                    name: "estrellas5",
+                                    value: "5"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(
+                                      _vm.hoster_atention_value,
+                                      "5"
+                                    )
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.hoster_atention_value = "5"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio21" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.hoster_atention_value,
+                                      expression: "hoster_atention_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio22",
+                                    type: "radio",
+                                    name: "estrellas5",
+                                    value: "4"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(
+                                      _vm.hoster_atention_value,
+                                      "4"
+                                    )
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.hoster_atention_value = "4"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio22" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.hoster_atention_value,
+                                      expression: "hoster_atention_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio23",
+                                    type: "radio",
+                                    name: "estrellas5",
+                                    value: "3"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(
+                                      _vm.hoster_atention_value,
+                                      "3"
+                                    )
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.hoster_atention_value = "3"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio23" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.hoster_atention_value,
+                                      expression: "hoster_atention_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio24",
+                                    type: "radio",
+                                    name: "estrellas5",
+                                    value: "2"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(
+                                      _vm.hoster_atention_value,
+                                      "2"
+                                    )
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.hoster_atention_value = "2"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio24" } }, [
+                                  _vm._v("★")
+                                ]),
+                                _vm._v(" "),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.hoster_atention_value,
+                                      expression: "hoster_atention_value"
+                                    }
+                                  ],
+                                  attrs: {
+                                    id: "radio25",
+                                    type: "radio",
+                                    name: "estrellas5",
+                                    value: "1"
+                                  },
+                                  domProps: {
+                                    checked: _vm._q(
+                                      _vm.hoster_atention_value,
+                                      "1"
+                                    )
+                                  },
+                                  on: {
+                                    change: function($event) {
+                                      _vm.hoster_atention_value = "1"
+                                    }
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("label", { attrs: { for: "radio25" } }, [
+                                  _vm._v("★")
+                                ])
+                              ])
+                            ]
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "col-md-12 col-sm-12 text-center" },
+                          [
+                            _c(
+                              "label",
+                              {
+                                staticClass: "mb-2 font-weight-bold text-light",
+                                attrs: { for: "comentario" }
+                              },
+                              [
+                                _vm._v(
+                                  _vm._s(_vm.$trans("messages.Review")) +
+                                    "\n   "
+                                ),
+                                _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: _vm.review_value,
+                                      expression: "review_value"
+                                    }
+                                  ],
+                                  staticClass: "form-control",
+                                  attrs: {
+                                    type: "text",
+                                    id: "comentario",
+                                    name: "comentario",
+                                    value: ""
+                                  },
+                                  domProps: { value: _vm.review_value },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.review_value = $event.target.value
+                                    }
+                                  }
+                                })
+                              ]
+                            )
+                          ]
+                        )
+                      ]
+                    )
+                  ])
+                ],
+                2
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "modal-footer" },
+                [
+                  _vm._t("default", [
+                    _c("div", { staticClass: "col justify-content-center" }, [
+                      _c("div", { staticClass: "form-group row mb-0" }, [
+                        _c("div", { staticClass: "col-md-5 offset-md-4" }, [
+                          _c(
+                            "a",
+                            {
+                              staticClass: "btn btn-dark text-light",
+                              attrs: { href: "#", type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.sendReview()
+                                }
+                              }
+                            },
+                            [_vm._v(_vm._s(_vm.$trans("messages.Send")))]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass:
+                                "modal-default-button btn btn-danger",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.$emit("close")
+                                }
+                              }
+                            },
+                            [_vm._v(_vm._s(_vm.$trans("messages.Close")))]
+                          )
+                        ])
+                      ])
+                    ])
+                  ])
+                ],
+                2
+              )
+            ])
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/ListComentariosHostalComponent.vue?vue&type=template&id=6d5a7861&":
 /*!***************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/ListComentariosHostalComponent.vue?vue&type=template&id=6d5a7861& ***!
@@ -68936,11 +70159,28 @@ var render = function() {
               {
                 staticClass:
                   "btn btn-warning  wow animate__animated animate__heartBeat animate__infinite",
-                attrs: { href: "#", type: "button" }
+                attrs: { href: "#", type: "button" },
+                on: {
+                  click: function($event) {
+                    _vm.ventanaReview = true
+                  }
+                }
               },
               [_vm._v(_vm._s(_vm.$trans("messages.Leave your review")))]
             )
-          ])
+          ]),
+          _vm._v(" "),
+          _vm.ventanaReview
+            ? _c("create-coment-hostal-component", {
+                attrs: { books: _vm.booksForReview },
+                on: {
+                  closereviewmodal: _vm.closeReviewModal,
+                  close: function($event) {
+                    _vm.ventanaReview = false
+                  }
+                }
+              })
+            : _vm._e()
         ],
         2
       )
@@ -84198,6 +85438,7 @@ Vue.component('cont-view-share-like-component', __webpack_require__(/*! ./compon
 Vue.component('reservar-hostal-component', __webpack_require__(/*! ./components/forms/ReservarHostalComponent.vue */ "./resources/js/components/forms/ReservarHostalComponent.vue")["default"]);
 Vue.component('comentario-hostal-component', __webpack_require__(/*! ./components/forms/ComentarioHostalComponent.vue */ "./resources/js/components/forms/ComentarioHostalComponent.vue")["default"]);
 Vue.component('list-comentarios-hostal-component', __webpack_require__(/*! ./components/forms/ListComentariosHostalComponent.vue */ "./resources/js/components/forms/ListComentariosHostalComponent.vue")["default"]);
+Vue.component('create-coment-hostal-component', __webpack_require__(/*! ./components/forms/CreateComentHostalComponent.vue */ "./resources/js/components/forms/CreateComentHostalComponent.vue")["default"]);
 Vue.component('msg-make-review-component', __webpack_require__(/*! ./components/forms/MsgMakeReviewComponent.vue */ "./resources/js/components/forms/MsgMakeReviewComponent.vue")["default"]);
 Vue.component('contacto-hostal-component', __webpack_require__(/*! ./components/forms/ContactoHostalComponent.vue */ "./resources/js/components/forms/ContactoHostalComponent.vue")["default"]);
 Vue.component('reservado-hostal-component', __webpack_require__(/*! ./components/forms/ReservadoHostalComponent.vue */ "./resources/js/components/forms/ReservadoHostalComponent.vue")["default"]);
@@ -84224,6 +85465,7 @@ var app = new Vue({
       email: '',
       password: '',
       ventanaLogin: '',
+      ventanaReview: '',
       ventanaContact: '',
       ventanaRegister: '',
       ventanaResetEmail: '',
@@ -84257,6 +85499,7 @@ var app = new Vue({
         $("#blog-menu").hide(true);
       }
     });
+    axios.get('/mails-review-advice');
     /*Vue.localStorage.set('openLogin', 'no');
     if(Vue.localStorage.get('openLogin')==='no'){
     console.log(Vue.localStorage.get('openLogin'));
@@ -84968,6 +86211,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/forms/CreateComentHostalComponent.vue":
+/*!***********************************************************************!*\
+  !*** ./resources/js/components/forms/CreateComentHostalComponent.vue ***!
+  \***********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _CreateComentHostalComponent_vue_vue_type_template_id_0e94b8e9___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CreateComentHostalComponent.vue?vue&type=template&id=0e94b8e9& */ "./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=template&id=0e94b8e9&");
+/* harmony import */ var _CreateComentHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CreateComentHostalComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CreateComentHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CreateComentHostalComponent_vue_vue_type_template_id_0e94b8e9___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _CreateComentHostalComponent_vue_vue_type_template_id_0e94b8e9___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/forms/CreateComentHostalComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=script&lang=js&":
+/*!************************************************************************************************!*\
+  !*** ./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=script&lang=js& ***!
+  \************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateComentHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateComentHostalComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateComentHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=template&id=0e94b8e9&":
+/*!******************************************************************************************************!*\
+  !*** ./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=template&id=0e94b8e9& ***!
+  \******************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateComentHostalComponent_vue_vue_type_template_id_0e94b8e9___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./CreateComentHostalComponent.vue?vue&type=template&id=0e94b8e9& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/CreateComentHostalComponent.vue?vue&type=template&id=0e94b8e9&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateComentHostalComponent_vue_vue_type_template_id_0e94b8e9___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CreateComentHostalComponent_vue_vue_type_template_id_0e94b8e9___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/forms/ListComentariosHostalComponent.vue":
 /*!**************************************************************************!*\
   !*** ./resources/js/components/forms/ListComentariosHostalComponent.vue ***!
@@ -85585,12 +86897,14 @@ module.exports = {
     "Category": "Category",
     "Check your email. Link password reset sent": "Check your email. Link password reset sent",
     "Childs": "Childs",
+    "Clean": "Clean",
     "Close": "Close",
     "Code": "Code",
     "Comunicate with our team by contact message way because we have a problem with your confirmation.": "Comunicate with our team by contact message way because we have a problem with your confirmation.",
     "Confirm": "Confirm",
     "Confirm Password": "Confirm Password",
     "Confirm your pre-reservation: ": "Confirm your pre-reservation: ",
+    "Confort": "Confort",
     "Contact": "Contact",
     "Content": "Content",
     "Continue reading": "Continue reading",
@@ -85643,6 +86957,7 @@ module.exports = {
     "Hello!": "Hello!",
     "Home": "Home",
     "Hostals": "Hostals",
+    "Hosters Atention": "Hosters Atention",
     "I need your name": "I need your name",
     "I'm very sorry but on this date we only have one room available": "I'm very sorry but on this date we only have one room available",
     "ID": "ID",
@@ -85670,6 +86985,7 @@ module.exports = {
     "Leave your review": "Leave your review",
     "Likes": "Likes",
     "List": "List",
+    "Location": "Location",
     "Login": "Login",
     "Logout": "Logout",
     "Logout Other Browser Sessions": "Logout Other Browser Sessions",
@@ -85767,6 +87083,7 @@ module.exports = {
     "Reset Password": "Reset Password",
     "Reset Password Notification": "Reset Password Notification",
     "Reset Password Notification- ": "Reset Password Notification- ",
+    "Review": "Review",
     "Role": "Role",
     "Rooms": "Rooms",
     "Rooms Category": "Rooms Category",
@@ -85863,6 +87180,7 @@ module.exports = {
     "User": "User",
     "Users": "Users",
     "Utilities User": "Utilities User",
+    "Value": "Value",
     "Verify Email Address": "Verify Email Address",
     "Verify Email Address- ": "Verify Email Address- ",
     "Verify Your Email Address": "Verify Your Email Address",
@@ -86088,17 +87406,19 @@ module.exports = {
     "Category": "Categor\xEDa",
     "Check your email. Link password reset sent": "Revise su email. Link de reseteo de contrase\xF1a enviado",
     "Childs": "Ni\xF1os",
+    "Clean": "Limpieza",
     "Close": "Cerrar",
     "Code": "C\xF3digo",
     "Comunicate with our team by contact message way because we have a problem with your confirmation.": "Comun\xEDquese con nuestro equipo por mensage de contacto porque tuvimos un problema confirmando su reserva.",
     "Confirm": "Confirmar",
     "Confirm Password": "Confirmar contrase\xF1a",
     "Confirm your pre-reservation: ": "Confirme su pre-reservaci\xF3n: ",
+    "Confort": "Comodidades",
     "Contact": "Contacto",
     "Content": "Contenido",
     "Continue reading": "Contin\xFAe leyendo",
     "Correct data": "Datos correctos",
-    "Could be awsome if you want leave a comment about your last visit clicking below!": "Ser\xEDa incre\xEDble si usted compartiera uun comentario acerca de su \xFAltima visita haciendo click en el bot\xF3n que ve debajo de este mensage!",
+    "Could be awsome if you want leave a comment about your last visit clicking below!": "Ser\xEDa incre\xEDble si usted compartiera un comentario acerca de su \xFAltima visita haciendo click en el bot\xF3n que ve debajo de este mensage!",
     "Country": "Pa\xEDs",
     "Create": "Crear",
     "Create API Token": "Crear Token API",
@@ -86146,6 +87466,7 @@ module.exports = {
     "Hello!": "\xA1Hola!",
     "Home": "Inicio",
     "Hostals": "Hostales",
+    "Hosters Atention": "Atenci\xF3n de Anfitriones",
     "I need your name": "Necesito su nombre",
     "I'm very sorry but on this date we only have one room available": "Lo siento mucho pero en esta fecha solo tenemos una habitacion disponible",
     "ID": "ID",
@@ -86173,6 +87494,7 @@ module.exports = {
     "Leave your review": "Deje su opini\xF3n",
     "Likes": "Me Gusta",
     "List": "Lista",
+    "Location": "Ubicaci\xF3n",
     "Login": "Iniciar Sesi\xF3n",
     "Logout": "Cerrar sesi\xF3n",
     "Logout Other Browser Sessions": "Cerrar las dem\xE1s sesiones",
@@ -86270,6 +87592,7 @@ module.exports = {
     "Reset Password": "Restablecer Contrase\xF1a",
     "Reset Password Notification": "Notificaci\xF3n de restablecimiento de contrase\xF1a",
     "Reset Password Notification- ": "Notificaci\xF3n de restablecimiento de contrase\xF1a- ",
+    "Review": "Rese\xF1a",
     "Role": "Rol",
     "Rooms": "Habitaciones",
     "Rooms Category": "Categoria de Habitaciones",
@@ -86366,6 +87689,7 @@ module.exports = {
     "User": "Usuario",
     "Users": "Usuarios",
     "Utilities User": "Utilidades de Usuario",
+    "Value": "Valor",
     "Verify Email Address": "Confirme su correo electr\xF3nico",
     "Verify Your Email Address": "Verifique su correo electr\xF3nico",
     "Verify Your Email Address- ": "Verifique su correo electr\xF3nico- ",
@@ -86475,17 +87799,19 @@ module.exports = {
     "Cash": "Moneda",
     "Check your email. Link password reset sent": "Revise su email. Link de reseteo de contrase\xF1a enviado",
     "Childs": "Ni\xF1os",
+    "Clean": "Limpieza",
     "Close": "Cerrar",
     "Code": "C\xF3digo",
     "Comunicate with our team by contact message way because we have a problem with your confirmation.": "Comun\xEDquese con nuestro equipo por mensage de contacto porque tuvimos un problema confirmando su reserva.",
     "Confirm": "Confirmar",
     "Confirm Password": "Confirmar contrase\xF1a",
     "Confirm your pre-reservation: ": "Confirme su pre-reservaci\xF3n: ",
+    "Confort": "Comodidades",
     "Contact": "Contacto",
     "Content": "Contenido",
     "Continue reading": "Contin\xFAe leyendo",
     "Correct data": "Datos correctos",
-    "Could be awsome if you want leave a comment about your last visit clicking below!": "Ser\xEDa incre\xEDble si usted compartiera uun comentario acerca de su \xFAltima visita haciendo click en el bot\xF3n que ve debajo de este mensage!",
+    "Could be awsome if you want leave a comment about your last visit clicking below!": "Ser\xEDa incre\xEDble si usted compartiera un comentario acerca de su \xFAltima visita haciendo click en el bot\xF3n que ve debajo de este mensage!",
     "Country": "Pa\xEDs",
     "Create": "Crear",
     "Create API Token": "Crear Token API",
@@ -86533,6 +87859,7 @@ module.exports = {
     "Hello!": "\xA1Hola!",
     "Home": "Inicio",
     "Hostals": "Hostales",
+    "Hosters Atention": "Atenci\xF3n de Anfitriones",
     "I need your name": "Necesito su nombre",
     "I'm very sorry but on this date we only have one room available": "Lo siento mucho pero en esta fecha solo tenemos una habitacion disponible",
     "If necessary, you may logout of all of your other browser sessions across all of your devices. If you feel your account has been compromised, you should also update your password.": "Si es necesario, puede salir de todas las dem\xE1s sesiones de otros navegadores en todos sus dispositivos. Si cree que su cuenta se ha visto comprometida, tambi\xE9n deber\xEDa actualizar su contrase\xF1a.",
@@ -86557,6 +87884,7 @@ module.exports = {
     "Leave Team": "Abandonar equipo",
     "Leave us your email": "D\xE9janos tu email",
     "Leave your review": "Deje su opini\xF3n",
+    "Location": "Ubicaci\xF3n",
     "Login": "Iniciar Sesi\xF3n",
     "Logout": "Cerrar sesi\xF3n",
     "Logout Other Browser Sessions": "Cerrar las dem\xE1s sesiones",
@@ -86629,6 +87957,7 @@ module.exports = {
     "Reset Password": "Restablecer Contrase\xF1a",
     "Reset Password Notification": "Notificaci\xF3n de restablecimiento de contrase\xF1a",
     "Reset Password Notification- ": "Notificaci\xF3n de restablecimiento de contrase\xF1a- ",
+    "Review": "Rese\xF1a",
     "Role": "Rol",
     "Rooms": "Habitaciones",
     "Rooms Category": "Categoria de Habitaciones",
@@ -86722,6 +88051,7 @@ module.exports = {
     "User": "Usuario",
     "Users": "Usuarios",
     "Utilities User": "Utilidades de Usuario",
+    "Value": "Valor",
     "Verify Email Address": "Confirme su correo electr\xF3nico",
     "Verify Email Address- ": "Confirme su correo electr\xF3nico- ",
     "Verify Your Email Address": "Verifique su correo electr\xF3nico",

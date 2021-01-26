@@ -18,6 +18,8 @@
     </ul>
   </div>
 @endif
+
+
 <section class="section-ppal pb-5" id="nosotros" name="nosotros"><!--Section Nosotros-->
   <div class="box"><h1 id="us_ttle" class="text-uppercase text-center pt-5 animate__animated animate__zoomIn">{{ __('Searching hostal') }}</h1></div>
   <p class="text-justify mx-2 my-2">{{__('Do you know what differentiates us from the rest of the great community of hostels that exist in Trinidad? Surely you will think that there we go with new old women that everyone says')}} &#128545;!

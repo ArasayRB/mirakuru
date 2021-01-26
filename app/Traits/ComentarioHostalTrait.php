@@ -14,5 +14,35 @@ trait ComentarioHostalTrait {
                        return $coments;
     }
 
+    public function verifyTestimonial($hostal_name,$cant){
+
+      $find_id_hostal=$this->getHostalIdByName($hostal_name);
+      $find_coment;
+      if($cant!=0){
+      $find_coment=ComentarioHostal::where('hostal_id',$find_id_hostal)
+                                   ->take($cant)
+                                   ->get();
+                                   }
+      else{
+        $find_coment=ComentarioHostal::where('hostal_id',$find_id_hostal)
+                                     ->get();
+      }
+      for($i=0;$i<count($find_coment);$i++){
+        $user=$this->getUserById($find_coment[$i]->user_id);
+        $find_coment[$i]->user=$user;
+      }
+                                   return $find_coment;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function indexComentarioHostalPpal()
+    {
+        return view('testimonials.index');
+    }
+
 
 }

@@ -5,52 +5,34 @@ namespace App\Http\Controllers;
 use App\Models\ComentarioHostal;
 use App\Traits\HostalTrait;
 use App\Traits\UserTrait;
+use App\Traits\ComentarioHostalTrait;
+use App\Traits\CalificacionCommentHostalTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ComentarioHostalController extends Controller
 {
-  use HostalTrait; use UserTrait;
+  use HostalTrait; use UserTrait; use ComentarioHostalTrait; use CalificacionCommentHostalTrait;
 
-  public function verifyTestimonial($hostal_name,$cant){
 
-    $find_id_hostal=$this->getHostalIdByName($hostal_name);
-    $find_coment;
-    if($cant!=0){
-    $find_coment=ComentarioHostal::where('hostal_id',$find_id_hostal)
-                                 ->take($cant)
-                                 ->get();
-                                 }
-    else{
-      $find_coment=ComentarioHostal::where('hostal_id',$find_id_hostal)
-                                   ->get();
-    }
-    for($i=0;$i<count($find_coment);$i++){
-      $user=$this->getUserById($find_coment[$i]->user_id);
-      $find_coment[$i]->user=$user;
-    }
-                                 return $find_coment;
+  public function __construct()
+  {
+      $this->middleware('auth');
   }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        return view('coments');
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+  protected function validator(array $data)
+  {
+      return Validator::make($data, [
+          'review_value' => ['required', 'string'],
+          'hoster_atention_value' => ['required', 'integer'],
+          'services_value' => ['required', 'integer'],
+          'confort_value' => ['required', 'integer'],
+          'location_value' => ['required', 'integer'],
+          'clean_value' => ['required', 'integer'],
+      ]);
+  }
 
-    /**
+        /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -58,7 +40,38 @@ class ComentarioHostalController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $this->validator($request->all())->validate();
+      $hostalIdQuery=$this->getHostalByName(request('hostal_name'));
+      $clean=request('clean_value');
+      $service=request('services_value');
+      $hoster=request('hoster_atention_value');
+      $location=request('location_value');
+      $confort=request('confort_value');
+      $valuation;
+      $aprox=($clean+$service+$hoster+$location+$confort)/5;
+      if($aprox<=1){
+        $valuation=1;
+      }
+      else if(1<$aprox && $aprox<=2.5){
+        $valuation=2;
+      }
+      else if(2.5<$aprox && $aprox<=3.5){
+        $valuation=3;
+      }
+      else if(3.5<$aprox && $aprox<=4.5){
+        $valuation=4;
+      }
+      else if(4.5<$aprox && $aprox<=5){
+        $valuation=5;
+      }
+      $calif_id=$this->getCalificationHostalByCalification($valuation);
+      $comentario=new ComentarioHostal;
+      $comentario->user_id=auth()->user()->id;
+      $comentario->comment=request('review_value');
+      $comentario->calification_id=$calif_id;
+      $comentario->hostal_id=$hostalIdQuery[0]->id;
+      $comentario->save();
+      return $comentario;
     }
 
     /**

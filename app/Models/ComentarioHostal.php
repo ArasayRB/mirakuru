@@ -20,11 +20,11 @@ class ComentarioHostal extends Model
     ];
 
     public function hostales(){
-      return $this->belongsTo(Hostal::class)->withTimestamps();
+      return $this->belongsTo(Hostal::class,'hostal_id')->withTimestamps();
     }
 
     public function users(){
-      return $this->belongsTo(User::class)->withTimestamps();
+      return $this->belongsTo(User::class,'user_id')->withTimestamps();
     }
 
     public function CalificacionCommentHostals(){

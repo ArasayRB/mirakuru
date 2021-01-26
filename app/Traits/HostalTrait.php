@@ -24,4 +24,9 @@ trait HostalTrait {
                     ->get();
   return  $id[0]->id;
   }
+
+  public function getNameHostalById($id){
+    $name=Hostal::find($id);
+    return $name;
+  }
 }

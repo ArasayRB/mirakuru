@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Lang;
 use Notification;
 use App\Notifications\NewsletterNotification;
 use App\Notifications\ConfirmReservaNotification;
+use App\Notifications\MakeReviewNotification;
 use App\Notifications\DeleteNotification;
 use App\Notifications\ContactoNotification;
 
@@ -90,6 +91,23 @@ trait MessageTrait
          return Notification::route('mail', $datos['email'])
                        ->notify(new ConfirmReservaNotification($newsData));
 
+    }
+
+    public function reviewAdviceSend($datos){
+      $url=url(route('home'));
+      $newsData = [
+             'name' => $datos['name'],
+             'email'=>$datos['email'],
+             'body' => Lang::get('Great!!'),
+             'thanks' => Lang::get('Greetings, '. config('app.name')),
+             'newsText' => Lang::get('We hope your days was you spended in our hostal magnificent very well. Can you share with other travelers your experience with our service? If you want  leave a review our hostal click in the below button please, we be greatfull of count with your opinion. Be WELCOME ALLWAYS!!'),
+             'newsText1' => Lang::get('If you dont have a reservation finished with us, please you do not need do any thing with this email').'.',
+             'newTextBye'=>Lang::get('Thank you for using our application!'),
+             'newsUrl' => $url,
+             'action_text'=> Lang::get('Go'),
+         ];
+         return Notification::route('mail', $datos['email'])
+                       ->notify(new MakeReviewNotification($newsData));
     }
 
     public function discardReservationDelete($datos){

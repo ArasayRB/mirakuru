@@ -63,6 +63,7 @@ Vue.component('cont-view-share-like-component', require('./components/forms/Cont
 Vue.component('reservar-hostal-component', require('./components/forms/ReservarHostalComponent.vue').default);
 Vue.component('comentario-hostal-component', require('./components/forms/ComentarioHostalComponent.vue').default);
 Vue.component('list-comentarios-hostal-component', require('./components/forms/ListComentariosHostalComponent.vue').default);
+Vue.component('create-coment-hostal-component', require('./components/forms/CreateComentHostalComponent.vue').default);
 Vue.component('msg-make-review-component', require('./components/forms/MsgMakeReviewComponent.vue').default);
 Vue.component('contacto-hostal-component', require('./components/forms/ContactoHostalComponent.vue').default);
 Vue.component('reservado-hostal-component', require('./components/forms/ReservadoHostalComponent.vue').default);
@@ -90,6 +91,7 @@ const app = new Vue({
         email    : '',
         password:'',
         ventanaLogin:'',
+        ventanaReview:'',
         ventanaContact:'',
         ventanaRegister:'',
         ventanaResetEmail:'',
@@ -124,6 +126,8 @@ const app = new Vue({
           $("#blog-menu").hide(true);
              }
            });
+
+           axios.get('/mails-review-advice');
 
      /*Vue.localStorage.set('openLogin', 'no');
      if(Vue.localStorage.get('openLogin')==='no'){

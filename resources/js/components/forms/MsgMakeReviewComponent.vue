@@ -7,8 +7,10 @@
 
     </slot>
     <div class="text-center panel-footer">
-    <a href="#" type="button" class="btn btn-warning  wow animate__animated animate__heartBeat animate__infinite">{{ $trans('messages.Leave your review') }}</a>
+    <a href="#" @click="ventanaReview = true" type="button" class="btn btn-warning  wow animate__animated animate__heartBeat animate__infinite">{{ $trans('messages.Leave your review') }}</a>
     </div>
+    <create-coment-hostal-component :books="booksForReview" @closereviewmodal="closeReviewModal" v-if="ventanaReview" @close="ventanaReview = false">
+    </create-coment-hostal-component>
   </div>
 
 </template>
@@ -18,6 +20,7 @@
       data(){
         return {
         booksForReview:[],
+        ventanaReview:false,
           token   : window.CSRF_TOKEN,
 
         }
@@ -26,12 +29,19 @@
         closeLeaveComment:function(){
           $('#leave-comment').hide(true);
         },
+        closeReviewModal:function(){
+          this.ventanaReview=false;
+          this.noMakedReviews();
+        },
+        noMakedReviews:function(){
+          axios.get('/comment-book')
+               .then(response =>{
+                 this.booksForReview=response.data;
+               });
+        },
       },
       created:function(){
-        axios.get('/comment-book')
-             .then(response =>{
-               this.booksForReview=response.data;
-             });
+        this.noMakedReviews();
       },
         mounted() {
 
