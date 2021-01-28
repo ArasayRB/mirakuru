@@ -277,12 +277,8 @@ text-field="value"
                        }).then(select=>{
                          if (select){
                            let postAdd=response.data;
-                           if(this.show_lang_div===true){
                           this.$emit('postnew',postAdd);
-                        }
-                        else{
-                        this.ventanaCreatPost=false;
-                      }
+
                            //location.reload();
                          }
                        });

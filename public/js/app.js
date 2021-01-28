@@ -2700,11 +2700,7 @@ __webpack_require__.r(__webpack_exports__);
           if (select) {
             var postAdd = response.data;
 
-            if (_this.show_lang_div === true) {
-              _this.$emit('postnew', postAdd);
-            } else {
-              _this.ventanaCreatPost = false;
-            } //location.reload();
+            _this.$emit('postnew', postAdd); //location.reload();
 
           }
         }); //console.log(response);
@@ -3413,8 +3409,28 @@ __webpack_require__.r(__webpack_exports__);
     imageEdit: function imageEdit(e) {
       this.imagenPost = e.target.files[0];
     },
+    getListPosts: function getListPosts() {
+      var _this = this;
+
+      axios.get('/postsTable').then(function (response) {
+        _this.posts = response.data;
+
+        if (response.data == '') {
+          _this.mensage = _this.$trans('messages.None Post added yet');
+        }
+      })["catch"](function (error) {
+        return _this.errors.push(error);
+      });
+    },
     addPostIndex: function addPostIndex(postAdd) {
-      this.posts.push(postAdd);
+      if (this.show_lang_div) {
+        if (this.posts.length === 0) {
+          location.reload();
+        } else {
+          this.posts.push(postAdd);
+        }
+      }
+
       this.ventanaCreatPost = false;
     },
     updPostIndex: function updPostIndex(postUpd, act_lan_to_edit) {
@@ -3427,7 +3443,7 @@ __webpack_require__.r(__webpack_exports__);
       this.lan_to_edit = act_lan_to_edit;
     },
     publishIt: function publishIt(index, post) {
-      var _this = this;
+      var _this2 = this;
 
       //alert($("#publish-"+index).removeClass('fa-toggle-on'));
       var mssg;
@@ -3458,8 +3474,8 @@ __webpack_require__.r(__webpack_exports__);
           axios.post(url).then(function (response) {
             var publicated_post = response.data;
             swal({
-              title: _this.$trans('messages.Correct data'),
-              text: _this.$trans('messages.The Post had been publicate'),
+              title: _this2.$trans('messages.Correct data'),
+              text: _this2.$trans('messages.The Post had been publicate'),
               icon: 'success',
               closeOnClickOutside: false,
               closeOnEsc: false
@@ -3500,7 +3516,7 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     deletePost: function deletePost(index, post, post_name) {
-      var _this2 = this;
+      var _this3 = this;
 
       var post_id = post;
       swal({
@@ -3519,14 +3535,18 @@ __webpack_require__.r(__webpack_exports__);
           var url = '/posts/' + post_id;
           axios["delete"](url).then(function (response) {
             swal({
-              title: _this2.$trans('messages.Correct data'),
-              text: _this2.$trans('messages.Post deleted successfully'),
+              title: _this3.$trans('messages.Correct data'),
+              text: _this3.$trans('messages.Post deleted successfully'),
               icon: 'success',
               closeOnClickOutside: false,
               closeOnEsc: false
             }).then(function (select) {
               if (select) {
-                _this2.posts.splice(index, 1);
+                _this3.posts.splice(index, 1);
+
+                if (_this3.posts.length === 0) {
+                  _this3.mensage = _this3.$trans('messages.None Post added yet');
+                }
               }
             });
           })["catch"](function (error) {
@@ -3570,28 +3590,28 @@ __webpack_require__.r(__webpack_exports__);
       this.ventanaCreatPost = true;
     },
     getTranslates: function getTranslates(index, post) {
-      var _this3 = this;
+      var _this4 = this;
 
       axios.get('/translated-language-post/' + post.id).then(function (response) {
-        _this3.lang = false;
+        _this4.lang = false;
 
         if (response.data === 'no-language-added') {
-          _this3.translated_languages = [];
+          _this4.translated_languages = [];
 
-          var mensageLang = _this3.$trans('messages.None language added yet');
+          var mensageLang = _this4.$trans('messages.None language added yet');
 
           swal({
-            title: _this3.$trans('messages.Warning!'),
+            title: _this4.$trans('messages.Warning!'),
             text: mensageLang,
             icon: 'warning',
             closeOnClickOutside: false,
             closeOnEsc: false
           });
         } else {
-          _this3.translated_languages = response.data;
+          _this4.translated_languages = response.data;
         }
       })["catch"](function (error) {
-        return _this3.errors.push(error);
+        return _this4.errors.push(error);
       });
     },
     openEditPost: function openEditPost(index, post) {
@@ -3599,41 +3619,31 @@ __webpack_require__.r(__webpack_exports__);
       this.ventanaEditPost = true;
     },
     openEditTranslated: function openEditTranslated(post, lang_available) {
-      var _this4 = this;
+      var _this5 = this;
 
       var post_translated_array;
       axios.get('/get-translated-post-by-lang/' + lang_available + '/' + post.id).then(function (response) {
         post_translated_array = response.data;
-        _this4.post = post_translated_array;
-        _this4.ventanaEditPost = true;
-        _this4.lan_to_edit = lang_available;
+        _this5.post = post_translated_array;
+        _this5.ventanaEditPost = true;
+        _this5.lan_to_edit = lang_available;
 
         if (response.data == '') {
-          _this4.mensage = _this4.$trans('messages.None Post added yet');
+          _this5.mensage = _this5.$trans('messages.None Post added yet');
         }
       })["catch"](function (error) {
-        return _this4.errors.push(error);
+        return _this5.errors.push(error);
       });
     }
   },
   created: function created() {
-    var _this5 = this;
+    var _this6 = this;
 
-    axios.get('/postsTable').then(function (response) {
-      _this5.posts = response.data;
-      console.log('Son -');
-      console.log(_this5.posts);
-
-      if (response.data == '') {
-        _this5.mensage = _this5.$trans('messages.None Post added yet');
-      }
-    })["catch"](function (error) {
-      return _this5.errors.push(error);
-    });
+    this.getListPosts();
     axios.get('/categoriesList').then(function (response) {
-      _this5.categories = response.data;
+      _this6.categories = response.data;
     })["catch"](function (error) {
-      return _this5.errors.push(error);
+      return _this6.errors.push(error);
     });
   },
   mounted: function mounted() {
@@ -86951,8 +86961,10 @@ module.exports = {
     "Forgot your password?": "Forgot your password?",
     "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.": "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.",
     "Galery": "Galery",
+    "Go": "Go",
     "Go Home": "Go Home",
     "Go to page =>page": "Go to page =>page",
+    "Great!!": "Great!!",
     "Greetings": "Greetings",
     "Hello!": "Hello!",
     "Home": "Home",
@@ -86968,6 +86980,7 @@ module.exports = {
     "If you did not receive the email": "If you did not receive the email",
     "If you did not request a password reset, no further action is required.": "If you did not request a password reset, no further action is required.",
     "If you did not subscribe link this url for unsubscribe": "If you did not subscribe link this url for unsubscribe",
+    "If you dont have a reservation finished with us, please you do not need do any thing with this email": "If you dont have a reservation finished with us, please you do not need do any thing with this email",
     "If you\u2019re having trouble clicking the \"=>actionText\" button, copy and paste the URL below\ninto your web browser=>": "If you\u2019re having trouble clicking the \"=>actionText\" button, copy and paste the URL below\ninto your web browser=>",
     "Image": "Image",
     "Interface": "Interface",
@@ -87186,6 +87199,7 @@ module.exports = {
     "Verify Your Email Address": "Verify Your Email Address",
     "Video": "Video",
     "Warning!": "Warning!",
+    "We hope your days was you spended in our hostal magnificent very well. Can you share with other travelers your experience with our service? If you want  leave a review our hostal click in the below button please, we be greatfull of count with your opinion. Be WELCOME ALLWAYS!!": "We hope your days was you spended in our hostal magnificent very well. Can you share with other travelers your experience with our service? If you want  leave a review our hostal click in the below button please, we be greatfull of count with your opinion. Be WELCOME ALLWAYS!!",
     "We were unable to find a registered user with this email address.": "We were unable to find a registered user with this email address.",
     "We won't ask for your password again for a few hours.": "We won't ask for your password again for a few hours.",
     "Welcome to our hostal web": "Welcome to our hostal web",
@@ -87460,8 +87474,10 @@ module.exports = {
     "Forgot your password?": "\xBFOlvid\xF3 su contrase\xF1a?",
     "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.": "\xBFOlvid\xF3 su contrase\xF1a? No hay problema. Simplemente d\xE9jenos saber su direcci\xF3n de correo electr\xF3nico y le enviaremos un enlace para restablecer la contrase\xF1a que le permitir\xE1 elegir una nueva.",
     "Galery": "Galeria",
+    "Go": "Vamos",
     "Go Home": "Ir a inicio",
     "Go to page =>page": "Ir a la p\xE1gina =>page",
+    "Great!!": "Grandioso!!",
     "Greetings": "Saludos",
     "Hello!": "\xA1Hola!",
     "Home": "Inicio",
@@ -87477,6 +87493,7 @@ module.exports = {
     "If you did not receive the email": "Si no ha recibido el correo electr\xF3nico",
     "If you did not request a password reset, no further action is required.": "Si no ha solicitado el restablecimiento de contrase\xF1a, omita este mensaje de correo electr\xF3nico.",
     "If you did not subscribe link this url for unsubscribe": "Si usted no se ha suscripto, por favor vaya al link que dejamos aqu\xED para notificar el error",
+    "If you dont have a reservation finished with us, please you do not need do any thing with this email": "Si no ha finalizado una reserva con nosotros, no necesita hacer nada con este correo electr\xF3nico",
     "If you\u2019re having trouble clicking the \"=>actionText\" button, copy and paste the URL below\ninto your web browser=>": "Si tiene problemas para hacer clic en el bot\xF3n \"=>actionText\", copie y pegue la siguiente URL \nen su navegador web=>",
     "Image": "Imagen",
     "Interface": "Interface",
@@ -87695,6 +87712,7 @@ module.exports = {
     "Verify Your Email Address- ": "Verifique su correo electr\xF3nico- ",
     "Video": "Video",
     "Warning!": "Atenci\xF3n!",
+    "We hope your days was you spended in our hostal magnificent very well. Can you share with other travelers your experience with our service? If you want  leave a review our hostal click in the below button please, we be greatfull of count with your opinion. Be WELCOME ALLWAYS!!": "Esperamos que hayan pasado muy bien sus d\xEDas en nuestro magn\xEDfico hostal. \xBFPuedes compartir con otros viajeros tu experiencia con nuestro servicio? Si desea dejar un comentario sobre nuestro hostal, haga clic en el bot\xF3n de abajo, estaremos encantados de contar con su opini\xF3n. Sea BIENVENIDO SIEMPRE !!",
     "We were unable to find a registered user with this email address.": "No pudimos encontrar un usuario registrado con esta direcci\xF3n de correo electr\xF3nico.",
     "We won't ask for your password again for a few hours.": "No pediremos su contrase\xF1a de nuevo por unas horas.",
     "Welcome to our hostal web": "Bienvenido a la web de nuestro hostal",
@@ -87853,8 +87871,10 @@ module.exports = {
     "Forgot your password?": "\xBFOlvid\xF3 su contrase\xF1a?",
     "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.": "\xBFOlvid\xF3 su contrase\xF1a? No hay problema. Simplemente d\xE9jenos saber su direcci\xF3n de correo electr\xF3nico y le enviaremos un enlace para restablecer la contrase\xF1a que le permitir\xE1 elegir una nueva.",
     "Galery": "Galeria",
+    "Go": "Vamos",
     "Go Home": "Ir a inicio",
     "Go to page :page": "Ir a la p\xE1gina :page",
+    "Great!!": "Grandioso!!",
     "Greetings": "Saludos",
     "Hello!": "\xA1Hola!",
     "Home": "Inicio",
@@ -87869,6 +87889,7 @@ module.exports = {
     "If you did not receive the email": "Si no ha recibido el correo electr\xF3nico",
     "If you did not request a password reset, no further action is required.": "Si no ha solicitado el restablecimiento de contrase\xF1a, omita este mensaje de correo electr\xF3nico.",
     "If you did not subscribe link this url for unsubscribe": "Si usted no se ha suscripto, por favor vaya al link que dejamos aqu\xED para notificar el error",
+    "If you dont have a reservation finished with us, please you do not need do any thing with this email": "Si no ha finalizado una reserva con nosotros, no necesita hacer nada con este correo electr\xF3nico",
     "If you\u2019re having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:": "Si tiene problemas para hacer clic en el bot\xF3n \":actionText\", copie y pegue la siguiente URL \nen su navegador web:",
     "In addition, among our offers we want to include": "Adem\xE1s entre nuestras ofertas queremos incluir",
     "Interface": "Interface",
@@ -88057,6 +88078,7 @@ module.exports = {
     "Verify Your Email Address": "Verifique su correo electr\xF3nico",
     "WHAT BETTER": "QU\xC9 MEJOR",
     "Warning!": "Atenci\xF3n!",
+    "We hope your days was you spended in our hostal magnificent very well. Can you share with other travelers your experience with our service? If you want  leave a review our hostal click in the below button please, we be greatfull of count with your opinion. Be WELCOME ALLWAYS!!": "Esperamos que hayan pasado muy bien sus d\xEDas en nuestro magn\xEDfico hostal. \xBFPuedes compartir con otros viajeros tu experiencia con nuestro servicio? Si desea dejar un comentario sobre nuestro hostal, haga clic en el bot\xF3n de abajo, estaremos encantados de contar con su opini\xF3n. Sea BIENVENIDO SIEMPRE !!",
     "We were unable to find a registered user with this email address.": "No pudimos encontrar un usuario registrado con esta direcci\xF3n de correo electr\xF3nico.",
     "We won't ask for your password again for a few hours.": "No pediremos su contrase\xF1a de nuevo por unas horas.",
     "Welcome to our hostal web": "Bienvenido a la web de nuestro hostal",

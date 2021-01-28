@@ -222,8 +222,25 @@
 
           this.imagenPost=e.target.files[0];
         },
+        getListPosts:function(){
+          axios.get('/postsTable')
+               .then(response =>{
+                 this.posts = response.data;
+                 if (response.data==''){
+                   this.mensage=this.$trans('messages.None Post added yet');
+                 }
+               })
+               .catch(error => this.errors.push(error));
+        },
         addPostIndex:function(postAdd){
+          if(this.show_lang_div){
+            if(this.posts.length===0){
+              location.reload();
+            }
+            else{
           this.posts.push(postAdd);
+        }
+        }
           this.ventanaCreatPost=false;
         },
         updPostIndex:function(postUpd,act_lan_to_edit){
@@ -329,6 +346,9 @@
                                }).then(select=>{
                                  if (select){
                                    this.posts.splice(index,1);
+                                   if(this.posts.length===0){
+                                     this.mensage=this.$trans('messages.None Post added yet');
+                                   }
                                  }
                                });
                          })
@@ -411,16 +431,7 @@
 
       },
       created: function () {
-         axios.get('/postsTable')
-              .then(response =>{
-                this.posts = response.data;
-                console.log('Son -');
-                console.log(this.posts);
-                if (response.data==''){
-                  this.mensage=this.$trans('messages.None Post added yet');
-                }
-              })
-              .catch(error => this.errors.push(error));
+        this.getListPosts();
          axios.get('/categoriesList')
                .then(response =>{
                  this.categories = response.data;
