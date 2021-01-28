@@ -68,7 +68,7 @@ class PostController extends Controller
 
       $post->show=true;
     }
-      return $post;
+      return $this->getPost($post->id);
     }
 
     public function getPost($post){

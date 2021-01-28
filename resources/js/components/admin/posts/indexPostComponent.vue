@@ -27,7 +27,7 @@
     <div class="card-body">
 
       <div class="table-responsive">
-        <paginate class="pt-5 mt-3" ref="paginator" name = "posts" :list = "posts" :per = "2">
+        <paginate class="pt-5 mt-3" ref="paginator" name = "posts" :list = "posts" :per = "2" :key="posts ? posts.length:0">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
@@ -78,8 +78,11 @@
                         <a href="#" @click="openEditPost(index,post)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
                         <a href="#" @click="deletePost(index,post.id,post.title)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
                         <a :href="hreff+post.id"><i title="Preview/Vista previa" class="fa fa-eye"></i></a>
-                        <a>
-                          <i :id="'publish-'+index" @click="publishIt(index,post)" v-if="post.publicate_state===0" title="Publish it/Publicar" class="fa fa-toggle-off"></i>
+                        <a id="publicado">
+                          <i :id="'publish-'+index" @click="publishIt(index,post)" v-if="post.show==false" title="Publish it/Publicar" class="fa fa-toggle-off"></i>
+                          <i :id="'unpublish-'+index"  @click="publishIt(index,post)" v-else title="Publish it/Publicar" class="fa fa-toggle-on text-primary"></i>
+                          <!--<i :id="'unpublish-act-'+index"  title="Publish it/Publicar" :hidden="post.show" class="fa fa-toggle-on text-primary"></i>
+                          <i :id="'publish-act-'+index"  title="Publish it/Publicar" :hidden="post.show" class="fa fa-toggle-off"></i>-->
                         </a>
                     </td>
                     <td>{{post.title}}</td>
@@ -226,6 +229,14 @@
           axios.get('/postsTable')
                .then(response =>{
                  this.posts = response.data;
+                /* for(var i=0; i<this.posts.length;i++){
+                   if(this.posts[i].publicate_state===0){
+                   this.posts[i].show=false;
+                 }
+                 else{
+                   this.posts[i].show=true;
+                 }
+               }*/
                  if (response.data==''){
                    this.mensage=this.$trans('messages.None Post added yet');
                  }
@@ -287,8 +298,16 @@
                                closeOnEsc:false
                              }).then(select=>{
                                if (select){
+                                 if(this.posts[index].show===false){
+                                 this.posts[index].show=true;
+                                 this.posts[index].publicate_state=1;
+                               }
+                               else{
+                               this.posts[index].show=false;
+                               this.posts[index].publicate_state=0;
+                             }
 
-                                   $("#publish-"+index).hide(true);
+                                  // $("#publish-"+index).hide(true);
 
                                //location.reload();
                                }
@@ -431,6 +450,7 @@
 
       },
       created: function () {
+        $('#publicado').add('<p>Hola</p>');
         this.getListPosts();
          axios.get('/categoriesList')
                .then(response =>{

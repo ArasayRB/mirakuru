@@ -3311,6 +3311,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -3414,6 +3417,14 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get('/postsTable').then(function (response) {
         _this.posts = response.data;
+        /* for(var i=0; i<this.posts.length;i++){
+           if(this.posts[i].publicate_state===0){
+           this.posts[i].show=false;
+         }
+         else{
+           this.posts[i].show=true;
+         }
+        }*/
 
         if (response.data == '') {
           _this.mensage = _this.$trans('messages.None Post added yet');
@@ -3481,7 +3492,15 @@ __webpack_require__.r(__webpack_exports__);
               closeOnEsc: false
             }).then(function (select) {
               if (select) {
-                $("#publish-" + index).hide(true); //location.reload();
+                if (_this2.posts[index].show === false) {
+                  _this2.posts[index].show = true;
+                  _this2.posts[index].publicate_state = 1;
+                } else {
+                  _this2.posts[index].show = false;
+                  _this2.posts[index].publicate_state = 0;
+                } // $("#publish-"+index).hide(true);
+                //location.reload();
+
               }
             });
           })["catch"](function (error) {
@@ -3639,6 +3658,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this6 = this;
 
+    $('#publicado').add('<p>Hola</p>');
     this.getListPosts();
     axios.get('/categoriesList').then(function (response) {
       _this6.categories = response.data;
@@ -67941,6 +67961,7 @@ var render = function() {
               _c(
                 "paginate",
                 {
+                  key: _vm.posts ? _vm.posts.length : 0,
                   ref: "paginator",
                   staticClass: "pt-5 mt-3",
                   attrs: { name: "posts", list: _vm.posts, per: 2 }
@@ -68174,8 +68195,8 @@ var render = function() {
                                   ]
                                 ),
                                 _vm._v(" "),
-                                _c("a", [
-                                  post.publicate_state === 0
+                                _c("a", { attrs: { id: "publicado" } }, [
+                                  post.show == false
                                     ? _c("i", {
                                         staticClass: "fa fa-toggle-off",
                                         attrs: {
@@ -68188,7 +68209,19 @@ var render = function() {
                                           }
                                         }
                                       })
-                                    : _vm._e()
+                                    : _c("i", {
+                                        staticClass:
+                                          "fa fa-toggle-on text-primary",
+                                        attrs: {
+                                          id: "unpublish-" + index,
+                                          title: "Publish it/Publicar"
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.publishIt(index, post)
+                                          }
+                                        }
+                                      })
                                 ])
                               ]),
                               _vm._v(" "),
