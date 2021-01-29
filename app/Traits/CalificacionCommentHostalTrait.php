@@ -11,4 +11,9 @@ trait CalificacionCommentHostalTrait {
   return  $calification[0]->id;
   }
 
+  public function getCalificationHostalById($cal){
+    $calification=CalificacionCommentHostal::find($cal);
+  return  $calification;
+  }
+
 }

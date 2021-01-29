@@ -8,13 +8,14 @@ use App\Traits\HostalTrait;
 use App\Traits\UserTrait;
 use App\Traits\MessageTrait;
 use App\Traits\ComentarioHostalTrait;
+use App\Traits\IndiceComentarioHostalTrait;
 use App\Traits\ReservaTrait;
 use App\Traits\ReservaTokenTrait;
 use Carbon\Carbon;
 
 class WelcomeController extends Controller
 {
-  use PostTrait; use ComentarioHostalTrait; use HostalTrait; use UserTrait; use MessageTrait; use ReservaTrait;use ReservaTokenTrait;
+  use PostTrait; use ComentarioHostalTrait; use HostalTrait;use IndiceComentarioHostalTrait; use UserTrait; use MessageTrait; use ReservaTrait;use ReservaTokenTrait;
     /**
      * Create a new controller instance.
      *
@@ -23,6 +24,10 @@ class WelcomeController extends Controller
     public function __construct()
     {
 
+    }
+
+    public function getIndicesComentHostal(){
+      return $this->getIndicesComentHostals();
     }
 
     public function verifyTestimonialComent($hostal_name,$cant){

@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\CalificacionCommentHostal;
 use App\Models\ComentarioHostal;
 use App\Models\Hostal;
 use App\Models\User;
@@ -24,7 +23,6 @@ class ComentarioHostalFactory extends Factory
      */
     public function definition()
     {
-      $cantCalification=CalificacionCommentHostal::all()->count();
       $cantHostal=Hostal::all()->count();
       $cantUser=User::all()->count();
       $gender=array('female','male');
@@ -33,7 +31,6 @@ class ComentarioHostalFactory extends Factory
           'user_id' => $this->faker->numberBetween(1,$cantUser),
           'comment' => $this->faker->text,
           'url_video' => $this->faker->url,
-          'calification_id' => $this->faker->numberBetween(1,$cantCalification),
           'hostal_id' => $this->faker->numberBetween(1,$cantHostal),
         ];
     }

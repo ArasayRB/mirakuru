@@ -30,5 +30,6 @@ class DatabaseSeeder extends Seeder
       $this->call(LanguageTableSeeder::class);
       $this->call(CalificacionCommentPostTableSeeder::class);
       $this->call(CalificacionCommentHostalTableSeeder::class);
+      $this->call(IndiceComentarioHostalTableSeeder::class);
     }
 }

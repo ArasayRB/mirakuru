@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\CalificacionCommentHostal;
 use App\Models\Hostal;
 use App\Models\User;
+use App\Models\IndiceComentarioHostal;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,7 +16,6 @@ class ComentarioHostal extends Model
         'user_id',
         'comment',
         'url_video',
-        'calification_id',
         'hostal_id',
     ];
 
@@ -28,6 +28,10 @@ class ComentarioHostal extends Model
     }
 
     public function CalificacionCommentHostals(){
-      return $this->belongsTo(CalificacionCommentHostal::class)->withTimestamps();
+      return $this->belongsToMany(CalificacionCommentHostal::class,'calificacion_indice_comment_hostal','comment_id','calificacion_id')->withPivot('indice_id')->withTimestamps();
+    }
+
+    public function indicesComentario(){
+      return $this->belongsToMany(IndiceComentarioHostal::class,'calificacion_indice_comment_hostal','comment_id','indice_id')->withPivot('calificacion_id')->withTimestamps();
     }
 }

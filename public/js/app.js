@@ -4088,107 +4088,62 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['books'],
   data: function data() {
     return {
       review_value: '',
-      hoster_atention_value: 0,
-      services_value: 0,
-      confort_value: 0,
-      location_value: 0,
+      indices: [],
+      indices_value: [],
       ventanaReview: false,
-      clean_value: 0,
       src: '/storage/img_web/login_img/',
       token: window.CSRF_TOKEN
     };
   },
   methods: {
-    sendReview: function sendReview() {
+    searchIndices: function searchIndices() {
       var _this = this;
+
+      axios.get('/indices-valuation-hostal').then(function (response) {
+        _this.indices = response.data;
+      });
+    },
+    sendReview: function sendReview() {
+      var _this2 = this;
+
+      console.log(this.indices_value);
+      var indices_id = [];
+
+      for (var i = 0; i < this.indices.length; i++) {
+        indices_id[i] = this.indices[i].id;
+      }
 
       var url = "/comentario-hostal";
       var mensaje = this.$trans('messages.Unidentified error');
 
-      if (this.review_value == '' || this["this"] == 0 || this.services_value == 0 || this.confort_value == 0 || this.location_value == 0 || this.clean_value == 0) {
+      if (this.review_value == '' || this.indices_value.length != this.indices.length) {
         mensaje = this.$trans('messages.You cannot leave empty fields, please check');
       }
 
       var data = new FormData();
       data.append("review_value", this.review_value);
-      data.append("hoster_atention_value", this.hoster_atention_value);
-      data.append("services_value", this.services_value);
-      data.append("confort_value", this.confort_value);
-      data.append("location_value", this.location_value);
-      data.append("clean_value", this.clean_value);
+      data.append("indices", indices_id);
+      data.append("indices_value", this.indices_value);
       data.append("hostal_name", this.books[0].hostal_name);
       axios.post(url, data).then(function (response) {
-        swal({
-          title: _this.$trans('messages.Correct data'),
-          text: _this.$trans('messages.Thanks!'),
-          icon: 'success',
-          closeOnClickOutside: false,
-          closeOnEsc: false
-        });
+        if (response.data === 'You cannot leave empty fields, please check') {
+          swal('Error', '' + _this2.$trans('messages.' + response.data + ''), 'error');
+        } else {
+          swal({
+            title: _this2.$trans('messages.Correct data'),
+            text: _this2.$trans('messages.Thanks!'),
+            icon: 'success',
+            closeOnClickOutside: false,
+            closeOnEsc: false
+          });
 
-        _this.$emit('closereviewmodal');
+          _this2.$emit('closereviewmodal');
+        }
       })["catch"](function (error) {
         if (error.response.data.message) {
           swal('Error', '' + error.response.data.message, 'error');
@@ -4200,24 +4155,16 @@ __webpack_require__.r(__webpack_exports__);
           mensaje += '-' + wrong.review_value[0];
         }
 
-        if (wrong.hasOwnProperty('hoster_atention_value')) {
-          mensaje += '-' + wrong.hoster_atention_value[0];
+        if (wrong.hasOwnProperty('indices')) {
+          mensaje += '-' + wrong.indices[0];
         }
 
-        if (wrong.hasOwnProperty('services_value')) {
-          mensaje += '-' + wrong.services_value[0];
+        if (wrong.hasOwnProperty('indices_value')) {
+          mensaje += '-' + wrong.indices_value[0];
         }
 
-        if (wrong.hasOwnProperty('confort_value')) {
-          mensaje += '-' + wrong.confort_value[0];
-        }
-
-        if (wrong.hasOwnProperty('location_value')) {
-          mensaje += '-' + wrong.location_value[0];
-        }
-
-        if (wrong.hasOwnProperty('clean_value')) {
-          mensaje += '-' + wrong.clean_value[0];
+        if (wrong.hasOwnProperty('hostal_name')) {
+          mensaje += '-' + wrong.hostal_name[0];
         }
 
         swal('Error', mensaje, 'error'); //console.log(error.response.data);
@@ -4225,6 +4172,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
+    this.searchIndices();
     console.log(this.books);
 
     if (this.$attrs.locale) {
@@ -69022,834 +68970,223 @@ var render = function() {
                         staticClass: "panel-header row justify-content-center"
                       },
                       [
-                        _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                          _c(
-                            "label",
-                            {
-                              staticClass: "font-weight-bold text-light",
-                              attrs: { for: "estrellas1" }
-                            },
-                            [
-                              _vm._v(
-                                _vm._s(_vm.$trans("messages.Clean")) +
-                                  " " +
-                                  _vm._s(_vm.$trans("messages.Value")) +
-                                  "\n  "
-                              ),
-                              _c("p", { staticClass: "clasificacion" }, [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.clean_value,
-                                      expression: "clean_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio1",
-                                    type: "radio",
-                                    name: "estrellas1",
-                                    value: "5"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.clean_value, "5")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.clean_value = "5"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio1" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.clean_value,
-                                      expression: "clean_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio2",
-                                    type: "radio",
-                                    name: "estrellas1",
-                                    value: "4"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.clean_value, "4")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.clean_value = "4"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio2" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.clean_value,
-                                      expression: "clean_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio3",
-                                    type: "radio",
-                                    name: "estrellas1",
-                                    value: "3"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.clean_value, "3")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.clean_value = "3"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio3" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.clean_value,
-                                      expression: "clean_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio4",
-                                    type: "radio",
-                                    name: "estrellas1",
-                                    value: "2"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.clean_value, "2")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.clean_value = "2"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio4" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.clean_value,
-                                      expression: "clean_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio5",
-                                    type: "radio",
-                                    name: "estrellas1",
-                                    value: "1"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.clean_value, "1")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.clean_value = "1"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio5" } }, [
-                                  _vm._v("★")
-                                ])
-                              ])
-                            ]
-                          ),
-                          _c("br"),
-                          _vm._v(" "),
-                          _c(
-                            "label",
-                            {
-                              staticClass: "font-weight-bold text-light",
-                              attrs: { for: "estrellas2" }
-                            },
-                            [
-                              _vm._v(
-                                _vm._s(_vm.$trans("messages.Location")) +
-                                  " " +
-                                  _vm._s(_vm.$trans("messages.Value")) +
-                                  "\n  "
-                              ),
-                              _c("p", { staticClass: "clasificacion" }, [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.location_value,
-                                      expression: "location_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio6",
-                                    type: "radio",
-                                    name: "estrellas2",
-                                    value: "5"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.location_value, "5")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.location_value = "5"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio6" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.location_value,
-                                      expression: "location_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio7",
-                                    type: "radio",
-                                    name: "estrellas2",
-                                    value: "4"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.location_value, "4")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.location_value = "4"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio7" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.location_value,
-                                      expression: "location_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio8",
-                                    type: "radio",
-                                    name: "estrellas2",
-                                    value: "3"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.location_value, "3")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.location_value = "3"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio8" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.location_value,
-                                      expression: "location_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio9",
-                                    type: "radio",
-                                    name: "estrellas2",
-                                    value: "2"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.location_value, "2")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.location_value = "2"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio9" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.location_value,
-                                      expression: "location_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio10",
-                                    type: "radio",
-                                    name: "estrellas2",
-                                    value: "1"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.location_value, "1")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.location_value = "1"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio10" } }, [
-                                  _vm._v("★")
-                                ])
-                              ])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-6 col-sm-12" }, [
-                          _c(
-                            "label",
-                            { staticClass: "font-weight-bold text-light" },
-                            [
-                              _vm._v(
-                                _vm._s(_vm.$trans("messages.Confort")) +
-                                  " " +
-                                  _vm._s(_vm.$trans("messages.Value")) +
-                                  "\n "
-                              ),
-                              _c("p", { staticClass: "clasificacion" }, [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.confort_value,
-                                      expression: "confort_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio11",
-                                    type: "radio",
-                                    name: "estrellas3",
-                                    value: "5"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.confort_value, "5")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.confort_value = "5"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio11" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.confort_value,
-                                      expression: "confort_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio12",
-                                    type: "radio",
-                                    name: "estrellas3",
-                                    value: "4"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.confort_value, "4")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.confort_value = "4"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio12" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.confort_value,
-                                      expression: "confort_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio13",
-                                    type: "radio",
-                                    name: "estrellas3",
-                                    value: "3"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.confort_value, "3")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.confort_value = "3"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio13" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.confort_value,
-                                      expression: "confort_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio14",
-                                    type: "radio",
-                                    name: "estrellas3",
-                                    value: "2"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.confort_value, "2")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.confort_value = "2"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio14" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.confort_value,
-                                      expression: "confort_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio15",
-                                    type: "radio",
-                                    name: "estrellas3",
-                                    value: "1"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.confort_value, "1")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.confort_value = "1"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio15" } }, [
-                                  _vm._v("★")
-                                ])
-                              ])
-                            ]
-                          ),
-                          _c("br"),
-                          _vm._v(" "),
-                          _c(
-                            "label",
-                            { staticClass: "font-weight-bold text-light" },
-                            [
-                              _vm._v(
-                                _vm._s(_vm.$trans("messages.Services")) +
-                                  " " +
-                                  _vm._s(_vm.$trans("messages.Value")) +
-                                  "\n "
-                              ),
-                              _c("p", { staticClass: "clasificacion" }, [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.services_value,
-                                      expression: "services_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio16",
-                                    type: "radio",
-                                    name: "estrellas4",
-                                    value: "5"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.services_value, "5")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.services_value = "5"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio16" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.services_value,
-                                      expression: "services_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio17",
-                                    type: "radio",
-                                    name: "estrellas4",
-                                    value: "4"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.services_value, "4")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.services_value = "4"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio17" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.services_value,
-                                      expression: "services_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio18",
-                                    type: "radio",
-                                    name: "estrellas4",
-                                    value: "3"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.services_value, "3")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.services_value = "3"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio18" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.services_value,
-                                      expression: "services_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio19",
-                                    type: "radio",
-                                    name: "estrellas4",
-                                    value: "2"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.services_value, "2")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.services_value = "2"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio19" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.services_value,
-                                      expression: "services_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio20",
-                                    type: "radio",
-                                    name: "estrellas4",
-                                    value: "1"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(_vm.services_value, "1")
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.services_value = "1"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio20" } }, [
-                                  _vm._v("★")
-                                ])
-                              ])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("div", { staticClass: "col-md-12 col-sm-12" }, [
-                          _c(
-                            "label",
-                            {
-                              staticClass:
-                                "mb-md-2 pt-md-5 font-weight-bold text-light"
-                            },
-                            [
-                              _vm._v(
-                                _vm._s(
-                                  _vm.$trans("messages.Hosters Atention")
-                                ) +
-                                  " " +
-                                  _vm._s(_vm.$trans("messages.Value")) +
-                                  "\n "
-                              ),
-                              _c("p", { staticClass: "clasificacion" }, [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.hoster_atention_value,
-                                      expression: "hoster_atention_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio21",
-                                    type: "radio",
-                                    name: "estrellas5",
-                                    value: "5"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(
-                                      _vm.hoster_atention_value,
-                                      "5"
+                        _c(
+                          "div",
+                          { staticClass: "col-md-6 col-sm-12" },
+                          [
+                            _vm._l(_vm.indices, function(indice, index) {
+                              return _c(
+                                "label",
+                                {
+                                  staticClass:
+                                    "font-weight-bold text-light text-uppercase mr-3",
+                                  attrs: { for: "estrellas1" }
+                                },
+                                [
+                                  _vm._v(
+                                    _vm._s(indice.name) +
+                                      " " +
+                                      _vm._s(_vm.$trans("messages.Value")) +
+                                      "\n  "
+                                  ),
+                                  _c("p", { staticClass: "clasificacion" }, [
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.indices_value[index],
+                                          expression: "indices_value[index]"
+                                        }
+                                      ],
+                                      attrs: {
+                                        id: "radio1" + index,
+                                        type: "radio",
+                                        name: "estrellas" + index,
+                                        value: "5"
+                                      },
+                                      domProps: {
+                                        checked: _vm._q(
+                                          _vm.indices_value[index],
+                                          "5"
+                                        )
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          return _vm.$set(
+                                            _vm.indices_value,
+                                            index,
+                                            "5"
+                                          )
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "label",
+                                      { attrs: { for: "radio1" + index } },
+                                      [_vm._v("★")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.indices_value[index],
+                                          expression: "indices_value[index]"
+                                        }
+                                      ],
+                                      attrs: {
+                                        id: "radio2" + index,
+                                        type: "radio",
+                                        name: "estrellas" + index,
+                                        value: "4"
+                                      },
+                                      domProps: {
+                                        checked: _vm._q(
+                                          _vm.indices_value[index],
+                                          "4"
+                                        )
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          return _vm.$set(
+                                            _vm.indices_value,
+                                            index,
+                                            "4"
+                                          )
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "label",
+                                      { attrs: { for: "radio2" + index } },
+                                      [_vm._v("★")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.indices_value[index],
+                                          expression: "indices_value[index]"
+                                        }
+                                      ],
+                                      attrs: {
+                                        id: "radio3" + index,
+                                        type: "radio",
+                                        name: "estrellas" + index,
+                                        value: "3"
+                                      },
+                                      domProps: {
+                                        checked: _vm._q(
+                                          _vm.indices_value[index],
+                                          "3"
+                                        )
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          return _vm.$set(
+                                            _vm.indices_value,
+                                            index,
+                                            "3"
+                                          )
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "label",
+                                      { attrs: { for: "radio3" + index } },
+                                      [_vm._v("★")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.indices_value[index],
+                                          expression: "indices_value[index]"
+                                        }
+                                      ],
+                                      attrs: {
+                                        id: "radio4" + index,
+                                        type: "radio",
+                                        name: "estrellas" + index,
+                                        value: "2"
+                                      },
+                                      domProps: {
+                                        checked: _vm._q(
+                                          _vm.indices_value[index],
+                                          "2"
+                                        )
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          return _vm.$set(
+                                            _vm.indices_value,
+                                            index,
+                                            "2"
+                                          )
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "label",
+                                      { attrs: { for: "radio4" + index } },
+                                      [_vm._v("★")]
+                                    ),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                      directives: [
+                                        {
+                                          name: "model",
+                                          rawName: "v-model",
+                                          value: _vm.indices_value[index],
+                                          expression: "indices_value[index]"
+                                        }
+                                      ],
+                                      attrs: {
+                                        id: "radio5" + index,
+                                        type: "radio",
+                                        name: "estrellas" + index,
+                                        value: "1"
+                                      },
+                                      domProps: {
+                                        checked: _vm._q(
+                                          _vm.indices_value[index],
+                                          "1"
+                                        )
+                                      },
+                                      on: {
+                                        change: function($event) {
+                                          return _vm.$set(
+                                            _vm.indices_value,
+                                            index,
+                                            "1"
+                                          )
+                                        }
+                                      }
+                                    }),
+                                    _vm._v(" "),
+                                    _c(
+                                      "label",
+                                      { attrs: { for: "radio5" + index } },
+                                      [_vm._v("★")]
                                     )
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.hoster_atention_value = "5"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio21" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.hoster_atention_value,
-                                      expression: "hoster_atention_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio22",
-                                    type: "radio",
-                                    name: "estrellas5",
-                                    value: "4"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(
-                                      _vm.hoster_atention_value,
-                                      "4"
-                                    )
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.hoster_atention_value = "4"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio22" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.hoster_atention_value,
-                                      expression: "hoster_atention_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio23",
-                                    type: "radio",
-                                    name: "estrellas5",
-                                    value: "3"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(
-                                      _vm.hoster_atention_value,
-                                      "3"
-                                    )
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.hoster_atention_value = "3"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio23" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.hoster_atention_value,
-                                      expression: "hoster_atention_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio24",
-                                    type: "radio",
-                                    name: "estrellas5",
-                                    value: "2"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(
-                                      _vm.hoster_atention_value,
-                                      "2"
-                                    )
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.hoster_atention_value = "2"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio24" } }, [
-                                  _vm._v("★")
-                                ]),
-                                _vm._v(" "),
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.hoster_atention_value,
-                                      expression: "hoster_atention_value"
-                                    }
-                                  ],
-                                  attrs: {
-                                    id: "radio25",
-                                    type: "radio",
-                                    name: "estrellas5",
-                                    value: "1"
-                                  },
-                                  domProps: {
-                                    checked: _vm._q(
-                                      _vm.hoster_atention_value,
-                                      "1"
-                                    )
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      _vm.hoster_atention_value = "1"
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c("label", { attrs: { for: "radio25" } }, [
-                                  _vm._v("★")
-                                ])
-                              ])
-                            ]
-                          )
-                        ]),
+                                  ])
+                                ]
+                              )
+                            }),
+                            _c("br")
+                          ],
+                          2
+                        ),
                         _vm._v(" "),
                         _c(
                           "div",

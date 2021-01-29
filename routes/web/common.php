@@ -60,3 +60,4 @@ Route::get('/view-testimonial', [App\Http\Controllers\WelcomeController::class, 
 Route::get('/comment-book', [App\Http\Controllers\HomeController::class, 'showMsgMakeComent']);
 Route::get('/mails-review-advice', [App\Http\Controllers\WelcomeController::class, 'sendEmailForReview']);
 Route::resource('/comentario-hostal', App\Http\Controllers\ComentarioHostalController::class,['only'=>['store','destroy']]);
+Route::get('/indices-valuation-hostal', [App\Http\Controllers\WelcomeController::class, 'getIndicesComentHostal']);
