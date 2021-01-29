@@ -30,6 +30,40 @@ trait PostTrait {
       return $posts_more_read;
     }
 
+    public function getTranslatedPostByLang($lang,$post_id){
+      $id_lang=$this->getLangIdByName($lang);
+      $post_translated=$this->getTranslatedTransPost($id_lang,$post_id);
+      $post=$this->getPost($post_id);
+      $post->title=$post_translated['title']['content_trans'];
+      $post->content=$post_translated['content']['content_trans'];
+      $post->summary=$post_translated['summary']['content_trans'];
+      return $post;
+    }
+
+    public function getPost($post){
+      $posts=Post::with('categoriaPosts')
+                   ->with('keywords')
+                   ->where('id',$post)
+                   ->first();
+                   return $posts;
+    }
+
+    public function getTranslatedPostBySigLang($lang,$post_id){
+      $id_lang=$this->getLangIdBySigla($lang);
+      $post_translated=$this->getTranslatedTransPost($id_lang,$post_id);
+      $post=$this->getPost($post_id);
+      if(count($post_translated)!=0){
+        $post->title=$post_translated['title']['content_trans'];
+        $post->content=$post_translated['content']['content_trans'];
+        $post->summary=$post_translated['summary']['content_trans'];
+        return $post;
+      }
+      else{
+        return $post;
+      }
+
+    }
+
     public function getPostsMoreLikes($cant){
       $posts_more_liked;
       if($cant===''){

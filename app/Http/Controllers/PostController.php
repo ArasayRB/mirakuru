@@ -71,13 +71,7 @@ class PostController extends Controller
       return $this->getPost($post->id);
     }
 
-    public function getPost($post){
-      $posts=Post::with('categoriaPosts')
-                   ->with('keywords')
-                   ->where('id',$post)
-                   ->first();
-                   return $posts;
-    }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -228,15 +222,7 @@ class PostController extends Controller
       return $array_trans_lang_post;
     }
 
-    public function getTranslatedPostByLang($lang,$post_id){
-      $id_lang=$this->getLangIdByName($lang);
-      $post_translated=$this->getTranslatedTransPost($id_lang,$post_id);
-      $post=$this->getPost($post_id);
-      $post->title=$post_translated['title']['content_trans'];
-      $post->content=$post_translated['content']['content_trans'];
-      $post->summary=$post_translated['summary']['content_trans'];
-      return $post;
-    }
+
 
     /**
      * Display the specified resource.

@@ -17,5 +17,12 @@ trait LanguageTrait {
 
     }
 
+    public function getLangIdBySigla($lang_sigla){
+      $id_lang=Language::where('sigla',$lang_sigla)
+                       ->get();
+                       return $id_lang[0]->id;
+
+    }
+
 
 }
