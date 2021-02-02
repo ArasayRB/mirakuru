@@ -166,6 +166,7 @@ return [
   "Newsletter "=>"Newsletter ",
   "Next"=>"Next",
   "Not Found"=> "Not Found",
+  "None User added yet"=>"None User added yet",
   "None Post added yet"=> "None Post added yet",
   "None reservation added yet"=>"None reservation added yet",
   "None language added yet"=>"None language added yet",

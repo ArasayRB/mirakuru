@@ -19,7 +19,13 @@ class UserController extends Controller
      */
     public function index()
     {
+      return view('admin.users.index');
+    }
 
+    public function getUsersList(){
+      $users=User::orderBy('created_at','asc')
+                 ->get();
+      return $users;
     }
 
     public function perfil(){

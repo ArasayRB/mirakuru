@@ -167,6 +167,7 @@ return [
   "Next"=>"Siguiente",
   "Not Found"=> "No encontrado",
   "Notification"=>"Notificación",
+  "None User added yet"=>"Ningún usuario añadido aún",
   "None Post added yet"=> "Ningún Post añadido aún",
   "None reservation added yet"=>"Ninguna reserva añadida aún",
   "None language added yet"=>"Ningún idioma añadido aún",
