@@ -19,7 +19,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        return view('userPerfil');
+
+    }
+
+    public function perfil(){
+      return view('userPerfil');
     }
 
     /**

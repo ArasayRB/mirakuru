@@ -36,7 +36,8 @@ Route::get('/countries-list', [App\Http\Controllers\ReservaController::class, 'g
 Route::get('/temporadas-hostal/{hostal}', [App\Http\Controllers\TemporadaHostalController::class, 'getTemporadasAvailable']);
 Route::get('/confirm-reservation/{token}/{reservation}/{user}', [App\Http\Controllers\ReservaController::class, 'confirmReservation'])->name('confirm-reservation');
 Route::get('/blocked-dates/{hostal}', [App\Http\Controllers\ReservaController::class, 'getBlockedDates']);
-Route::get('/user-perfil', [App\Http\Controllers\UserController::class, 'index'])->name('user-perfil');
+//Route::get('/user-perfil', [App\Http\Controllers\UserController::class, 'index'])->name('user-perfil');
+Route::get('/user-perfil', [App\Http\Controllers\UserController::class, 'perfil'])->name('user-perfil');
 Route::get('/active-books', [App\Http\Controllers\ReservaController::class, 'activeBooks'])->name('active-books');
 Route::get('/active-books-list', [App\Http\Controllers\ReservaController::class, 'listBooksByUser'])->name('active-books-list');
 Route::post('/delete-book-by-guest/{book}/{email}/{name}', [App\Http\Controllers\ReservaController::class, 'deleteBookByUser'])->name('delete-book-by-guest');
