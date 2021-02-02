@@ -232,6 +232,7 @@ return [
   "Regards"=> "Regards",
   "Regenerate Recovery Codes"=> "Regenerate Recovery Codes",
   "Register"=> "Register",
+  "Relationed Posts"=>"Relationed Posts",
   "Remember me"=> "Remember me",
   "Remember Me"=> "Remember Me",
   "Remove"=> "Remove",

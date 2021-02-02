@@ -232,6 +232,7 @@ return [
   "Regards"=> "Saludos",
   "Regenerate Recovery Codes"=> "Regenerar códigos de recuperación",
   "Register"=> "Registrarse",
+  "Relationed Posts"=>"Posts Relacionados",
   "Remember me"=> "Mantener sesión activa",
   "Remember Me"=> "Mantener sesión activa",
   "Remove"=> "Retirar",

@@ -66526,7 +66526,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", {}, [
-    _c("h3", { staticClass: "text-uppercase text-center" }, [_vm._v("Tags")]),
+    _c("h3", { staticClass: "text-uppercase text-center" }, [
+      _vm._v(_vm._s(_vm.$trans("messages.Tags")))
+    ]),
     _vm._v(" "),
     _c(
       "p",
@@ -66553,7 +66555,7 @@ var render = function() {
       },
       [
         _c("h3", { staticClass: "text-uppercase text-center" }, [
-          _vm._v("Relationed Posts")
+          _vm._v(_vm._s(_vm.$trans("messages.Relationed Posts")))
         ]),
         _vm._v(" "),
         _vm._l(_vm.relationed_posts, function(pot) {
@@ -66627,7 +66629,7 @@ var render = function() {
                         staticClass: "stretched-link",
                         attrs: { href: _vm.hreff + pot.id }
                       },
-                      [_vm._v(_vm._s(_vm.$trans("messages.Continue reading")))]
+                      [_vm._v(_vm._s(_vm.trans("messages.Continue reading")))]
                     )
                   ]
                 )
@@ -86454,6 +86456,7 @@ module.exports = {
     "Regards": "Regards",
     "Regenerate Recovery Codes": "Regenerate Recovery Codes",
     "Register": "Register",
+    "Relationed Posts": "Relationed Posts",
     "Remember Me": "Remember Me",
     "Remember me": "Remember me",
     "Remove": "Remove",
@@ -86967,6 +86970,7 @@ module.exports = {
     "Regards": "Saludos",
     "Regenerate Recovery Codes": "Regenerar c\xF3digos de recuperaci\xF3n",
     "Register": "Registrarse",
+    "Relationed Posts": "Posts Relacionados",
     "Remember Me": "Mantener sesi\xF3n activa",
     "Remember me": "Mantener sesi\xF3n activa",
     "Remove": "Retirar",
@@ -87336,6 +87340,7 @@ module.exports = {
     "Regards": "Saludos",
     "Regenerate Recovery Codes": "Regenerar c\xF3digos de recuperaci\xF3n",
     "Register": "Registrarse",
+    "Relationed Posts": "Posts Relacionados",
     "Remember Me": "Mantener sesi\xF3n activa",
     "Remember me": "Mantener sesi\xF3n activa",
     "Remove": "Retirar",
@@ -87384,6 +87389,7 @@ module.exports = {
     "THE EXCHANGE, yes, you have read very well, we know that we find ourselves in very difficult situations in the world economy, and ": "EL INTERCAMBIO, s\xED, has le\xEDdo muy bien, sabemos que nos encontramos en situaciones muy dif\xEDciles de la econom\xEDa mundial, y ",
     "TOUR": "TOUR",
     "Tabs": "Tablas",
+    "Tags": "Etiquetas",
     "Taxes": "Comisiones",
     "Team Details": "Detalles del Equipo",
     "Team Members": "Miembros del Equipo",

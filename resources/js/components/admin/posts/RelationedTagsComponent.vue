@@ -1,10 +1,10 @@
 <template>
 <div class="">
-  <h3 class="text-uppercase text-center">Tags</h3>
+  <h3 class="text-uppercase text-center">{{$trans('messages.Tags')}}</h3>
   <p class="text-center"><span class="badge badge-pill badge-primary ml-2" v-for="tag in tags">{{tag.name}}</span></p>
 
   <div class="tab-pane fade show active mt-5" id="nav-readed" role="tabpanel" aria-labelledby="nav-readed-tab">
-    <h3 class="text-uppercase text-center">Relationed Posts</h3>
+    <h3 class="text-uppercase text-center">{{$trans('messages.Relationed Posts')}}</h3>
      <div class="pt-5 mt-3" v-for="pot in relationed_posts">
        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
          <div class="col-auto d-none d-lg-block w-25 h-25">
@@ -16,7 +16,7 @@
            <h3 class="mb-0">{{pot.title}}</h3>
            <div class="mb-1 text-muted">{{pot.created_at}}</div>
            <p class="card-text mb-auto">{{pot.summary}}</p>
-           <a :href="hreff+pot.id" class="stretched-link">{{ $trans('messages.Continue reading') }}</a>
+           <a :href="hreff+pot.id" class="stretched-link">{{ trans('messages.Continue reading')}}</a>
 
           </div>
 
