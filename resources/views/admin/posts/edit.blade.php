@@ -1,7 +1,7 @@
 @extends('admin.layout.dashboard')
 @section('head')
   @parent
-  @include('admin.posts.subviews.head')
+  @include('admin.subviews.head')
 @endsection
 @section('dashboard')
 <h1>Editar un Post/ Update a Post</h1>
@@ -65,5 +65,5 @@
 @endsection
 @section('scripts')
   @parent
-@include('admin.posts.subviews.scripts')
+@include('admin.subviews.scripts')
 @endsection

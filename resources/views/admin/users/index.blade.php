@@ -1,7 +1,7 @@
 @extends('admin.layout.dashboard')
 @section('head')
   @parent
-  @include('admin.posts.subviews.head')
+  @include('admin.subviews.head')
 @endsection
 @section('dashboard')
 
@@ -21,5 +21,5 @@
 @endsection
 @section('scripts')
   @parent
-@include('admin.posts.subviews.scripts')
+@include('admin.subviews.scripts')
 @endsection
