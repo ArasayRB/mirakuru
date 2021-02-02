@@ -115,6 +115,12 @@ trait PostTrait {
         $post->save();
     }
     if($type==="real"){
+        if($post->default_lang!=app()->getLocale()){
+          $post_lang=$this->getTranslatedPostBySigLang(app()->getLocale(),$post->id);
+          $post->title=$post_lang->title;
+          $post->content=$post_lang->content;
+          $post->summary= $post_lang->summary;
+        }
       return view('/posts/show',['post'=>$post]);
     }
      return view('/posts/show',['post'=>$post,'preview'=>'vista previa']);
