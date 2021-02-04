@@ -15,18 +15,21 @@ class PermissionTableSeeder extends Seeder
     public function run()
     {
       $permission=new Permission();
-      $permission->name='all';
-      $permission->description='Obtiene todos los permisos sobre la aplicacion';
+      $permission->name='Insert Post';
+      $permission->slug='insertar-post';
+      $permission->description='Obtiene todos los permisos sobre posts';
       $permission->save();
 
       $permission=new Permission();
-      $permission->name='/';
-      $permission->description='Acceso a la página principal luego de login';
+      $permission->name='Update Post';
+      $permission->slug='update-post';
+      $permission->description='Acceso a actualizar posts';
       $permission->save();
 
       $permission=new Permission();
-      $permission->name='/posts';
-      $permission->description='Acceso a la página principal de posts';
+      $permission->name='Delete Post';
+      $permission->slug='delete-post';
+      $permission->description='Acceso a eliminar posts';
       $permission->save();
     }
 }

@@ -11,4 +11,3 @@ use Illuminate\Support\Str;
 Route::get('/usersList', [App\Http\Controllers\UserController::class, 'getUsersList']);
 Route::resource('/users', App\Http\Controllers\UserController::class);
 Route::get('/roles-list',[App\Http\Controllers\UserController::class, 'allRoles']);
-Route::get('/available-permissions/{role}',[App\Http\Controllers\RoleController::class, 'permissionsOfRole']);

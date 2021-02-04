@@ -3,11 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Traits\RoleTrait;
+use App\Traits\PermissionTrait;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
+use RoleTrait,PermissionTrait;
 
+
+   protected function validator(array $data)
+   {
+       return Validator::make($data, [
+           'name' => 'required', 'max:255',
+           'description' => 'required',
+       ]);
+   }
 
   public function permissionsOfRole($role){
     $permissions=Role::with('permissions')
@@ -19,6 +32,13 @@ class RoleController extends Controller
                      }
                      return $permissions_array;
   }
+
+  public function getRolesList(){
+    $roles=Role::with('permissions')
+               ->orderBy('created_at','asc')
+               ->get();
+    return $roles;
+  }
     /**
      * Display a listing of the resource.
      *
@@ -26,17 +46,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('admin.roles.index');
     }
 
     /**
@@ -47,29 +57,25 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
-    }
+        $this->validator($request->all())->validate();
+        $role=new Role();
+        $role->name=request('name');
+        $role->description=request('description');
+        $role->slug=Str::slug($role->name, '-');
+        $role->save();
+        $permissions;
+        if(strpos(request('permissions'), ',')){
+          $permissions = explode(",", request('permissions'));
+        }
+        else{
+          $permissions=request('permissions');
+        }
+        foreach ($permissions as $permission) {
+          $role->permissions()->attach($permission);
+        }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Role $role)
-    {
-        //
-    }
+        return $this->getRoleById($role->id);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Role $role)
-    {
-        //
     }
 
     /**
@@ -81,7 +87,28 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        //
+      $dataRole=request()->validate([
+      'name'=> 'required|max:255',
+      'description'=> 'required'
+    ]);
+      $role=Role::findOrFail($role->id);
+      $role->name=request('name');
+      $role->description=request('description');
+      $role->slug=Str::slug($role->name, '-');
+      $role->update();
+      $role->permissions()->detach();
+      $permissions;
+      if(strpos(request('permissions'), ',')){
+        $permissions = explode(",", request('permissions'));
+      }
+      else{
+        $permissions=request('permissions');
+      }
+      foreach ($permissions as $permission) {
+        $role->permissions()->attach($permission);
+      }
+
+      return $this->getRoleById($role->id);
     }
 
     /**
@@ -92,6 +119,8 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+      $role=Role::findOrFail($role->id);
+      $role->permissions()->detach();
+      $role->delete();
     }
 }

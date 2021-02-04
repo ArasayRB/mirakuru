@@ -75,7 +75,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">{{__('Tabs')}}:</h6>
             <a class="collapse-item" href="/users">{{__('Users')}}</a>
-            <a class="collapse-item" href="cards.html">{{__('Role')}}</a>
+            <a class="collapse-item" href="/roles">{{__('Role')}}</a>
             <a class="collapse-item" href="cards.html">{{__('Permissions')}}</a>
           </div>
         </div>

@@ -2,20 +2,20 @@
   <div>
   <div class="row py-lg-2">
     <div class="col-md-6">
-      <h1 class="h3 mb-2 text-gray-800">{{ $trans('messages.Users') }}</h1>
+      <h1 class="h3 mb-2 text-gray-800">{{ $trans('messages.Rolls') }}</h1>
     </div>
     <div class="col-md-6">
-      <a href="#" @click="openAddUser()" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">{{ $trans('messages.Add') }}</a>
+      <a href="#" @click="openAddRole()" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">{{ $trans('messages.Add') }}</a>
     </div>
 
   </div>
   <div class="card shadow mb-4">
-    <add-user-form-component @usernew="addUserIndex" :user="user" :locale="locale" v-if="ventanaCreatUser" @close="ventanaCreatUser = false">
+    <add-role-form-component @rolenew="addRoleIndex" :role="role" :locale="locale" v-if="ventanaCreatRole" @close="ventanaCreatRole = false">
 
-    </add-user-form-component>
-    <edit-user-form-component @userupd="updUserIndex" :lan_to_edit="lan_to_edit" :locale="locale" :user="user" v-if="ventanaEditUser" @close="ventanaEditUser = false">
+    </add-role-form-component>
+    <edit-role-form-component @roleupd="updroleIndex" :locale="locale" :role="role" v-if="ventanaEditRole" @close="ventanaEditRole = false">
 
-    </edit-user-form-component>
+    </edit-role-form-component>
     <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary">{{ $trans('messages.List') }}</h6>
     </div>
@@ -27,43 +27,40 @@
     <div class="card-body">
 
       <div class="table-responsive">
-        <paginate class="pt-5 mt-3" ref="paginator" name = "users" :list = "users" :per = "2" :key="users ? users.length:0">
+        <paginate class="pt-5 mt-3" ref="paginator" name = "roles" :list = "roles" :per = "2" :key="roles ? roles.length:0">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
               <th>{{ $trans('messages.Tools') }}</th>
-              <th>{{ $trans('messages.User') }}</th>
-              <th>{{ $trans('messages.Email') }}</th>
               <th>{{ $trans('messages.Role') }}</th>
+              <th>{{ $trans('messages.Slug') }}</th>
+              <th>{{ $trans('messages.Description') }}</th>
               <th>{{ $trans('messages.Permissions') }}</th>
-              <th>{{ $trans('messages.Image') }}</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
               <th>{{ $trans('messages.Tools') }}</th>
-              <th>{{ $trans('messages.User') }}</th>
-              <th>{{ $trans('messages.Email') }}</th>
               <th>{{ $trans('messages.Role') }}</th>
+              <th>{{ $trans('messages.Slug') }}</th>
+              <th>{{ $trans('messages.Description') }}</th>
               <th>{{ $trans('messages.Permissions') }}</th>
-              <th>{{ $trans('messages.Image') }}</th>
             </tr>
           </tfoot>
           <tbody>
 
 
-                <tr v-for="(user,index) in paginated('users')" :user="user" :key="user.id">
+                <tr v-for="(role,index) in paginated('roles')" :role="role" :key="role.id">
 
                     <td>
 
-                          <a href="#" @click="openEdituser(index,user)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
-                        <a href="#" @click="deleteUser(index,user.id,user.name)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
+                          <a href="#" @click="openEditRole(index,role)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
+                        <a href="#" @click="deleteRole(index,role.id,role.name)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
                    </td>
-                    <td>{{user.name}}</td>
-                    <td>{{user.email}}</td>
-                    <td><p v-for="role in user.roles"><span class="badge badge-pill badge-info">{{role.name}}</span></p></td>
-                    <td><p v-for="permiso in user.permissions"><span class="badge badge-pill badge-info">{{permiso.name}}</span></p></td>
-                    <td><img :src="src+user.imagen_url"  width="100"></td>
+                    <td>{{role.name}}</td>
+                    <td>{{role.slug}}</td>
+                    <td>{{role.description}}</td>
+                    <td><p v-for="permiso in role.permissions"><span class="badge badge-pill badge-info">{{permiso.name}}</span></p></td>
 
                 </tr>
 
@@ -73,9 +70,9 @@
         </table>
       </paginate>
            <strong class="text-primary">
-             <paginate-links for="users" :show-step-links="true"></paginate-links>
+             <paginate-links for="roles" :show-step-links="true"></paginate-links>
              <paginate-links
-            for="users"
+            for="roles"
             :show-step-links="true"
             :simple="{
                 prev: $trans('messages.Previous'),
@@ -136,25 +133,30 @@
        ],
        height: 300
      },
-          users:[],
-          user:[],
-          user_state:[],
-          paginate:['users'],
-          hreff:'/user-preview/',
-          userActualizar:false,
-          iduserActualizar:-1,
+          roles:[],
+          role:[],
+          role_state:[],
+          paginate:['roles'],
+          hreff:'/role-preview/',
+          roleActualizar:false,
+          idroleActualizar:-1,
           value:'',
           id:'',
           mensage:'',
+          valueImg:'',
           lang:true,
+          title:'',
+          translated_languages:[],
+          lang_available:'',
           lan_to_edit:'none',
           locale:'',
-          user:this.$attrs.user,
-          imagenuser:'',
+          imagenrole:'',
           src:'storage/img_web/login_img/',
-          src_qr:'storage/qrcodes/users/',
-          ventanaCreatUser:false,
-          ventanaEditUser:false,
+          src_qr:'storage/qrcodes/roles/',
+          checkEditSummary:'',
+          checkEditContent:'',
+          ventanaCreatRole:false,
+          ventanaEditRole:false,
           token   : window.CSRF_TOKEN,
 
         }
@@ -178,32 +180,34 @@
     onFileUploadResponse(evt) {
       console.log(evt);
     },
+        imageEdit:function(e){
 
-        userList:function(){
-          axios.get('/usersList')
+          this.imagenrole=e.target.files[0];
+        },
+        roleList:function(){
+          axios.get('/rolesList')
                .then(response =>{
-                 this.users = response.data;
+                 this.roles = response.data;
                  if (response.data==''){
-                   this.mensage=this.$trans('messages.None User added yet');
+                   this.mensage=this.$trans('messages.None added yet');
                  }
                })
                .catch(error => this.errors.push(error));
         },
-        addUserIndex:function(userAdd){
+        addRoleIndex:function(roleAdd){
 
-          this.users.push(userAdd);
-          this.ventanaCreatUser=false;
+          this.roles.push(roleAdd);
+          this.ventanaCreatRole=false;
         },
-        updUserIndex:function(userUpd){
-          const position=this.users.findIndex(user=>user.id===userUpd.id);
-          this.users[position]=userUpd;
-          this.userList();
-          this.ventanaEditUser=false;
+        updroleIndex:function(roleUpd){
+          const position=this.roles.findIndex(role=>role.id===roleUpd.id);
+          this.roleList();
+          this.ventanaEditRole=false;
         },
-        deleteUser:function(index,user,user_name){
-          let user_id=user;
-            swal({title:this.$trans('messages.Delete')+' '+this.$trans('messages.User'),
-                  text:this.$trans('messages.Are you completely sure you want to delete ')+this.$trans('messages.User')+' : '+user_name+'?',
+        deleteRole:function(index,role,role_name){
+          let role_id=role;
+            swal({title:this.$trans('messages.Delete')+' '+this.$trans('messages.Role'),
+                  text:this.$trans('messages.Are you completely sure you want to delete ')+this.$trans('messages.Role')+' : '+role_name+'?',
                   icon:'warning',
                   closeOnClickOutside:false,
                   closeOnEsc:false,
@@ -214,18 +218,18 @@
                   cancelButtonText: this.$trans('messages.Cancel'),
                 }).then(select=>{
                   if (select){
-                    let  url='/users/'+user_id;
+                    let  url='/roles/'+role_id;
                     axios.delete(url)
                          .then(response=>{
                            swal({title:this.$trans('messages.Correct data'),
-                                 text:this.$trans('messages.User')+' '+this.$trans('messages.Deleted'),
+                                 text:this.$trans('messages.role')+' '+this.$trans('messages.Deleted'),
                                  icon:'success',
                                  closeOnClickOutside:false,
                                  closeOnEsc:false
                                }).then(select=>{
                                  if (select){
-                                   this.userList();
-                                   if(this.users.length===0){
+                                   this.roleList();
+                                   if(this.roles.length===0){
                                      this.mensage=this.$trans('messages.None added yet');
                                    }
                                  }
@@ -241,19 +245,19 @@
 
 
         },
-        openAddUser:function(){
-          this.ventanaCreatUser = true;
+        openAddRole:function(){
+          this.ventanaCreatRole = true;
         },
-        openEdituser:function(index,user){
+        openEditRole:function(index,role){
 
-        this.user=user;
-          this.ventanaEditUser=true;
+        this.role=role;
+          this.ventanaEditRole=true;
 
         },
 
       },
       created: function () {
-        this.userList();
+        this.roleList();
          },
         mounted() {
           if (this.$attrs.locale) {

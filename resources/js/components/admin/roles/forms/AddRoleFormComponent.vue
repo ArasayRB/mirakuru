@@ -1,13 +1,13 @@
 <template>
-  <section class="mb-5" id="createUserModal" name="createUserModal"><!--Formulario createUserModal-->
+  <section class="mb-5" id="createRoleModal" name="createRoleModal"><!--Formulario createRoleModal-->
     <form  id="form-create-user">
-      <transition class="modal fade pt-5" id="createUserModalModal">
+      <transition class="modal fade pt-5" id="createRoleModalModal">
         <div class="modal-mask">
     <div class="modal-wrapper">
     <div class="modal-container">
       <div class="modal-header">
         <slot>
-        <h1 class="text-center text-dark">{{ $trans('messages.New User') }}</h1>
+        <h1 class="text-center text-dark">{{ $trans('messages.Create') }} {{ $trans('messages.Role') }}</h1>
         <button type="button" class="modal-default-button btn btn-lg" @click="$emit('close')"><span aria-hidden="true">&times;</span></button>
 
         </slot>
@@ -26,30 +26,13 @@
       <input type="text" name="name" v-model="name" class="form-control font-italic mb-2">
     </div>
 
-    <div class="form-group">
-          <label for="email">{{ $trans('messages.Email') }}</label>
-          <input type="text" name="email" v-model="email" class="form-control font-italic mb-2">
-        </div>
-
         <div class="form-group">
-              <label for="password">{{ $trans('messages.Password') }}</label>
-              <input type="password" name="password" v-model="password" class="form-control font-italic mb-2">
+              <label for="description">{{ $trans('messages.Description') }}</label>
+              <input type="text" name="description" v-model="description" class="form-control font-italic mb-2">
             </div>
-            <div class="form-group">
-                  <label for="confirm_pass">{{ $trans('messages.Confirm Password') }}</label>
-                  <input type="password" name="confirm_pass" v-model="confirm_password" class="form-control font-italic mb-2">
-                </div>
-
-    <div class="form-group">
-      <label for="role">{{ $trans('messages.Role') }}</label>
-      <select class="form-control" v-model="roll" name="role" required>
-       <option value=''>{{ $trans('messages.Select Role') }}</option>
-         <option v-for="role in roles" :value="role.id">{{role.name}}</option>
-      </select>
-    </div>
 <div class="custom-control custom-checkbox ">{{ $trans('messages.Permissions') }}:
-  <span aria-hidden="true"><label :for="'permis_'+permis.key" v-for="permis in permissions" class="badge badge-pill badge-primary h3">
-    {{permis.value}} <input type="checkbox" :name="'permis_'+permis.key" :id="'permis_'+permis.key" v-model="selectedPermissions" class="ml-1" :value="permis.key"></label></span>
+  <span aria-hidden="true"><label :for="'permis_'+permis.id" v-for="permis in permissions" class="badge badge-pill badge-primary h3">
+    {{permis.name}} <input type="checkbox" :name="'permis_'+permis.id" :id="'permis_'+permis.id" v-model="selectedPermissions" class="ml-1" :value="permis.id"></label></span>
 </div>
 
 
@@ -68,7 +51,7 @@
         <div class="col justify-content-center">
       <div class="form-group row mb-0">
           <div class="col-md-5 offset-md-4">
-            <button type="button" class="btn rounded btn-primary reserva" @click="createPost()">{{ $trans('messages.Create') }}</button>
+            <button type="button" class="btn rounded btn-primary reserva" @click="createRole()">{{ $trans('messages.Create') }}</button>
 
               <button type="button" class="modal-default-button btn btn-danger" @click="$emit('close')">{{ $trans('messages.Close') }}</button>
 
@@ -117,15 +100,12 @@
      },
           roles:[],
           role:[],
-          email:'',
           activeClass:'active',
           showClass:'show',
-          password:'',
-          confirm_password:'',
+          description:'',
           value:'',
           name:'',
           imagenPost:'',
-          roll:'',
           src:'images/lang/',
           lang_trans:'',
           checkEditSummary:'',
@@ -155,22 +135,19 @@
     onFileUploadResponse(evt) {
       console.log(evt);
     },
-        createPost:function(){
+        createRole:function(){
 
-            let  url="/users";
-            let msg_succ=this.$trans('messages.User')+' '+this.$trans('messages.Created.');
+            let  url="/roles";
+            let msg_succ=this.$trans('messages.Role')+' '+this.$trans('messages.Created.');
             let mensaje=this.$trans('messages.Unidentified error');
-            if (this.name==''||this.email==''||this.password==''||this.confirm_password==''||this.roll==''||this.selectedPermissions.length==0) {
+            if (this.name==''||this.description==''||this.selectedPermissions.length==0) {
               mensaje=this.$trans('messages.You cannot leave empty fields, please check');
             }
 
             let data = new FormData();
               data.append("name", this.name);
-              data.append("email", this.email);
-              data.append("password", this.password);
-              data.append("password_confirmation", this.confirm_password);
-              data.append("roll", this.roll);
-              data.append("selectedPermissions", this.selectedPermissions);
+              data.append("description", this.description);
+              data.append("permissions", this.selectedPermissions);
 
 
 
@@ -183,8 +160,8 @@
                          closeOnEsc:false
                        }).then(select=>{
                          if (select){
-                           let userAdd=response.data;
-                          this.$emit('usernew',userAdd);
+                           let roleAdd=response.data;
+                          this.$emit('rolenew',roleAdd);
 
                            //location.reload();
                          }
@@ -196,51 +173,28 @@
                      swal('Error',''+error.response.data.message,'error');
                    }
                    let wrong=error.response.data.errors;
-                   if(wrong.hasOwnProperty('title')){
-                     mensaje+='-'+wrong.title[0];
+                   if(wrong.hasOwnProperty('name')){
+                     mensaje+='-'+wrong.name[0];
                    }
-                   if(wrong.hasOwnProperty('image')){
-                     mensaje+='-'+wrong.image[0];
+                   if(wrong.hasOwnProperty('description')){
+                     mensaje+='-'+wrong.description[0];
                    }
-                  if (wrong.hasOwnProperty('rolea')) {
-                     mensaje+='-'+wrong.rolea[0];
-                   }
-                   if(wrong.hasOwnProperty('checkEditSummary')){
-                     mensaje+='-'+wrong.checkEditSummary[0];
-                   }
-                  if (wrong.hasOwnProperty('checkEditContent')) {
-                     mensaje+='-'+wrong.checkEditContent[0];
-                   }
-                  if (wrong.hasOwnProperty('tags')) {
-                     mensaje+='-'+wrong.tags[0];
-                   }
-                   if (wrong.hasOwnProperty('keywords')) {
-                      mensaje+='-'+wrong.tags[0];
-                    }
-                   else if (wrong.hasOwnProperty('login')){
-                     mensaje+='-'+wrong.login[0];
+                  if (wrong.hasOwnProperty('selectedPermissions')) {
+                     mensaje+='-'+wrong.selectedPermissions[0];
                    }
                    swal('Error',mensaje,'error');
                    //console.log(error.response.data);
                  });
 
         },
-      },
-      watch:{
-        roll(val){
-          axios.get('/available-permissions/'+val)
-               .then(response =>{
-                 this.permissions = response.data
-               })
+        getPermissions:function(){
+          axios.get('/permissions-list')
+               .then(response => this.permissions = response.data)
                .catch(error => this.errors.push(error));
-                 console.log(this.permissions);
         },
       },
       created: function () {
-         axios.get('/roles-list')
-              .then(response => this.roles = response.data)
-              .catch(error => this.errors.push(error));
-
+        this.getPermissions();
 
 
 

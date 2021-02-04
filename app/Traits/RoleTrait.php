@@ -12,5 +12,11 @@ trait RoleTrait {
       return $roles;
     }
 
+    public function getRoleById($idRole){
+      $role=Role::with('permissions')
+                 ->find($idRole);
+      return $role;
+    }
+
 
 }
