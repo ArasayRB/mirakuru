@@ -1,11 +1,8 @@
 @extends('admin.layout.dashboard')
-@section('head')
-  @parent
-  @include('admin.subviews.head')
-@endsection
+
 @section('dashboard')
 
-
+@auth
     <!-- Begin Page Content -->
     <div class="container-fluid">
 
@@ -17,6 +14,7 @@
       </index-role-component>
 
       </div>
+    @endauth
     <!-- /.container-fluid -->
 @endsection
 @section('scripts')

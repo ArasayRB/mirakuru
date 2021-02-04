@@ -70,9 +70,14 @@ use RoleTrait,PermissionTrait;
         else{
           $permissions=request('permissions');
         }
+        if(is_array($permissions)){
         foreach ($permissions as $permission) {
           $role->permissions()->attach($permission);
         }
+      }
+      else{
+        $role->permissions()->attach($permissions);
+      }
 
         return $this->getRoleById($role->id);
 
@@ -104,9 +109,14 @@ use RoleTrait,PermissionTrait;
       else{
         $permissions=request('permissions');
       }
+      if(is_array($permissions)){
       foreach ($permissions as $permission) {
         $role->permissions()->attach($permission);
       }
+    }
+    else{
+      $role->permissions()->attach($permissions);
+    }
 
       return $this->getRoleById($role->id);
     }
