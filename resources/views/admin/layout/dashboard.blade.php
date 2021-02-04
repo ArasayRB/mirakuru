@@ -76,7 +76,7 @@
             <h6 class="collapse-header">{{__('Tabs')}}:</h6>
             <a class="collapse-item" href="/users">{{__('Users')}}</a>
             <a class="collapse-item" href="/roles">{{__('Role')}}</a>
-            <a class="collapse-item" href="cards.html">{{__('Permissions')}}</a>
+            <a class="collapse-item" href="/permissions">{{__('Permissions')}}</a>
           </div>
         </div>
       </li>

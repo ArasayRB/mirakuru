@@ -76,10 +76,13 @@ Vue.component('edit-user-form-component', require('./components/admin/users/form
 Vue.component('add-user-form-component', require('./components/admin/users/forms/AddUserFormComponent.vue').default);
 Vue.component('edit-role-form-component', require('./components/admin/roles/forms/EditRoleFormComponent.vue').default);
 Vue.component('add-role-form-component', require('./components/admin/roles/forms/AddRoleFormComponent.vue').default);
+Vue.component('edit-permiso-form-component', require('./components/admin/permisos/forms/EditPermisoFormComponent.vue').default);
+Vue.component('add-permiso-form-component', require('./components/admin/permisos/forms/AddPermisoFormComponent.vue').default);
 Vue.component('edit-post-form-component', require('./components/admin/posts/forms/EditPostFormComponent.vue').default);
 Vue.component('index-post-component', require('./components/admin/posts/indexPostComponent.vue').default);
 Vue.component('index-user-component', require('./components/admin/users/indexUserComponent.vue').default);
 Vue.component('index-role-component', require('./components/admin/roles/indexRoleComponent.vue').default);
+Vue.component('index-permiso-component', require('./components/admin/permisos/indexPermisoComponent.vue').default);
 Vue.component('post-ppal-tab-component', require('./components/admin/posts/PostPpalTabComponent.vue').default);
 Vue.component('relationed-tags-component', require('./components/admin/posts/RelationedTagsComponent.vue').default);
 

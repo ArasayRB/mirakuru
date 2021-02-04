@@ -2,20 +2,20 @@
   <div>
   <div class="row py-lg-2">
     <div class="col-md-6">
-      <h1 class="h3 mb-2 text-gray-800">{{ $trans('messages.Rolls') }}</h1>
+      <h1 class="h3 mb-2 text-gray-800">{{ $trans('messages.Permissions') }}</h1>
     </div>
     <div class="col-md-6">
-      <a href="#" @click="openAddRole()" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">{{ $trans('messages.Add') }}</a>
+      <a href="#" @click="openAddPermiso()" class="btn btn-primary btn-lg float-md-right" permission="button" aria-pressed="true">{{ $trans('messages.Add') }}</a>
     </div>
 
   </div>
   <div class="card shadow mb-4">
-    <add-role-form-component @rolenew="addRoleIndex" :role="role" :locale="locale" v-if="ventanaCreatRole" @close="ventanaCreatRole = false">
+    <add-permiso-form-component @permissionnew="addPermisoIndex" :permission="permission" :locale="locale" v-if="ventanaCreatPermiso" @close="ventanaCreatPermiso = false">
 
-    </add-role-form-component>
-    <edit-role-form-component @roleupd="updRoleIndex" :locale="locale" :role="role" v-if="ventanaEditRole" @close="ventanaEditRole = false">
+    </add-permiso-form-component>
+    <edit-permiso-form-component @permissionupd="updPermisoIndex" :locale="locale" :permission="permission" v-if="ventanaEditPermiso" @close="ventanaEditPermiso = false">
 
-    </edit-role-form-component>
+    </edit-permiso-form-component>
     <div class="card-header py-3">
       <h6 class="m-0 font-weight-bold text-primary">{{ $trans('messages.List') }}</h6>
     </div>
@@ -27,40 +27,37 @@
     <div class="card-body">
 
       <div class="table-responsive">
-        <paginate class="pt-5 mt-3" ref="paginator" name = "roles" :list = "roles" :per = "2" :key="roles ? roles.length:0">
+        <paginate class="pt-5 mt-3" ref="paginator" name = "permissions" :list = "permissions" :per = "2" :key="permissions ? permissions.length:0">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
               <th>{{ $trans('messages.Tools') }}</th>
-              <th>{{ $trans('messages.Role') }}</th>
+              <th>{{ $trans('messages.Permission') }}</th>
               <th>{{ $trans('messages.Slug') }}</th>
               <th>{{ $trans('messages.Description') }}</th>
-              <th>{{ $trans('messages.Permissions') }}</th>
             </tr>
           </thead>
           <tfoot>
             <tr>
               <th>{{ $trans('messages.Tools') }}</th>
-              <th>{{ $trans('messages.Role') }}</th>
+              <th>{{ $trans('messages.Permission') }}</th>
               <th>{{ $trans('messages.Slug') }}</th>
               <th>{{ $trans('messages.Description') }}</th>
-              <th>{{ $trans('messages.Permissions') }}</th>
             </tr>
           </tfoot>
           <tbody>
 
 
-                <tr v-for="(role,index) in paginated('roles')" :role="role" :key="role.id">
+                <tr v-for="(permission,index) in paginated('permissions')" :permission="permission" :key="permission.id">
 
                     <td>
 
-                          <a href="#" @click="openEditRole(index,role)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
-                        <a href="#" @click="deleteRole(index,role.id,role.name)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
+                          <a href="#" @click="openEditPermission(index,permission)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
+                        <a href="#" @click="deletePermission(index,permission.id,permission.name)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
                    </td>
-                    <td>{{role.name}}</td>
-                    <td>{{role.slug}}</td>
-                    <td>{{role.description}}</td>
-                    <td><p v-for="permiso in role.permissions"><span class="badge badge-pill badge-info">{{permiso.name}}</span></p></td>
+                    <td>{{permission.name}}</td>
+                    <td>{{permission.slug}}</td>
+                    <td>{{permission.description}}</td>
 
                 </tr>
 
@@ -70,9 +67,9 @@
         </table>
       </paginate>
            <strong class="text-primary">
-             <paginate-links for="roles" :show-step-links="true"></paginate-links>
+             <paginate-links for="permissions" :show-step-links="true"></paginate-links>
              <paginate-links
-            for="roles"
+            for="permissions"
             :show-step-links="true"
             :simple="{
                 prev: $trans('messages.Previous'),
@@ -133,30 +130,23 @@
        ],
        height: 300
      },
-          roles:[],
-          role:[],
-          role_state:[],
-          paginate:['roles'],
-          hreff:'/role-preview/',
-          roleActualizar:false,
-          idroleActualizar:-1,
+          permissions:[],
+          permission:[],
+          permission_state:[],
+          paginate:['permissions'],
+          hreff:'/permission-preview/',
+          permissionActualizar:false,
+          idpermissionActualizar:-1,
           value:'',
           id:'',
           mensage:'',
           valueImg:'',
           lang:true,
-          title:'',
-          translated_languages:[],
-          lang_available:'',
-          lan_to_edit:'none',
           locale:'',
-          imagenrole:'',
           src:'storage/img_web/login_img/',
-          src_qr:'storage/qrcodes/roles/',
-          checkEditSummary:'',
-          checkEditContent:'',
-          ventanaCreatRole:false,
-          ventanaEditRole:false,
+          src_qr:'storage/qrcodes/permissions/',
+          ventanaCreatPermiso:false,
+          ventanaEditPermiso:false,
           token   : window.CSRF_TOKEN,
 
         }
@@ -182,32 +172,32 @@
     },
         imageEdit:function(e){
 
-          this.imagenrole=e.target.files[0];
+          this.imagenpermission=e.target.files[0];
         },
-        roleList:function(){
-          axios.get('/rolesList')
+        permissionList:function(){
+          axios.get('/permissionsList')
                .then(response =>{
-                 this.roles = response.data;
+                 this.permissions = response.data;
                  if (response.data==''){
                    this.mensage=this.$trans('messages.None added yet');
                  }
                })
                .catch(error => this.errors.push(error));
         },
-        addRoleIndex:function(roleAdd){
+        addPermisoIndex:function(permissionAdd){
 
-          this.roles.push(roleAdd);
-          this.ventanaCreatRole=false;
+          this.permissions.push(permissionAdd);
+          this.ventanaCreatPermiso=false;
         },
-        updRoleIndex:function(roleUpd){
-          const position=this.roles.findIndex(role=>role.id===roleUpd.id);
-          this.roleList();
-          this.ventanaEditRole=false;
+        updPermisoIndex:function(permissionUpd){
+          const position=this.permissions.findIndex(permission=>permission.id===permissionUpd.id);
+          this.permissionList();
+          this.ventanaEditPermiso=false;
         },
-        deleteRole:function(index,role,role_name){
-          let role_id=role;
-            swal({title:this.$trans('messages.Delete')+' '+this.$trans('messages.Role'),
-                  text:this.$trans('messages.Are you completely sure you want to delete ')+this.$trans('messages.Role')+' : '+role_name+'?',
+        deletePermission:function(index,permission,permission_name){
+          let permission_id=permission;
+            swal({title:this.$trans('messages.Delete')+' '+this.$trans('messages.Permission'),
+                  text:this.$trans('messages.Are you completely sure you want to delete ')+this.$trans('messages.Permission')+' : '+permission_name+'?',
                   icon:'warning',
                   closeOnClickOutside:false,
                   closeOnEsc:false,
@@ -218,18 +208,18 @@
                   cancelButtonText: this.$trans('messages.Cancel'),
                 }).then(select=>{
                   if (select){
-                    let  url='/roles/'+role_id;
+                    let  url='/permissions/'+permission_id;
                     axios.delete(url)
                          .then(response=>{
                            swal({title:this.$trans('messages.Correct data'),
-                                 text:this.$trans('messages.role')+' '+this.$trans('messages.Deleted'),
+                                 text:this.$trans('messages.Permission')+' '+this.$trans('messages.Deleted'),
                                  icon:'success',
                                  closeOnClickOutside:false,
                                  closeOnEsc:false
                                }).then(select=>{
                                  if (select){
-                                   this.roleList();
-                                   if(this.roles.length===0){
+                                   this.permissionList();
+                                   if(this.permissions.length===0){
                                      this.mensage=this.$trans('messages.None added yet');
                                    }
                                  }
@@ -245,19 +235,19 @@
 
 
         },
-        openAddRole:function(){
-          this.ventanaCreatRole = true;
+        openAddPermiso:function(){
+          this.ventanaCreatPermiso = true;
         },
-        openEditRole:function(index,role){
+        openEditPermission:function(index,permission){
 
-        this.role=role;
-          this.ventanaEditRole=true;
+        this.permission=permission;
+          this.ventanaEditPermiso=true;
 
         },
 
       },
       created: function () {
-        this.roleList();
+        this.permissionList();
          },
         mounted() {
           if (this.$attrs.locale) {

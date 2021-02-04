@@ -188,6 +188,7 @@ return [
   "Permanently delete this team."=> "Borrar este equipo de forma permanente",
   "Permanently delete your account."=> "Borre su cuenta de forma permanente.",
   "Permissions"=> "Permisos",
+  "Permission"=> "Permiso",
   "Persons"=> "Personas",
   "Photo"=> "Foto",
   "Please, choice a date interval before continue"=>"Por favor, escoja un intervalo de fechas para continuar",

@@ -188,6 +188,7 @@ return [
   "Permanently delete this team."=> "Permanently delete this team.",
   "Permanently delete your account."=> "Permanently delete your account.",
   "Permissions"=> "Permissions",
+  "Permission"=> "Permission",
   "Persons"=> "Persons",
   "Photo"=>"Photo",
   "Please, choice a date interval before continue"=>"Please, choice a date interval before continue",
