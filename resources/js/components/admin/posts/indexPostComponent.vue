@@ -255,9 +255,7 @@
           this.ventanaCreatPost=false;
         },
         updPostIndex:function(postUpd,act_lan_to_edit){
-          console.log('Nueva variable lan_to_edit es: '+act_lan_to_edit);
-          const position=this.posts.findIndex(post=>post.id===postUpd.id);
-          this.posts[position]=postUpd;
+          this.getListPosts();
           this.ventanaEditPost=false;
           this.lan_to_edit=act_lan_to_edit;
         },
@@ -364,7 +362,7 @@
                                  closeOnEsc:false
                                }).then(select=>{
                                  if (select){
-                                   this.posts.splice(index,1);
+                                 this.getListPosts();
                                    if(this.posts.length===0){
                                      this.mensage=this.$trans('messages.None Post added yet');
                                    }

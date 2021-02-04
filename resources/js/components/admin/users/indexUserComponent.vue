@@ -5,15 +5,15 @@
       <h1 class="h3 mb-2 text-gray-800">{{ $trans('messages.Users') }}</h1>
     </div>
     <div class="col-md-6">
-      <a href="#" @click="openAdduser()" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">{{ $trans('messages.Add') }}</a>
+      <a href="#" @click="openAddUser()" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">{{ $trans('messages.Add') }}</a>
     </div>
 
   </div>
   <div class="card shadow mb-4">
-    <add-user-form-component @usernew="adduserIndex" :show_lang_div="show_lang_div" :user="user" :locale="locale" v-if="ventanaCreatuser" @close="ventanaCreatuser = false">
+    <add-user-form-component @usernew="addUserIndex" :user="user" :locale="locale" v-if="ventanaCreatUser" @close="ventanaCreatUser = false">
 
     </add-user-form-component>
-    <edit-user-form-component @userupd="upduserIndex" :lan_to_edit="lan_to_edit" :locale="locale" :user="user" v-if="ventanaEdituser" @close="ventanaEdituser = false">
+    <edit-user-form-component @userupd="updUserIndex" :lan_to_edit="lan_to_edit" :locale="locale" :user="user" v-if="ventanaEditUser" @close="ventanaEditUser = false">
 
     </edit-user-form-component>
     <div class="card-header py-3">
@@ -55,34 +55,14 @@
                 <tr v-for="(user,index) in paginated('users')" :user="user" :key="user.id">
 
                     <td>
-                      <div class="dropdown">
-                        <a class="dropdown-toggle" title="Edit Translate/Editar Traducción" data-toggle="dropdown" @click="getTranslates(index,user)">
-                          <i class="fa fa-edit"></i>
-                          <i class="fas fa-language"></i>
-                        </a>
-                        <div class="dropdown-menu">
 
-                          <a class="dropdown-item" type="button" v-for="lang_available in translated_languages" @click="openEditTranslated(user, lang_available)">
-                              {{lang_available}}
-                          </a>
-
-                          </div>
-                      </div>
-                        <a href="#" @click="openAddTranslate(index,user)"><i class="fas fa-language" title="Add Language/Añadir Lenguage"></i></a>
-                        <a href="#" @click="openEdituser(index,user)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
-                        <a href="#" @click="deleteuser(index,user.id,user.name)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
-                        <a :href="hreff+user.id"><i title="Preview/Vista previa" class="fa fa-eye"></i></a>
-                        <a id="publicado">
-                          <i :id="'publish-'+index" @click="publishIt(index,user)" v-if="user.show==false" title="Publish it/Publicar" class="fa fa-toggle-off"></i>
-                          <i :id="'unpublish-'+index"  @click="publishIt(index,user)" v-else title="Publish it/Publicar" class="fa fa-toggle-on text-primary"></i>
-                          <!--<i :id="'unpublish-act-'+index"  title="Publish it/Publicar" :hidden="user.show" class="fa fa-toggle-on text-primary"></i>
-                          <i :id="'publish-act-'+index"  title="Publish it/Publicar" :hidden="user.show" class="fa fa-toggle-off"></i>-->
-                        </a>
-                    </td>
+                          <a href="#" @click="openEdituser(index,user)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
+                        <a href="#" @click="deleteUser(index,user.id,user.name)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
+                   </td>
                     <td>{{user.name}}</td>
                     <td>{{user.email}}</td>
-                    <td>Roles</td>
-                    <td>Permisos</td>
+                    <td><p v-for="role in user.roles"><span class="badge badge-pill badge-info">{{role.name}}</span></p></td>
+                    <td><p v-for="permiso in user.permissions"><span class="badge badge-pill badge-info">{{permiso.name}}</span></p></td>
                     <td><img :src="src+user.imagen_url"  width="100"></td>
 
                 </tr>
@@ -161,7 +141,6 @@
           user_state:[],
           paginate:['users'],
           hreff:'/user-preview/',
-          show_lang_div:false,
           userActualizar:false,
           iduserActualizar:-1,
           value:'',
@@ -180,8 +159,8 @@
           src_qr:'storage/qrcodes/users/',
           checkEditSummary:'',
           checkEditContent:'',
-          ventanaCreatuser:false,
-          ventanaEdituser:false,
+          ventanaCreatUser:false,
+          ventanaEditUser:false,
           token   : window.CSRF_TOKEN,
 
         }
@@ -219,107 +198,21 @@
                })
                .catch(error => this.errors.push(error));
         },
-        adduserIndex:function(userAdd){
-          if(this.show_lang_div){
-            if(this.users.length===0){
-              location.reload();
-            }
-            else{
+        addUserIndex:function(userAdd){
+
           this.users.push(userAdd);
-        }
-        }
-          this.ventanaCreatuser=false;
+          this.ventanaCreatUser=false;
         },
-        upduserIndex:function(userUpd,act_lan_to_edit){
-          console.log('Nueva variable lan_to_edit es: '+act_lan_to_edit);
+        updUserIndex:function(userUpd){
           const position=this.users.findIndex(user=>user.id===userUpd.id);
           this.users[position]=userUpd;
-          this.ventanaEdituser=false;
-          this.lan_to_edit=act_lan_to_edit;
+          this.userList();
+          this.ventanaEditUser=false;
         },
-        publishIt:function(index,user){
-          //alert($("#publish-"+index).removeClass('fa-toggle-on'));
-          let mssg;
-          let state_act;
-
-          if(user.publicate_state===0){
-            mssg=this.$trans('messages.Do you want publish the user');
-            state_act=1;
-          }
-          else{
-          mssg=this.$trans('messages.Do you want unpublish the user');
-          state_act=0;
-        }
-          swal({title:this.$trans('messages.Publish user'),
-                text:mssg+': '+user.title+'?',
-                icon:'warning',
-                closeOnClickOutside:false,
-                closeOnEsc:false,
-                buttons:true,
-                dangerMode:true,
-                showCancelButton: true,
-                confirmButtonText: this.$trans('messages.Yes'),
-                cancelButtonText: this.$trans('messages.Cancel'),
-              }).then(select=>{
-                if (select){
-                  let  url='/publicate-user/'+user.id+'/'+state_act;
-
-                  axios.user(url)
-                       .then(response=>{
-                         let publicated_user=response.data;
-                         swal({title:this.$trans('messages.Correct data'),
-                               text:this.$trans('messages.The user had been publicate'),
-                               icon:'success',
-                               closeOnClickOutside:false,
-                               closeOnEsc:false
-                             }).then(select=>{
-                               if (select){
-                                 if(this.users[index].show===false){
-                                 this.users[index].show=true;
-                                 this.users[index].publicate_state=1;
-                               }
-                               else{
-                               this.users[index].show=false;
-                               this.users[index].publicate_state=0;
-                             }
-
-                                  // $("#publish-"+index).hide(true);
-
-                               //location.reload();
-                               }
-                             });
-                       })
-                       .catch(error=>{
-                         console.log(error.response.data.errors);
-                         let wrong=error.response.data.errors;
-                         if(wrong.hasOwnProperty('title')){
-                           mensaje+='-'+wrong.title[0];
-                         }
-                         if(wrong.hasOwnProperty('image')){
-                           mensaje+='-'+wrong.image[0];
-                         }
-                        if (wrong.hasOwnProperty('categoria')) {
-                           mensaje+='-'+wrong.categoria[0];
-                         }
-                         if(wrong.hasOwnProperty('checkEditSummary')){
-                           mensaje+='-'+wrong.checkEditSummary[0];
-                         }
-                        if (wrong.hasOwnProperty('checkEditContent')) {
-                           mensaje+='-'+wrong.checkEditContent[0];
-                         }
-                         else if (wrong.hasOwnProperty('login')){
-                           mensaje+='-'+wrong.login[0];
-                         }
-                         swal('Error',mensaje,'error');
-                       });
-                }
-              });
-
-        },
-        deleteuser:function(index,user,user_name){
+        deleteUser:function(index,user,user_name){
           let user_id=user;
-            swal({title:this.$trans('messages.Delete user'),
-                  text:this.$trans('messages.Are you completely sure you want to delete the user')+': '+user_name+'?',
+            swal({title:this.$trans('messages.Delete')+' '+this.$trans('messages.User'),
+                  text:this.$trans('messages.Are you completely sure you want to delete ')+this.$trans('messages.User')+' : '+user_name+'?',
                   icon:'warning',
                   closeOnClickOutside:false,
                   closeOnEsc:false,
@@ -334,15 +227,15 @@
                     axios.delete(url)
                          .then(response=>{
                            swal({title:this.$trans('messages.Correct data'),
-                                 text:this.$trans('messages.user deleted successfully'),
+                                 text:this.$trans('messages.User')+' '+this.$trans('messages.Deleted'),
                                  icon:'success',
                                  closeOnClickOutside:false,
                                  closeOnEsc:false
                                }).then(select=>{
                                  if (select){
-                                   this.users.splice(index,1);
+                                   this.userList();
                                    if(this.users.length===0){
-                                     this.mensage=this.$trans('messages.None user added yet');
+                                     this.mensage=this.$trans('messages.None added yet');
                                    }
                                  }
                                });
@@ -350,24 +243,6 @@
                          .catch(error=>{
                            console.log(error.response.data.errors);
                            let wrong=error.response.data.errors;
-                           if(wrong.hasOwnProperty('title')){
-                             mensaje+='-'+wrong.title[0];
-                           }
-                           if(wrong.hasOwnProperty('image')){
-                             mensaje+='-'+wrong.image[0];
-                           }
-                          if (wrong.hasOwnProperty('categoria')) {
-                             mensaje+='-'+wrong.categoria[0];
-                           }
-                           if(wrong.hasOwnProperty('checkEditSummary')){
-                             mensaje+='-'+wrong.checkEditSummary[0];
-                           }
-                          if (wrong.hasOwnProperty('checkEditContent')) {
-                             mensaje+='-'+wrong.checkEditContent[0];
-                           }
-                           else if (wrong.hasOwnProperty('login')){
-                             mensaje+='-'+wrong.login[0];
-                           }
                            swal('Error',mensaje,'error');
                          });
                   }
@@ -377,12 +252,10 @@
         },
         openAddTranslate:function(index,user){
           this.user=user;
-          this.show_lang_div=false;
-          this.ventanaCreatuser = true;
+          this.ventanaCreatUser = true;
         },
-        openAdduser:function(){
-          this.show_lang_div=true;
-          this.ventanaCreatuser = true;
+        openAddUser:function(){
+          this.ventanaCreatUser = true;
         },
         getTranslates:function(index,user){
           axios.get('/translated-language-user/'+user.id)
@@ -407,7 +280,7 @@
         openEdituser:function(index,user){
 
         this.user=user;
-          this.ventanaEdituser=true;
+          this.ventanaEditUser=true;
 
         },
         openEditTranslated:function(user, lang_available){
@@ -416,7 +289,7 @@
                .then(response =>{
                  user_translated_array = response.data;
                  this.user=user_translated_array;
-                     this.ventanaEdituser=true;
+                     this.ventanaEditUser=true;
                      this.lan_to_edit=lang_available;
                  if (response.data==''){
                    this.mensage=this.$trans('messages.None user added yet');

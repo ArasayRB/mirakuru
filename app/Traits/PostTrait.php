@@ -45,6 +45,14 @@ trait PostTrait {
                    ->with('keywords')
                    ->where('id',$post)
                    ->first();
+
+       if($posts->publicate_state===0){
+         $posts->show=false;
+       }
+       else{
+         $posts->show=true;
+        }
+
                    return $posts;
     }
 

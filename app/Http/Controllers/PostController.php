@@ -71,7 +71,7 @@ class PostController extends Controller
       return $this->getPost($post->id);
     }
 
-    
+
 
     /**
      * Show the form for creating a new resource.
@@ -137,8 +137,21 @@ class PostController extends Controller
         ]);
         $newFileName=$this->manageImage(request('image'));
 
-        $tags = explode(",", request('tags'));
-        $keywords = explode(",", request('keywords'));
+        $tags;
+        $keywords;
+        if(strpos(request('tags'), ',')){
+          $tags = explode(",", request('tags'));
+        }
+        else{
+          $tags=request('tags');
+        }
+
+        if(strpos(request('keywords'), ',')){
+          $keywords = explode(",", request('keywords'));
+        }
+        else{
+          $keywords=request('keywords');
+        }
         $post= new Post();
         $post->title=request('title');
         $post->default_lang=request('default-lang');
@@ -159,11 +172,18 @@ class PostController extends Controller
         $post->update();
         QrCode::format('svg')->color(33, 56, 175)->generate(url('/post-list/'.$post->id),public_path('storage/qrcodes/posts/qrcode_'.$post->id.'_'.$post->slug.'.svg'));
         $post->tag($tags);
-        foreach($keywords as $keyword){
-          $existKey=$this->getKeywordIf($keyword);
+        if(is_array($keywords)){
+          foreach($keywords as $keyword){
+            $existKey=$this->getKeywordIf($keyword);
 
+            $post->keywords()->attach($existKey->id);
+          }
+        }
+        else{
+          $existKey=$this->getKeywordIf($keywords);
           $post->keywords()->attach($existKey->id);
         }
+
 
 
         $postToAdd=$this->getPost($post->id);

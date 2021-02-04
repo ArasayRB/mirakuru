@@ -10,6 +10,7 @@ use App\Models\Pago;
 use App\Models\Post;
 use App\Models\Reserva;
 use App\Models\Role;
+use App\Models\Permission;
 use App\Notifications\MirakuruVerifyEmail;
 use App\Notifications\MirakuruResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -55,7 +56,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     public function roles(){
-      return $this->belongsToMany(Role::class)->withTimestamps();
+      return $this->belongsToMany(Role::class,'role_user','user_id','role_id')->withTimestamps();
     }
 
     public function hostales(){
@@ -84,6 +85,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function cuentas(){
       return $this->hasMany(Cuenta::class)->withTimestamps();
+    }
+
+    public function permissions(){
+      return $this->belongsToMany(Permission::class,'permission_user','user_id','permission_id')->withTimestamps();
     }
 
     public function authorizeRoles($roles)

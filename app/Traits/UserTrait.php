@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Cache;
 
 trait UserTrait {
     public function getUserById($idUser) {
-    $user=User::find($idUser);
+    $user=User::with('permissions')
+               ->with('roles')
+               ->find($idUser);
     return $user;
     }
 
