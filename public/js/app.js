@@ -5858,6 +5858,9 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -5917,7 +5920,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
       lang: true,
       lan_to_edit: 'none',
       locale: ''
-    }, _defineProperty(_ref, "user", this.$attrs.user), _defineProperty(_ref, "imagenuser", ''), _defineProperty(_ref, "src", 'storage/img_web/login_img/'), _defineProperty(_ref, "src_qr", 'storage/qrcodes/users/'), _defineProperty(_ref, "ventanaCreatUser", false), _defineProperty(_ref, "ventanaEditUser", false), _defineProperty(_ref, "token", window.CSRF_TOKEN), _ref;
+    }, _defineProperty(_ref, "user", this.$attrs.user), _defineProperty(_ref, "user_id", this.$attrs.user_id), _defineProperty(_ref, "imagenuser", ''), _defineProperty(_ref, "src", 'storage/img_web/login_img/'), _defineProperty(_ref, "src_qr", 'storage/qrcodes/users/'), _defineProperty(_ref, "ventanaCreatUser", false), _defineProperty(_ref, "ventanaEditUser", false), _defineProperty(_ref, "token", window.CSRF_TOKEN), _ref;
   },
   methods: {
     onBlur: function onBlur(evt) {
@@ -73583,7 +73586,7 @@ var render = function() {
                   key: _vm.users ? _vm.users.length : 0,
                   ref: "paginator",
                   staticClass: "pt-5 mt-3",
-                  attrs: { name: "users", list: _vm.users, per: 2 }
+                  attrs: { name: "users", list: _vm.users, per: 5 }
                 },
                 [
                   _c(
@@ -73658,7 +73661,14 @@ var render = function() {
                         _vm._l(_vm.paginated("users"), function(user, index) {
                           return _c(
                             "tr",
-                            { key: user.id, attrs: { user: user } },
+                            {
+                              key: user.id,
+                              class:
+                                user.id == _vm.user_id
+                                  ? (_vm.bg_color = "bg-dark")
+                                  : "",
+                              attrs: { user: user }
+                            },
                             [
                               _c("td", [
                                 _c(
@@ -73702,9 +73712,27 @@ var render = function() {
                                 )
                               ]),
                               _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(user.name))]),
+                              _c(
+                                "td",
+                                {
+                                  class:
+                                    user.id == _vm.user_id
+                                      ? (_vm.text_color = "text-light")
+                                      : ""
+                                },
+                                [_vm._v(_vm._s(user.name))]
+                              ),
                               _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(user.email))]),
+                              _c(
+                                "td",
+                                {
+                                  class:
+                                    user.id == _vm.user_id
+                                      ? (_vm.text_color = "text-light")
+                                      : ""
+                                },
+                                [_vm._v(_vm._s(user.email))]
+                              ),
                               _vm._v(" "),
                               _c(
                                 "td",
@@ -92618,6 +92646,7 @@ module.exports = {
     "Payments": "Payments",
     "Permanently delete this team.": "Permanently delete this team.",
     "Permanently delete your account.": "Permanently delete your account.",
+    "Permission": "Permission",
     "Permissions": "Permissions",
     "Persons": "Persons",
     "Photo": "Photo",
@@ -93141,6 +93170,7 @@ module.exports = {
     "Payments": "Pagos",
     "Permanently delete this team.": "Borrar este equipo de forma permanente",
     "Permanently delete your account.": "Borre su cuenta de forma permanente.",
+    "Permission": "Permiso",
     "Permissions": "Permisos",
     "Persons": "Personas",
     "Photo": "Foto",
@@ -93543,6 +93573,7 @@ module.exports = {
     "Payments": "Pagos",
     "Permanently delete this team.": "Borrar este equipo de forma permanente",
     "Permanently delete your account.": "Borre su cuenta de forma permanente.",
+    "Permission": "Permiso",
     "Permissions": "Permisos",
     "Persons": "Personas",
     "Photo": "Foto",

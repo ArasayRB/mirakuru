@@ -27,7 +27,7 @@
     <div class="card-body">
 
       <div class="table-responsive">
-        <paginate class="pt-5 mt-3" ref="paginator" name = "users" :list = "users" :per = "2" :key="users ? users.length:0">
+        <paginate class="pt-5 mt-3" ref="paginator" name = "users" :list = "users" :per = "5" :key="users ? users.length:0">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
@@ -52,18 +52,21 @@
           <tbody>
 
 
-                <tr v-for="(user,index) in paginated('users')" :user="user" :key="user.id">
+                <tr v-for="(user,index) in paginated('users')" :user="user" :key="user.id" :class="user.id==user_id?bg_color='bg-dark':''">
+
 
                     <td>
 
                           <a href="#" @click="openEdituser(index,user)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
                         <a href="#" @click="deleteUser(index,user.id,user.name)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
                    </td>
-                    <td>{{user.name}}</td>
-                    <td>{{user.email}}</td>
+                    <td :class="user.id==user_id?text_color='text-light':''">{{user.name}}</td>
+                    <td :class="user.id==user_id?text_color='text-light':''">{{user.email}}</td>
                     <td><p v-for="role in user.roles"><span class="badge badge-pill badge-info">{{role.name}}</span></p></td>
                     <td><p v-for="permiso in user.permissions"><span class="badge badge-pill badge-info">{{permiso.name}}</span></p></td>
                     <td><img :src="src+user.imagen_url"  width="100"></td>
+
+
 
                 </tr>
 
@@ -150,6 +153,7 @@
           lan_to_edit:'none',
           locale:'',
           user:this.$attrs.user,
+          user_id:this.$attrs.user_id,
           imagenuser:'',
           src:'storage/img_web/login_img/',
           src_qr:'storage/qrcodes/users/',

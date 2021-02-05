@@ -12,7 +12,7 @@
       <!-- Page Heading -->
 
       <!-- DataTales Example -->
-      <index-user-component user="{{auth()->user()->name}}" locale="{{ App::getLocale() }}">
+      <index-user-component user="{{auth()->user()->name}}" user_id="{{auth()->user()->id}}" locale="{{ App::getLocale() }}">
 
       </index-user-component>
 
