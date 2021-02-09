@@ -9,4 +9,4 @@ use Illuminate\Support\Str;
 
 
 Route::get('/permissionsList', [App\Http\Controllers\PermissionController::class, 'getPermissionList']);
-Route::resource('/permissions', App\Http\Controllers\PermissionController::class);
+Route::resource('/permissions', App\Http\Controllers\PermissionController::class)->middleware('can:admin');

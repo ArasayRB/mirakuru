@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Gate;
 use App\Traits\PostTrait;
 
 class PostController extends Controller
@@ -37,11 +38,21 @@ class PostController extends Controller
     }
 
     public function getPostAutentUser(){
+      if(auth()->user()->roles->contains('slug','admin')||auth()->user()->roles->contains('slug','publisher-content')){
+        $posts=Post::with('categoriaPosts')
+                     ->with('keywords')
+                     ->with('users')
+                     ->orderBy('created_at','asc')
+                     ->get();
+      }
+      else{
       $posts=Post::with('categoriaPosts')
                    ->with('keywords')
+                   ->with('users')
                    ->where('user_id',auth()->user()->id)
                    ->orderBy('created_at','asc')
                    ->get();
+                 }
       for($i=0;$i<count($posts);$i++){
         if($posts[$i]->publicate_state===0){
           $posts[$i]->show=false;
@@ -59,6 +70,7 @@ class PostController extends Controller
 
     public function publicatePost($idPost,$state){
       $post=Post::find($idPost);
+      $this->authorize('publicate',$post);
       $post->publicate_state=$state;
       $post->update();
       if($post->publicate_state===0){
@@ -126,6 +138,8 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+
+
         $dataPost=request()->validate([
           'title'=> 'required|max:255',
           'default-lang'=> 'required',
@@ -167,6 +181,7 @@ class PostController extends Controller
         $post->tags=request('tags');
         $post->slug=Str::slug($post->title, '-');
         $post->keywords=request('keywords');
+        $this->authorize('store',$post);
         $post->save();
         $post->qr_img_url='qrcode_'.$post->id.'_'.$post->slug.'.svg';
         $post->update();
@@ -199,7 +214,7 @@ class PostController extends Controller
       ]);
 
       $post=Post::find(request('post_id'));
-
+      $this->authorize('storeTranslate',$post);
       $contentType='Post';
       $tipo_content=$this->findContentId($contentType);
 
@@ -274,6 +289,12 @@ class PostController extends Controller
      */
     public function update(Request $request, Post $post)
     {
+
+      /*if(Gate::denies('admin')){
+        abort('403');
+      }*/
+      $this->authorize('update',$post);
+
       $post= Post::findOrFail($post->id);
       $newFileName;
       $dataPost;
@@ -344,7 +365,7 @@ class PostController extends Controller
       ]);
 
       $post=Post::find(request('post_id'));
-
+       $this->authorize('updateTranslate',$post);
       $contentType='Post';
       $tipo_content=$this->findContentId($contentType);
 
@@ -386,6 +407,8 @@ class PostController extends Controller
 
     public function destroy(Post $post)
     {
+
+      $this->authorize('delete',$post);
         $post=Post::find($post->id);
         $this->delImage($post->img_url);
         $post->delete();

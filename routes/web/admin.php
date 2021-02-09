@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index']);
 Route::get('/post-preview/{id}', [App\Http\Controllers\PostController::class, 'previewPost']);
 Route::post('/publicate-post/{id}/{state}', [App\Http\Controllers\PostController::class, 'publicatePost']);
-Route::resource('/posts', App\Http\Controllers\PostController::class);
+Route::resource('/posts', App\Http\Controllers\PostController::class)->middleware('role:admin,viewer-content,writer-content,publisher-content');
 Route::get('/categoriesList', [App\Http\Controllers\PostController::class, 'getCategories']);
 Route::get('/postsTable', [App\Http\Controllers\PostController::class, 'getPostAutentUser']);
 Route::get('/available-tags', [App\Http\Controllers\PostController::class, 'getTags']);

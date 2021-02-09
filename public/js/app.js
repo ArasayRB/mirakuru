@@ -4074,6 +4074,7 @@ __webpack_require__.r(__webpack_exports__);
       lan_to_edit: 'none',
       locale: '',
       user: this.$attrs.user,
+      userPermissions: [],
       imagenPost: '',
       src: 'storage/img_web/posts_img/',
       src_qr: 'storage/qrcodes/posts/',
@@ -4197,7 +4198,10 @@ __webpack_require__.r(__webpack_exports__);
               }
             });
           })["catch"](function (error) {
-            console.log(error.response.data.errors);
+            if (error.response.data.message) {
+              swal('Error', '' + error.response.data.message, 'error');
+            }
+
             var wrong = error.response.data.errors;
 
             if (wrong.hasOwnProperty('title')) {
@@ -4262,7 +4266,10 @@ __webpack_require__.r(__webpack_exports__);
               }
             });
           })["catch"](function (error) {
-            console.log(error.response.data.errors);
+            if (error.response.data.message) {
+              swal('Error', '' + error.response.data.message, 'error');
+            }
+
             var wrong = error.response.data.errors;
 
             if (wrong.hasOwnProperty('title')) {
@@ -4351,6 +4358,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this6 = this;
 
+    this.userPermissions = Permissions;
     $('#publicado').add('<p>Hola</p>');
     this.getListPosts();
     axios.get('/categoriesList').then(function (response) {
@@ -5745,6 +5753,21 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-ckeditor2 */ "./node_modules/vue-ckeditor2/dist/vue-ckeditor2.esm.js");
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -71099,8 +71122,21 @@ var render = function() {
         _c(
           "a",
           {
+            directives: [
+              {
+                name: "can-user",
+                rawName: "v-can-user",
+                value: "create-post",
+                expression: "'create-post'"
+              }
+            ],
             staticClass: "btn btn-primary btn-lg float-md-right",
-            attrs: { href: "#", role: "button", "aria-pressed": "true" },
+            attrs: {
+              href: "#",
+              role: "button",
+              "aria-pressed": "true",
+              hidden: ""
+            },
             on: {
               click: function($event) {
                 return _vm.openAddPost()
@@ -71277,11 +71313,21 @@ var render = function() {
                                   _c(
                                     "a",
                                     {
+                                      directives: [
+                                        {
+                                          name: "can-user",
+                                          rawName: "v-can-user",
+                                          value: "edit-translate-post",
+                                          expression: "'edit-translate-post'"
+                                        }
+                                      ],
                                       staticClass: "dropdown-toggle",
                                       attrs: {
+                                        id: "edit-translate-post-" + post.id,
                                         title:
                                           "Edit Translate/Editar Traducción",
-                                        "data-toggle": "dropdown"
+                                        "data-toggle": "dropdown",
+                                        hidden: ""
                                       },
                                       on: {
                                         click: function($event) {
@@ -71334,7 +71380,19 @@ var render = function() {
                                 _c(
                                   "a",
                                   {
-                                    attrs: { href: "#" },
+                                    directives: [
+                                      {
+                                        name: "can-user",
+                                        rawName: "v-can-user",
+                                        value: "translate-post",
+                                        expression: "'translate-post'"
+                                      }
+                                    ],
+                                    attrs: {
+                                      href: "#",
+                                      id: "translate-post-" + post.id,
+                                      hidden: ""
+                                    },
                                     on: {
                                       click: function($event) {
                                         return _vm.openAddTranslate(index, post)
@@ -71354,7 +71412,19 @@ var render = function() {
                                 _c(
                                   "a",
                                   {
-                                    attrs: { href: "#" },
+                                    directives: [
+                                      {
+                                        name: "can",
+                                        rawName: "v-can",
+                                        value: "update-post," + post.users.name,
+                                        expression:
+                                          "'update-post,'+post.users.name"
+                                      }
+                                    ],
+                                    attrs: {
+                                      href: "#",
+                                      id: "update-post-" + post.id
+                                    },
                                     on: {
                                       click: function($event) {
                                         return _vm.openEditPost(index, post)
@@ -71372,7 +71442,19 @@ var render = function() {
                                 _c(
                                   "a",
                                   {
-                                    attrs: { href: "#" },
+                                    directives: [
+                                      {
+                                        name: "can-user",
+                                        rawName: "v-can-user",
+                                        value: "delete-post",
+                                        expression: "'delete-post'"
+                                      }
+                                    ],
+                                    attrs: {
+                                      href: "#",
+                                      id: "delete-post-" + post.id,
+                                      hidden: ""
+                                    },
                                     on: {
                                       click: function($event) {
                                         return _vm.deletePost(
@@ -71393,7 +71475,21 @@ var render = function() {
                                 _vm._v(" "),
                                 _c(
                                   "a",
-                                  { attrs: { href: _vm.hreff + post.id } },
+                                  {
+                                    directives: [
+                                      {
+                                        name: "can-user",
+                                        rawName: "v-can-user",
+                                        value: "pre-view-post",
+                                        expression: "'pre-view-post'"
+                                      }
+                                    ],
+                                    attrs: {
+                                      href: _vm.hreff + post.id,
+                                      id: "preview-" + post.id,
+                                      hidden: ""
+                                    }
+                                  },
                                   [
                                     _c("i", {
                                       staticClass: "fa fa-eye",
@@ -71402,34 +71498,52 @@ var render = function() {
                                   ]
                                 ),
                                 _vm._v(" "),
-                                _c("a", { attrs: { id: "publicado" } }, [
-                                  post.show == false
-                                    ? _c("i", {
-                                        staticClass: "fa fa-toggle-off",
-                                        attrs: {
-                                          id: "publish-" + index,
-                                          title: "Publish it/Publicar"
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.publishIt(index, post)
+                                _c(
+                                  "a",
+                                  {
+                                    directives: [
+                                      {
+                                        name: "can-user",
+                                        rawName: "v-can-user",
+                                        value: "publish-post",
+                                        expression: "'publish-post'"
+                                      }
+                                    ],
+                                    attrs: {
+                                      id: "publicado",
+                                      id: "publish-post-" + post.id,
+                                      hidden: ""
+                                    }
+                                  },
+                                  [
+                                    post.show == false
+                                      ? _c("i", {
+                                          staticClass: "fa fa-toggle-off",
+                                          attrs: {
+                                            id: "publish-" + index,
+                                            title: "Publish it/Publicar"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.publishIt(index, post)
+                                            }
                                           }
-                                        }
-                                      })
-                                    : _c("i", {
-                                        staticClass:
-                                          "fa fa-toggle-on text-primary",
-                                        attrs: {
-                                          id: "unpublish-" + index,
-                                          title: "Publish it/Publicar"
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            return _vm.publishIt(index, post)
+                                        })
+                                      : _c("i", {
+                                          staticClass:
+                                            "fa fa-toggle-on text-primary",
+                                          attrs: {
+                                            id: "unpublish-" + index,
+                                            title: "Publish it/Publicar"
+                                          },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.publishIt(index, post)
+                                            }
                                           }
-                                        }
-                                      })
-                                ])
+                                        })
+                                  ]
+                                )
                               ]),
                               _vm._v(" "),
                               _c("td", [_vm._v(_vm._s(post.title))]),
@@ -71475,7 +71589,7 @@ var render = function() {
                                 })
                               ]),
                               _vm._v(" "),
-                              _c("td", [_vm._v(_vm._s(_vm.user))]),
+                              _c("td", [_vm._v(_vm._s(post.users.name))]),
                               _vm._v(" "),
                               _c("td", [
                                 _vm._v(
@@ -73585,8 +73699,8 @@ var render = function() {
                 {
                   key: _vm.users ? _vm.users.length : 0,
                   ref: "paginator",
-                  staticClass: "pt-5 mt-3",
-                  attrs: { name: "users", list: _vm.users, per: 5 }
+                  staticClass: "mt-3",
+                  attrs: { name: "users", list: _vm.users, per: 3 }
                 },
                 [
                   _c(
@@ -73751,22 +73865,77 @@ var render = function() {
                                 0
                               ),
                               _vm._v(" "),
-                              _c(
-                                "td",
-                                _vm._l(user.permissions, function(permiso) {
-                                  return _c("p", [
-                                    _c(
-                                      "span",
-                                      {
-                                        staticClass:
-                                          "badge badge-pill badge-info"
-                                      },
-                                      [_vm._v(_vm._s(permiso.name))]
-                                    )
-                                  ])
-                                }),
-                                0
-                              ),
+                              _c("td", [
+                                _c("div", { staticClass: "card shadow mb-4" }, [
+                                  _c(
+                                    "a",
+                                    {
+                                      staticClass: "d-block card-header py-3",
+                                      attrs: {
+                                        href: "#collapseCardExample" + user.id,
+                                        "data-toggle": "collapse",
+                                        role: "button",
+                                        "aria-expanded": "true",
+                                        "aria-controls":
+                                          "collapseCardExample" + user.id
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "h6",
+                                        {
+                                          staticClass:
+                                            "m-0 font-weight-bold text-primary"
+                                        },
+                                        [
+                                          _vm._v(
+                                            _vm._s(
+                                              _vm.$trans("messages.Show")
+                                            ) +
+                                              " " +
+                                              _vm._s(
+                                                _vm.$trans(
+                                                  "messages.Permissions"
+                                                )
+                                              )
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    {
+                                      staticClass: "collapse",
+                                      attrs: {
+                                        id: "collapseCardExample" + user.id
+                                      }
+                                    },
+                                    [
+                                      _c(
+                                        "div",
+                                        { staticClass: "card-body" },
+                                        _vm._l(user.permissions, function(
+                                          permiso
+                                        ) {
+                                          return _c("p", [
+                                            _c(
+                                              "span",
+                                              {
+                                                staticClass:
+                                                  "badge badge-pill badge-info"
+                                              },
+                                              [_vm._v(_vm._s(permiso.name))]
+                                            )
+                                          ])
+                                        }),
+                                        0
+                                      )
+                                    ]
+                                  )
+                                ])
+                              ]),
                               _vm._v(" "),
                               _c("td", [
                                 _c("img", {
@@ -90306,6 +90475,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var v_calendar__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(v_calendar__WEBPACK_IMPORTED_MODULE_7__);
 /* harmony import */ var vue_paginate__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! vue-paginate */ "./node_modules/vue-paginate/dist/vue-paginate.js");
 /* harmony import */ var vue_paginate__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(vue_paginate__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _src_directives_directives_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./src/directives/directives.js */ "./resources/js/src/directives/directives.js");
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -90353,6 +90523,9 @@ Vue.use(_eli5_vue_lang_js__WEBPACK_IMPORTED_MODULE_3___default.a, {
 Vue.use(__webpack_require__(/*! vue-cookies */ "./node_modules/vue-cookies/vue-cookies.js"));
 Vue.use(vue_localstorage__WEBPACK_IMPORTED_MODULE_1___default.a);
 Vue.use(vue_paginate__WEBPACK_IMPORTED_MODULE_8___default.a);
+/**Directives*/
+
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -90428,6 +90601,8 @@ var app = new Vue({
     }
   },
   mounted: function mounted() {
+    console.log('user de html', UserId);
+
     if ($cookies.isKey('mostrarModalLogin') === false) {
       this.openLoginModal();
       $cookies.set('mostrarModalLogin', 'no', '6h');
@@ -92449,6 +92624,47 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/src/directives/directives.js":
+/*!***************************************************!*\
+  !*** ./resources/js/src/directives/directives.js ***!
+  \***************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.js");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);
+
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.directive('can', function (el, binding, vnode) {
+  var valores = binding.value;
+  var lista = valores.split(',');
+
+  if (lista.length === 2) {
+    if (Permissions.indexOf(lista[0]) !== -1 && UserId.name === lista[1]) {
+      el.hidden = false;
+    } else if (UserId.name === lista[1]) {
+      el.hidden = false;
+    } else if (UserId.name !== lista[1]) {
+      el.hidden = true;
+    } else {
+      el.hidden = false;
+    }
+  }
+});
+vue__WEBPACK_IMPORTED_MODULE_0___default.a.directive('can-user', function (el, binding, vnode) {
+  console.log('create permission-', binding);
+  console.log('existe permiso:' + Permissions.indexOf(binding.value) + '-permissions-', Permissions);
+
+  if (Permissions.indexOf(binding.value) !== -1) {
+    el.hidden = false;
+  } else {
+    el.hidden = true;
+  }
+});
+
+/***/ }),
+
 /***/ "./resources/js/vue-translations.js":
 /*!******************************************!*\
   !*** ./resources/js/vue-translations.js ***!
@@ -92621,6 +92837,7 @@ module.exports = {
     "Message sended": "Message sended",
     "Mirakuru Gran Familia Hostal. Reset Password Notification": "Mirakuru Gran Familia Hostal. Reset Password Notification",
     "Mobile Phone": "Mobile Phone",
+    "More": "More",
     "More Pictures": "More Pictures",
     "Name": "Name",
     "Nevermind": "Nevermind",
@@ -92733,6 +92950,7 @@ module.exports = {
     "Service Unavailable": "Service Unavailable",
     "Services": "Services",
     "Shared": "Shared",
+    "Show": "Show",
     "Show Recovery Codes": "Show Recovery Codes",
     "Showing": "Showing",
     "Slug": "Slug",
@@ -93145,6 +93363,7 @@ module.exports = {
     "Message sended": "Mensage enviado",
     "Mirakuru Gran Familia Hostal. Reset Password Notification": "Hostal Mirakuru Gran Familia. Notificaci\xF3n de cambio de contrase\xF1a",
     "Mobile Phone": "Tel\xE9fono M\xF3vil",
+    "More": "M\xE1s",
     "More Pictures": "M\xE1s Fotos",
     "Name": "Nombre",
     "Nevermind": "Olvidar",
@@ -93257,9 +93476,10 @@ module.exports = {
     "Service Unavailable": "Servicio no disponible",
     "Services": "Servicios",
     "Shared": "Veces Compartido",
+    "Show": "Mostrar",
     "Show Recovery Codes": "Mostrar c\xF3digos de recuperaci\xF3n",
     "Showing": "Mostrando desde el",
-    "Slug": "Slug",
+    "Slug": "Babosa",
     "Sorry, the page you are looking for could not be found.": "Lo sentimos, no se pudo encontrar la p\xE1gina que est\xE1s buscando.",
     "Sorry, we are doing some maintenance. Please check back soon.": "Lo sentimos, estamos haciendo un mantenimiento. Por favor, revise luego.",
     "Sorry, you are forbidden from accessing this page.": "Lo sentimos, tiene prohibido acceder a esta p\xE1gina.",
@@ -93549,6 +93769,7 @@ module.exports = {
     "Manage and logout your active sessions on other browsers and devices.": "Administre y cierre sus sesiones activas en otros navegadores y dispositivos.",
     "Message sended": "Mensage enviado",
     "Mirakuru Gran Familia Hostal. Reset Password Notification": "Hostal Mirakuru Gran Familia. Notificaci\xF3n de cambio de contrase\xF1a",
+    "More": "M\xE1s",
     "More Pictures": "M\xE1s Fotos",
     "Name": "Nombre",
     "Nevermind": "Olvidar",
@@ -93638,9 +93859,10 @@ module.exports = {
     "Server Error": "Error del servidor",
     "Service Unavailable": "Servicio no disponible",
     "Services": "Servicios",
+    "Show": "Mostrar",
     "Show Recovery Codes": "Mostrar c\xF3digos de recuperaci\xF3n",
     "Showing": "Mostrando desde el",
-    "Slug": "Slug",
+    "Slug": "Babosa",
     "Sorry, the page you are looking for could not be found.": "Lo sentimos, no se pudo encontrar la p\xE1gina que est\xE1s buscando.",
     "Sorry, we are doing some maintenance. Please check back soon.": "Lo sentimos, estamos haciendo un mantenimiento. Por favor, revise luego.",
     "Sorry, you are forbidden from accessing this page.": "Lo sentimos, tiene prohibido acceder a esta p\xE1gina.",

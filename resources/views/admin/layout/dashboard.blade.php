@@ -66,6 +66,7 @@
       </div>
 
       <!-- Nav Item - Pages Collapse Menu -->
+      @can ('admin')
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
           <i class="fas fa-fw fa-cog"></i>
@@ -75,11 +76,14 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">{{__('Tabs')}}:</h6>
             <a class="collapse-item" href="/users">{{__('Users')}}</a>
-            <a class="collapse-item" href="/roles">{{__('Role')}}</a>
+
+              <a class="collapse-item" href="/roles">{{__('Role')}}</a>
+
             <a class="collapse-item" href="/permissions">{{__('Permissions')}}</a>
           </div>
         </div>
       </li>
+      @endcan
 
 
       <!-- Nav Item - Charts -->
@@ -480,6 +484,16 @@
                 <script src="{{ asset('vendor/ckeditor/ckeditor.js') }}"></script>
                 <script src="{{ asset('vendor/ckeditor/adapters/jquery.js') }}"></script>
               @show
+              <script type="text/javascript">
+                window.CSRF_TOKEN = '{{ csrf_token() }}';
+                @auth
+                   window.Permissions = {!! json_encode(Auth::user()->checkPermission(), true) !!};
+                   window.UserId = {!! json_encode(Auth::user(), true) !!};
+                @else
+                   window.Permissions = [];
+                   window.UserId =[];
+                @endauth
+              </script>
 
             </body>
 

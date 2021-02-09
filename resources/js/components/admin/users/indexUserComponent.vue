@@ -27,7 +27,7 @@
     <div class="card-body">
 
       <div class="table-responsive">
-        <paginate class="pt-5 mt-3" ref="paginator" name = "users" :list = "users" :per = "5" :key="users ? users.length:0">
+        <paginate class="mt-3" ref="paginator" name = "users" :list = "users" :per = "3" :key="users ? users.length:0">
         <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
           <thead>
             <tr>
@@ -63,7 +63,22 @@
                     <td :class="user.id==user_id?text_color='text-light':''">{{user.name}}</td>
                     <td :class="user.id==user_id?text_color='text-light':''">{{user.email}}</td>
                     <td><p v-for="role in user.roles"><span class="badge badge-pill badge-info">{{role.name}}</span></p></td>
-                    <td><p v-for="permiso in user.permissions"><span class="badge badge-pill badge-info">{{permiso.name}}</span></p></td>
+                    <td>
+                      <!-- Collapsable Card Example -->
+                      <div class="card shadow mb-4">
+                        <!-- Card Header - Accordion -->
+                        <a :href="'#collapseCardExample'+user.id" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" :aria-controls="'collapseCardExample'+user.id">
+                          <h6 class="m-0 font-weight-bold text-primary">{{ $trans('messages.Show') }} {{ $trans('messages.Permissions') }}</h6>
+                        </a>
+                        <!-- Card Content - Collapse -->
+                        <div class="collapse" :id="'collapseCardExample'+user.id">
+                          <div class="card-body">
+                            <p v-for="permiso in user.permissions"><span class="badge badge-pill badge-info">{{permiso.name}}</span></p>
+                          </div>
+                        </div>
+                      </div>
+
+                    </td>
                     <td><img :src="src+user.imagen_url"  width="100"></td>
 
 

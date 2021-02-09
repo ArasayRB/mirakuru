@@ -5,7 +5,7 @@
       <h1 class="h3 mb-2 text-gray-800">{{ $trans('messages.Posts') }}</h1>
     </div>
     <div class="col-md-6">
-      <a href="#" @click="openAddPost()" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true">{{ $trans('messages.Add') }}</a>
+      <a href="#" @click="openAddPost()" v-can-user="'create-post'" class="btn btn-primary btn-lg float-md-right" role="button" aria-pressed="true" hidden>{{ $trans('messages.Add') }}</a>
     </div>
 
   </div>
@@ -62,7 +62,7 @@
 
                     <td>
                       <div class="dropdown">
-                        <a class="dropdown-toggle" title="Edit Translate/Editar Traducción" data-toggle="dropdown" @click="getTranslates(index,post)">
+                        <a class="dropdown-toggle" :id="'edit-translate-post-'+post.id" v-can-user="'edit-translate-post'" title="Edit Translate/Editar Traducción" data-toggle="dropdown" @click="getTranslates(index,post)" hidden>
                           <i class="fa fa-edit"></i>
                           <i class="fas fa-language"></i>
                         </a>
@@ -74,11 +74,11 @@
 
                           </div>
                       </div>
-                        <a href="#" @click="openAddTranslate(index,post)"><i class="fas fa-language" title="Add Language/Añadir Lenguage"></i></a>
-                        <a href="#" @click="openEditPost(index,post)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
-                        <a href="#" @click="deletePost(index,post.id,post.title)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
-                        <a :href="hreff+post.id"><i title="Preview/Vista previa" class="fa fa-eye"></i></a>
-                        <a id="publicado">
+                        <a href="#" @click="openAddTranslate(index,post)" :id="'translate-post-'+post.id" v-can-user="'translate-post'" hidden><i class="fas fa-language" title="Add Language/Añadir Lenguage"></i></a>
+                        <a href="#" @click="openEditPost(index,post)" :id="'update-post-'+post.id" v-can="'update-post,'+post.users.name"><i class="fa fa-edit" title="Edit/Editar"></i></a>
+                        <a href="#" @click="deletePost(index,post.id,post.title)" :id="'delete-post-'+post.id" v-can-user="'delete-post'" hidden><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
+                        <a :href="hreff+post.id" :id="'preview-'+post.id" v-can-user="'pre-view-post'" hidden><i title="Preview/Vista previa" class="fa fa-eye"></i></a>
+                        <a id="publicado" :id="'publish-post-'+post.id" v-can-user="'publish-post'" hidden>
                           <i :id="'publish-'+index" @click="publishIt(index,post)" v-if="post.show==false" title="Publish it/Publicar" class="fa fa-toggle-off"></i>
                           <i :id="'unpublish-'+index"  @click="publishIt(index,post)" v-else title="Publish it/Publicar" class="fa fa-toggle-on text-primary"></i>
                           <!--<i :id="'unpublish-act-'+index"  title="Publish it/Publicar" :hidden="post.show" class="fa fa-toggle-on text-primary"></i>
@@ -95,7 +95,7 @@
                     <td>{{post.publicate_state}}</td>
                     <td><img :src="src+post.img_url"  width="100"></td>
                     <td><img :src="src_qr+post.qr_img_url"  width="100"></td>
-                    <td>{{user}}</td>
+                    <td>{{post.users.name}}</td>
                     <td>{{post.categoria_posts.category_post}}</td>
 
                 </tr>
@@ -188,6 +188,7 @@
           lan_to_edit:'none',
           locale:'',
           user:this.$attrs.user,
+          userPermissions:[],
           imagenPost:'',
           src:'storage/img_web/posts_img/',
           src_qr:'storage/qrcodes/posts/',
@@ -312,7 +313,9 @@
                              });
                        })
                        .catch(error=>{
-                         console.log(error.response.data.errors);
+                         if(error.response.data.message){
+                         swal('Error',''+error.response.data.message,'error');
+                       }
                          let wrong=error.response.data.errors;
                          if(wrong.hasOwnProperty('title')){
                            mensaje+='-'+wrong.title[0];
@@ -370,7 +373,9 @@
                                });
                          })
                          .catch(error=>{
-                           console.log(error.response.data.errors);
+                             if(error.response.data.message){
+                             swal('Error',''+error.response.data.message,'error');
+                           }
                            let wrong=error.response.data.errors;
                            if(wrong.hasOwnProperty('title')){
                              mensaje+='-'+wrong.title[0];
@@ -448,6 +453,7 @@
 
       },
       created: function () {
+        this.userPermissions=Permissions;
         $('#publicado').add('<p>Hola</p>');
         this.getListPosts();
          axios.get('/categoriesList')

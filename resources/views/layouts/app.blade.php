@@ -116,10 +116,10 @@
             </div>
         </li>
 
-                        @if ((Auth::user()->hasRole('admin')==true)||(Auth::user()->hasRole('review-content')==true)||(Auth::user()->hasRole('writer-content')==true)||(Auth::user()->hasRole('public-content')==true))
+                        @cannot('client')
                             <li class="nav-item"><a href="/admin" class="nav-link text-light">{{__('Dashboard')}}</a></li>
 
-                        @endif
+                        @endcannot
 
 
 
@@ -192,5 +192,12 @@
 
            <script type="text/javascript">
              window.CSRF_TOKEN = '{{ csrf_token() }}';
+             @auth
+                window.Permissions = {!! json_encode(Auth::user()->permissions, true) !!};
+                window.UserId = {!! json_encode(Auth::user(), true) !!};
+             @else
+                window.Permissions = [];
+                window.UserId =[];
+             @endauth
            </script>
          </html>

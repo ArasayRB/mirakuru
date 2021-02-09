@@ -112,12 +112,28 @@ class User extends Authenticatable implements MustVerifyEmail
         return false;
     }
 
+    public function checkPermission(){
+      $permissions=[];
+      foreach (auth()->user()->permissions as $permiso) {
+        $permissions[]=$permiso->slug;
+      }
+      //$result=in_array($permiso,$permission);
+      return $permissions;
+    }
+
     public function hasRole($role)
     {
         if ($this->roles()->where('name', $role)->first()) {
             return true;
         }
         return false;
+    }
+
+    public function hasRoleBySlug($role){
+      if($this->roles->contains('slug',$role)){
+        return true;
+      }
+      return false;
     }
 
     public function sendEmailVerificationNotification()

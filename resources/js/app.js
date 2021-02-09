@@ -44,6 +44,10 @@ Vue.use(require('vue-cookies'));
 Vue.use(VueLocalStorage);
 Vue.use(VuePaginate);
 
+/**Directives*/
+
+import "./src/directives/directives.js";
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -122,6 +126,7 @@ const app = new Vue({
 
     },
     mounted(){
+      console.log('user de html',UserId);
       if($cookies.isKey('mostrarModalLogin')===false){
         this.openLoginModal();
         $cookies.set('mostrarModalLogin', 'no', '6h');

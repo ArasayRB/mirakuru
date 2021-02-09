@@ -123,6 +123,7 @@ trait PostTrait {
         $post->save();
     }
     if($type==="real"){
+
         if($post->default_lang!=app()->getLocale()){
           $post_lang=$this->getTranslatedPostBySigLang(app()->getLocale(),$post->id);
           $post->title=$post_lang->title;
@@ -131,6 +132,8 @@ trait PostTrait {
         }
       return view('/posts/show',['post'=>$post]);
     }
+
+          $this->authorize('preViewPost',$post);
      return view('/posts/show',['post'=>$post,'preview'=>'vista previa']);
     }
 
