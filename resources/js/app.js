@@ -126,7 +126,6 @@ const app = new Vue({
 
     },
     mounted(){
-      console.log('user de html',UserId);
       if($cookies.isKey('mostrarModalLogin')===false){
         this.openLoginModal();
         $cookies.set('mostrarModalLogin', 'no', '6h');

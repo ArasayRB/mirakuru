@@ -176,7 +176,8 @@ return [
         App\Providers\RouteServiceProvider::class,
         Mariuzzo\LaravelJsLocalization\LaravelJsLocalizationServiceProvider::class,
         Conner\Tagging\Providers\TaggingServiceProvider::class,
-        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class
+        SimpleSoftwareIO\QrCode\QrCodeServiceProvider::class,
+        App\Providers\RoleServiceProvider::class
 
     ],
 

@@ -121,6 +121,14 @@ class User extends Authenticatable implements MustVerifyEmail
       return $permissions;
     }
 
+    public function isAdmin()
+    {
+      if($this->roles->contains('slug','admin'))
+      {
+        return true;
+      }
+    }
+
     public function hasRole($role)
     {
         if ($this->roles()->where('name', $role)->first()) {
@@ -130,11 +138,23 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     public function hasRoleBySlug($role){
-      if($this->roles->contains('slug',$role)){
-        return true;
+
+      if(strpos($role,',')!==false){
+        $listRoles=explode(',',$role);
+        foreach ($listRoles as $rol) {
+          if($this->roles->contains('slug',$rol)){
+            return true;
+          }
+        }
+
+
+        }
+        else if($this->roles->contains('slug',$role)){
+          return true;
+        }
+        return false;
       }
-      return false;
-    }
+
 
     public function sendEmailVerificationNotification()
   {

@@ -90601,8 +90601,6 @@ var app = new Vue({
     }
   },
   mounted: function mounted() {
-    console.log('user de html', UserId);
-
     if ($cookies.isKey('mostrarModalLogin') === false) {
       this.openLoginModal();
       $cookies.set('mostrarModalLogin', 'no', '6h');
@@ -92646,16 +92644,17 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.directive('can', function (el, bindin
     } else if (UserId.name === lista[1]) {
       el.hidden = false;
     } else if (UserId.name !== lista[1]) {
-      el.hidden = true;
+      if (UserId.roles[0].slug === 'admin' || UserId.roles[0].slug === 'manager-content') {
+        el.hidden = false;
+      } else {
+        el.hidden = true;
+      }
     } else {
       el.hidden = false;
     }
   }
 });
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.directive('can-user', function (el, binding, vnode) {
-  console.log('create permission-', binding);
-  console.log('existe permiso:' + Permissions.indexOf(binding.value) + '-permissions-', Permissions);
-
   if (Permissions.indexOf(binding.value) !== -1) {
     el.hidden = false;
   } else {

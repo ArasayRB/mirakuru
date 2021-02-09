@@ -173,10 +173,16 @@
         <div id="collapsePost" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">{{__('Tabs')}}:</h6>
+            @role('admin,viewer-content,writer-content,publisher-content')
             <a class="collapse-item" href="/posts">{{__('Posts')}}</a>
+            @endrole
+            @role('admin,viewer-content')
             <a class="collapse-item" href="utilities-color.html">{{__('Posts Category')}}</a>
+            @endrole
+            @can('admin')
             <a class="collapse-item" href="utilities-border.html">{{__('Testimonials')}}</a>
             <a class="collapse-item" href="utilities-border.html">{{__('Testimonials Calification')}}</a>
+            @endcan
           </div>
         </div>
       </li>

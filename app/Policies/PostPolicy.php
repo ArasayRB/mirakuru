@@ -10,6 +10,13 @@ class PostPolicy
 {
     use HandlesAuthorization;
 
+    public function before($user,$ability)
+    {
+      if($user->isAdmin()){
+        return true;
+      }
+    }
+
     /**
      * Determine whether the user can view any models.
      *
@@ -57,6 +64,9 @@ class PostPolicy
           return true;
         }
         elseif ($post->user_id==$user->id) {
+          return true;
+        }
+        elseif($user->roles->contains('slug','manager-content')){
           return true;
         }
         return false;

@@ -12,7 +12,12 @@ Vue.directive('can', function (el, binding, vnode) {
               el.hidden = false;
             }
             else if(UserId.name!==lista[1]){
+              if(UserId.roles[0].slug==='admin'||UserId.roles[0].slug==='manager-content'){
+                el.hidden = false;
+              }
+              else{
               el.hidden = true;
+            }
             }
             else{
               el.hidden = false;
@@ -24,8 +29,6 @@ Vue.directive('can', function (el, binding, vnode) {
     });
 
     Vue.directive('can-user', function (el, binding, vnode) {
-      console.log('create permission-',binding);
-        console.log('existe permiso:'+Permissions.indexOf(binding.value)+'-permissions-',Permissions);
              if(Permissions.indexOf(binding.value)!==-1){
                el.hidden=false;
              }
