@@ -64,8 +64,8 @@ class PostController extends Controller
                    return $posts;
     }
 
-    public function previewPost($id){
-      return $this->show($id,'preview');
+    public function previewPost($slug){
+      return $this->show($slug,'preview');
     }
 
     public function publicatePost($idPost,$state){

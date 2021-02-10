@@ -43,6 +43,7 @@ trait PostTrait {
     public function getPost($post){
       $posts=Post::with('categoriaPosts')
                    ->with('keywords')
+                   ->with('users')
                    ->where('id',$post)
                    ->first();
 
@@ -114,15 +115,17 @@ trait PostTrait {
 
     }
 
-    public function show($idPost,$type){
+    public function show($postSlug,$type){
       $post=Post::with('users')
-                  ->find($idPost);
-                  if(Cache::has($idPost)==false){
-        Cache::add($idPost,'contador',0.30);
-        $post->cant_access_read++;
-        $post->save();
-    }
+                  ->where('slug',$postSlug)
+                  ->first();
     if($type==="real"){
+
+      if(Cache::has($post->id)==false){
+         Cache::add($post->id,'contador',0.30);
+         $post->cant_access_read++;
+         $post->save();
+      }
 
         if($post->default_lang!=app()->getLocale()){
           $post_lang=$this->getTranslatedPostBySigLang(app()->getLocale(),$post->id);
@@ -133,7 +136,7 @@ trait PostTrait {
       return view('/posts/show',['post'=>$post]);
     }
 
-          $this->authorize('preViewPost',$post);
+
      return view('/posts/show',['post'=>$post,'preview'=>'vista previa']);
     }
 

@@ -124,15 +124,15 @@ class WelcomeController extends Controller
         if($posts[$i]->default_lang!=app()->getLocale()){
           $post=$this->getTranslatedPostBySigLang(app()->getLocale(),$posts[$i]->id);
         $posts[$i]->title=$post->title;
-        $posts[$i]->content=$post->content;    
-        $posts[$i]->summary=$post->summary;   
+        $posts[$i]->content=$post->content;
+        $posts[$i]->summary=$post->summary;
        }
       }
       return ['posts'=>$posts,'posts_more_liked'=>$posts_more_liked,'posts_more_read'=>$posts_more_read,'latest_posts'=>$latest_posts];
     }
 
-    public function showPost($id){
-      return $this->show($id,'real');
+    public function showPost($slug){
+      return $this->show($slug,'real');
     }
 
     public function relationedPost($id){

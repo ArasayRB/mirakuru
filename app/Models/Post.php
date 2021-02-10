@@ -37,6 +37,7 @@ class Post extends Model
       return $this->belongsTo(User::class,'user_id');
     }
 
+    
     public function categoriaPosts(){
       return $this->belongsTo('App\Models\CategoriaPost','category_id');
     }

@@ -69452,7 +69452,7 @@ var render = function() {
                       "a",
                       {
                         staticClass: "stretched-link",
-                        attrs: { href: _vm.hreff + pot.id }
+                        attrs: { href: _vm.hreff + pot.slug }
                       },
                       [_vm._v(_vm._s(_vm.$trans("messages.Continue reading")))]
                     )
@@ -71485,7 +71485,7 @@ var render = function() {
                                       }
                                     ],
                                     attrs: {
-                                      href: _vm.hreff + post.id,
+                                      href: _vm.hreff + post.slug,
                                       id: "preview-" + post.id,
                                       hidden: ""
                                     }

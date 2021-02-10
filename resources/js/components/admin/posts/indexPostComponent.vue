@@ -77,7 +77,7 @@
                         <a href="#" @click="openAddTranslate(index,post)" :id="'translate-post-'+post.id" v-can-user="'translate-post'" hidden><i class="fas fa-language" title="Add Language/Añadir Lenguage"></i></a>
                         <a href="#" @click="openEditPost(index,post)" :id="'update-post-'+post.id" v-can="'update-post,'+post.users.name"><i class="fa fa-edit" title="Edit/Editar"></i></a>
                         <a href="#" @click="deletePost(index,post.id,post.title)" :id="'delete-post-'+post.id" v-can-user="'delete-post'" hidden><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
-                        <a :href="hreff+post.id" :id="'preview-'+post.id" v-can-user="'pre-view-post'" hidden><i title="Preview/Vista previa" class="fa fa-eye"></i></a>
+                        <a :href="hreff+post.slug" :id="'preview-'+post.id" v-can-user="'pre-view-post'" hidden><i title="Preview/Vista previa" class="fa fa-eye"></i></a>
                         <a id="publicado" :id="'publish-post-'+post.id" v-can-user="'publish-post'" hidden>
                           <i :id="'publish-'+index" @click="publishIt(index,post)" v-if="post.show==false" title="Publish it/Publicar" class="fa fa-toggle-off"></i>
                           <i :id="'unpublish-'+index"  @click="publishIt(index,post)" v-else title="Publish it/Publicar" class="fa fa-toggle-on text-primary"></i>

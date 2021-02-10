@@ -96,7 +96,7 @@ class PostPolicy
       return false;
     }
 
-    public function preViewPost(User $user,Post $post){
+    public function preViewPost(User $user){
       if($user->permissions->contains('slug','pre-view-post')){
         return true;
       }

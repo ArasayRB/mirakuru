@@ -21,7 +21,7 @@
             <h3 class="mb-0">{{pot.title}}</h3>
             <div class="mb-1 text-muted">{{pot.created_at}}</div>
             <p class="card-text mb-auto">{{pot.summary}}</p>
-            <a :href="hreff+pot.id" class="stretched-link">{{ $trans('messages.Continue reading') }}</a>
+            <a :href="hreff+pot.slug" class="stretched-link">{{ $trans('messages.Continue reading') }}</a>
 
            </div>
 
