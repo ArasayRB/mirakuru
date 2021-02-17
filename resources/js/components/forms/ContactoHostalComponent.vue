@@ -30,11 +30,12 @@
     <div class="col-6">
     <section class="info-contact">
       <div class="container mt-5">
-          <div class="tel-fijo"><p><mark class="bg-dark text-light">{{ $trans('messages.Landline') }}: <br></mark>+53-41993797</p></div>
-          <div class="movil"><p><mark class="bg-dark text-light">{{ $trans('messages.Mobile Phone') }} Arasay: <br></mark>+53-53419001</p>
-          <p><mark class="bg-dark text-light">{{ $trans('messages.Mobile Phone') }} Youblián: <br></mark>+53-52474269</p></div>
-          <div class="email"> <p><mark class="bg-dark text-light">{{ $trans('messages.Email') }}: <br></mark>hostalgranfamilia@gmail.com</p></div>
-          <div class="direc"><p><mark class="bg-dark text-light">{{ $trans('messages.Adress') }}: <br></mark>{{ $trans('messages.At 180A Camilo Cienfuegos, between José Martí and Miguel Calzada street. Trinidad, Sancti Spíritus, Cuba. PC: 62600') }}</p></div>
+          <div class="tel-fijo"><p><mark class="bg-dark text-light">{{ $trans('messages.Landline') }}: <br></mark>{{hostal_data.phone}}</p></div>
+          <div class="movil">
+            <p v-for="(owner,index) in hostal_data.owners"><mark class="bg-dark text-light">{{ $trans('messages.Mobile Phone') }}<br> {{owner.name}}: <br></mark>{{owner.cel}}</p>
+          </div>
+          <div class="email"> <p><mark class="bg-dark text-light">{{ $trans('messages.Email') }}: <br></mark>{{hostal_data.email}}</p></div>
+          <div class="direc"><p><mark class="bg-dark text-light">{{ $trans('messages.Adress') }}: <br></mark>{{ hostal_data.address}}</p></div>
         </div>
     </section>
     </div>
@@ -56,6 +57,8 @@
       data(){
         return {
           email:this.$attrs.email,
+          hostal:this.$attrs.hostal_id,
+          hostal_data:[],
           name:'',
           mensage:'',
           ventanaContact:false,
@@ -64,6 +67,13 @@
         }
       },
       methods:{
+        hostalData:function(){
+          axios.get('/data-hostal/'+this.hostal)
+               .then(response =>{
+                 this.hostal_data=response.data;
+
+               });
+        },
       contact:function(){
 
         let url="/contact";
@@ -76,7 +86,7 @@
             data.append("name", this.name);
             data.append("token", this.token);
             data.append("mensage", this.mensage);
-            data.append("hostal_id", 'Hostal Mirakuru Gran Familia');
+            data.append("hostal_id", this.hostal_data.name);
 
           axios.post(url,data)
                .then(response=>{
@@ -107,6 +117,8 @@
       }
       },
         mounted() {
+          this.hostalData();
+          console.log(this.$attrs.hostal_id);
           this.blockedDays={'start': null,'end': new Date()};
           if (this.$attrs.locale) {
                this.$lang.setLocale(this.$attrs.locale);

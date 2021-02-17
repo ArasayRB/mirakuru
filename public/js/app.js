@@ -6128,7 +6128,6 @@ __webpack_require__.r(__webpack_exports__);
     return {
       comentarios: [],
       comentario: [],
-      activeClass: '',
       src: '/storage/img_web/login_img/',
       token: window.CSRF_TOKEN
     };
@@ -6327,10 +6326,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       email: this.$attrs.email,
+      hostal: this.$attrs.hostal_id,
+      hostal_data: [],
       name: '',
       mensage: '',
       ventanaContact: false,
@@ -6338,8 +6340,15 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    contact: function contact() {
+    hostalData: function hostalData() {
       var _this = this;
+
+      axios.get('/data-hostal/' + this.hostal).then(function (response) {
+        _this.hostal_data = response.data;
+      });
+    },
+    contact: function contact() {
+      var _this2 = this;
 
       var url = "/contact";
       var mensaje = this.$trans('messages.Unidentified error');
@@ -6353,13 +6362,13 @@ __webpack_require__.r(__webpack_exports__);
       data.append("name", this.name);
       data.append("token", this.token);
       data.append("mensage", this.mensage);
-      data.append("hostal_id", 'Hostal Mirakuru Gran Familia');
+      data.append("hostal_id", this.hostal_data.name);
       axios.post(url, data).then(function (response) {
         var contact = response.data;
-        _this.ventanaContact = false;
+        _this2.ventanaContact = false;
         swal({
-          title: _this.$trans('messages.Message sended'),
-          text: _this.$trans('messages.You go to receive an answare as soon like be possible!'),
+          title: _this2.$trans('messages.Message sended'),
+          text: _this2.$trans('messages.You go to receive an answare as soon like be possible!'),
           icon: 'success',
           closeOnClickOutside: false,
           closeOnEsc: false
@@ -6380,6 +6389,8 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
+    this.hostalData();
+    console.log(this.$attrs.hostal_id);
     this.blockedDays = {
       'start': null,
       'end': new Date()
@@ -6551,6 +6562,76 @@ __webpack_require__.r(__webpack_exports__);
     this.searchIndices();
     console.log(this.books);
 
+    if (this.$attrs.locale) {
+      this.$lang.setLocale(this.$attrs.locale);
+    } else {
+      this.$lang.setLocale('en');
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      hostals: [],
+      hostal: [],
+      searcher: '',
+      setTimeOUTSearcher: '',
+      token: window.CSRF_TOKEN
+    };
+  },
+  methods: {
+    getHostals: function getHostals() {
+      var _this = this;
+
+      axios.get('/all-hostals', {
+        params: {
+          searcher: this.searcher
+        }
+      }).then(function (response) {
+        _this.hostals = response.data;
+      });
+    },
+    openHostal: function openHostal(hostal) {
+      window.location.href = window.location.origin + '/hostal/' + hostal.slug;
+    },
+    searchHostal: function searchHostal() {
+      clearTimeout(this.setTimeOUTSearcher);
+      this.setTimeOUTSearcher = setTimeout(this.getHostals, 360);
+    }
+  },
+  created: function created() {
+    this.getHostals();
+  },
+  mounted: function mounted() {
     if (this.$attrs.locale) {
       this.$lang.setLocale(this.$attrs.locale);
     } else {
@@ -7554,6 +7635,8 @@ __webpack_require__.r(__webpack_exports__);
       },
       email: this.$attrs.email,
       name: '',
+      hostal: this.$attrs.hostal_id,
+      hostal_data: [],
       adress: '',
       pais: '',
       phone: '',
@@ -7584,6 +7667,13 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    hostalData: function hostalData() {
+      var _this = this;
+
+      axios.get('/data-hostal/' + this.hostal).then(function (response) {
+        _this.hostal_data = response.data;
+      });
+    },
     esconderMensage: function esconderMensage() {
       $("#mensage").hide(true);
     },
@@ -7679,62 +7769,62 @@ __webpack_require__.r(__webpack_exports__);
       this.nuSortArr = numeros;
     },
     getCountryList: function getCountryList() {
-      var _this = this;
-
-      axios.get('/countries-list').then(function (response) {
-        _this.countries = response.data;
-      })["catch"](function (error) {
-        return _this.errors.push(error);
-      });
-    },
-    getTemporadasHostal: function getTemporadasHostal(name) {
       var _this2 = this;
 
-      axios.get('/temporadas-hostal/' + name).then(function (response) {
-        _this2.seasons = response.data.temporadas;
+      axios.get('/countries-list').then(function (response) {
+        _this2.countries = response.data;
       })["catch"](function (error) {
         return _this2.errors.push(error);
       });
     },
-    getBookedDatesBD: function getBookedDatesBD(name) {
+    getTemporadasHostal: function getTemporadasHostal(name) {
       var _this3 = this;
 
-      axios.get('/blocked-dates/' + name).then(function (response) {
-        var dates_block = response.data;
-        var temp;
-        _this3.blockedAllDays = dates_block;
+      axios.get('/temporadas-hostal/' + name).then(function (response) {
+        _this3.seasons = response.data.temporadas;
       })["catch"](function (error) {
         return _this3.errors.push(error);
       });
     },
-    getAvailableRooms: function getAvailableRooms(name) {
+    getBookedDatesBD: function getBookedDatesBD(name) {
       var _this4 = this;
 
-      axios.get('/available-rooms/' + name).then(function (response) {
-        _this4.rooms = response.data;
-
-        for (var i = 0; i < _this4.rooms.length; i++) {
-          _this4.roomCapacityMax += _this4.rooms[i].capacity;
-        }
-
-        _this4.childCapacityMax = _this4.roomCapacityMax - 1;
+      axios.get('/blocked-dates/' + name).then(function (response) {
+        var dates_block = response.data;
+        var temp;
+        _this4.blockedAllDays = dates_block;
       })["catch"](function (error) {
         return _this4.errors.push(error);
       });
     },
-    getAvailableServices: function getAvailableServices(name) {
+    getAvailableRooms: function getAvailableRooms(name) {
       var _this5 = this;
 
-      axios.get('/available-services/' + name).then(function (response) {
-        var hostalsServices = response.data;
-        var servicesHostal = hostalsServices[0].services;
-        _this5.services = servicesHostal;
+      axios.get('/available-rooms/' + name).then(function (response) {
+        _this5.rooms = response.data;
+
+        for (var i = 0; i < _this5.rooms.length; i++) {
+          _this5.roomCapacityMax += _this5.rooms[i].capacity;
+        }
+
+        _this5.childCapacityMax = _this5.roomCapacityMax - 1;
       })["catch"](function (error) {
         return _this5.errors.push(error);
       });
     },
-    book: function book() {
+    getAvailableServices: function getAvailableServices(name) {
       var _this6 = this;
+
+      axios.get('/available-services/' + name).then(function (response) {
+        var hostalsServices = response.data;
+        var servicesHostal = hostalsServices[0].services;
+        _this6.services = servicesHostal;
+      })["catch"](function (error) {
+        return _this6.errors.push(error);
+      });
+    },
+    book: function book() {
+      var _this7 = this;
 
       var url = "/reserva";
       var mensaje = this.$trans('messages.Unidentified error');
@@ -7783,43 +7873,43 @@ __webpack_require__.r(__webpack_exports__);
       data.append("amount", this.amount);
       data.append("date_in", this.range['start']);
       data.append("date_out", this.range['end']);
-      data.append("hostal_id", 'Hostal Mirakuru Gran Familia');
+      data.append("hostal_id", this.hostal_data.name);
       data.append("reservation_days", this.reservation_days);
       axios.post(url, data).then(function (response) {
         var valor = Object.keys(response.data);
 
         if (valor.includes('msg')) {
           swal({
-            title: _this6.$trans('messages.Whoops! Something went wrong.'),
-            text: _this6.$trans('messages.' + response.data['msg'] + ''),
+            title: _this7.$trans('messages.Whoops! Something went wrong.'),
+            text: _this7.$trans('messages.' + response.data['msg'] + ''),
             icon: 'error',
             closeOnClickOutside: false,
             closeOnEsc: false
           });
         } else {
           swal({
-            title: _this6.$trans('messages.Correct data'),
-            text: _this6.$trans('messages.You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment'),
+            title: _this7.$trans('messages.Correct data'),
+            text: _this7.$trans('messages.You have made a pre-reservation in our hostal, you must receive in your email a link that you must access for confirm it and know steps to payment'),
             icon: 'success',
             closeOnClickOutside: false,
             closeOnEsc: false
           });
-          _this6.name = '';
-          _this6.adress = '';
-          _this6.pais = '';
-          _this6.phone = '';
-          _this6.cant_person = 0;
-          _this6.childs = 0;
-          _this6.amount = 0;
-          _this6.selectedRooms = [];
-          _this6.selectedServices = [];
-          _this6.range = [];
+          _this7.name = '';
+          _this7.adress = '';
+          _this7.pais = '';
+          _this7.phone = '';
+          _this7.cant_person = 0;
+          _this7.childs = 0;
+          _this7.amount = 0;
+          _this7.selectedRooms = [];
+          _this7.selectedServices = [];
+          _this7.range = [];
 
-          _this6.getAvailableServices(hostalName);
+          _this7.getAvailableServices(hostalName);
 
-          _this6.getAvailableRooms(hostalName);
+          _this7.getAvailableRooms(hostalName);
 
-          _this6.getBookedDatesBD(hostalName);
+          _this7.getBookedDatesBD(hostalName);
         } //console.log(response);
 
       })["catch"](function (error) {
@@ -7931,7 +8021,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    var hostalName = 'Hostal Mirakuru Gran Familia';
+    var hostalName = this.hostal_data.name;
     this.getAvailableServices(hostalName);
     this.getAvailableRooms(hostalName);
     this.getCountryList();
@@ -8400,6 +8490,137 @@ __webpack_require__.r(__webpack_exports__);
         console.log(error.response.data);
       });
     }
+  },
+  mounted: function mounted() {
+    if (this.$attrs.locale) {
+      this.$lang.setLocale(this.$attrs.locale);
+    } else {
+      this.$lang.setLocale('en');
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=script&lang=js&":
+/*!***************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      src: '/storage/img_web/news_img/',
+      src_user: '/storage/img_web/login_img/',
+      noticias: [],
+      noticia: [],
+      token: window.CSRF_TOKEN
+    };
+  },
+  methods: {
+    getNoticias: function getNoticias() {
+      var _this = this;
+
+      var cant = 3;
+      axios.get('/read-news').then(function (response) {
+        _this.noticias = response.data;
+
+        if (_this.noticias.length === 0) {
+          $("#last-news").hide(true);
+        }
+        /*  else{
+            this.comentarios=
+          }*/
+
+      });
+    }
+  },
+  created: function created() {
+    this.getNoticias();
   },
   mounted: function mounted() {
     if (this.$attrs.locale) {
@@ -74031,7 +74252,7 @@ var render = function() {
                     { staticClass: "carousel-indicators" },
                     _vm._l(_vm.comentarios, function(comentario, index) {
                       return _c("li", {
-                        class: index == 0 ? _vm.activeClass : "active",
+                        class: index == 0 ? (_vm.activeClass = "active") : "",
                         attrs: {
                           "data-target": "demo",
                           id: "control" + index,
@@ -74050,7 +74271,7 @@ var render = function() {
                         "div",
                         {
                           staticClass: "carousel-item",
-                          class: index == 0 ? _vm.activeClass : "active",
+                          class: index == 0 ? (_vm.activeClass = "active") : "",
                           attrs: { id: "coment" + index }
                         },
                         [
@@ -74539,43 +74760,37 @@ var render = function() {
                                   _c("br")
                                 ]
                               ),
-                              _vm._v("+53-41993797")
+                              _vm._v(_vm._s(_vm.hostal_data.phone))
                             ])
                           ]),
                           _vm._v(" "),
-                          _c("div", { staticClass: "movil" }, [
-                            _c("p", [
-                              _c(
-                                "mark",
-                                { staticClass: "bg-dark text-light" },
-                                [
-                                  _vm._v(
-                                    _vm._s(
-                                      _vm.$trans("messages.Mobile Phone")
-                                    ) + " Arasay: "
-                                  ),
-                                  _c("br")
-                                ]
-                              ),
-                              _vm._v("+53-53419001")
-                            ]),
-                            _vm._v(" "),
-                            _c("p", [
-                              _c(
-                                "mark",
-                                { staticClass: "bg-dark text-light" },
-                                [
-                                  _vm._v(
-                                    _vm._s(
-                                      _vm.$trans("messages.Mobile Phone")
-                                    ) + " Youblián: "
-                                  ),
-                                  _c("br")
-                                ]
-                              ),
-                              _vm._v("+53-52474269")
-                            ])
-                          ]),
+                          _c(
+                            "div",
+                            { staticClass: "movil" },
+                            _vm._l(_vm.hostal_data.owners, function(
+                              owner,
+                              index
+                            ) {
+                              return _c("p", [
+                                _c(
+                                  "mark",
+                                  { staticClass: "bg-dark text-light" },
+                                  [
+                                    _vm._v(
+                                      _vm._s(
+                                        _vm.$trans("messages.Mobile Phone")
+                                      )
+                                    ),
+                                    _c("br"),
+                                    _vm._v(" " + _vm._s(owner.name) + ": "),
+                                    _c("br")
+                                  ]
+                                ),
+                                _vm._v(_vm._s(owner.cel))
+                              ])
+                            }),
+                            0
+                          ),
                           _vm._v(" "),
                           _c("div", { staticClass: "email" }, [
                             _c("p", [
@@ -74589,7 +74804,7 @@ var render = function() {
                                   _c("br")
                                 ]
                               ),
-                              _vm._v("hostalgranfamilia@gmail.com")
+                              _vm._v(_vm._s(_vm.hostal_data.email))
                             ])
                           ]),
                           _vm._v(" "),
@@ -74605,13 +74820,7 @@ var render = function() {
                                   _c("br")
                                 ]
                               ),
-                              _vm._v(
-                                _vm._s(
-                                  _vm.$trans(
-                                    "messages.At 180A Camilo Cienfuegos, between José Martí and Miguel Calzada street. Trinidad, Sancti Spíritus, Cuba. PC: 62600"
-                                  )
-                                )
-                              )
+                              _vm._v(_vm._s(_vm.hostal_data.address))
                             ])
                           ])
                         ])
@@ -75011,6 +75220,98 @@ var render = function() {
       ])
     ]
   )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=template&id=1974eefa&":
+/*!***********************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=template&id=1974eefa& ***!
+  \***********************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "text-center" }, [
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.searcher,
+            expression: "searcher"
+          }
+        ],
+        staticClass:
+          "form-control form-control-navbar text-center text-dark text-uppercase",
+        attrs: {
+          type: "search",
+          "aria-label": "Search",
+          title: "Search you HOSTAL",
+          placeholder: "Find your HOSTAL"
+        },
+        domProps: { value: _vm.searcher },
+        on: {
+          keyup: _vm.getHostals,
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.searcher = $event.target.value
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _vm.hostals.length
+      ? _c("div", { staticClass: "panel-footer" }, [
+          _c(
+            "ul",
+            { staticClass: "list-group" },
+            _vm._l(_vm.hostals, function(hostal, index) {
+              return _c("li", { staticClass: "list-group-item" }, [
+                _c(
+                  "a",
+                  {
+                    staticClass: "dropdown-item",
+                    attrs: { type: "submit" },
+                    on: {
+                      click: [
+                        function($event) {
+                          return _vm.openHostal(hostal)
+                        },
+                        function($event) {
+                          $event.preventDefault()
+                          _vm.searcher = hostal.name
+                        }
+                      ]
+                    }
+                  },
+                  [
+                    _c("span", {
+                      domProps: { innerHTML: _vm._s(hostal.word_black) }
+                    })
+                  ]
+                )
+              ])
+            }),
+            0
+          )
+        ])
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -77361,6 +77662,356 @@ var render = function() {
   )
 }
 var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=template&id=6b785e09&":
+/*!*******************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=template&id=6b785e09& ***!
+  \*******************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "container-fluid col-12", attrs: { id: "container-fluid" } },
+    [
+      _c("div", { staticClass: "row", attrs: { id: "home", name: "home" } }, [
+        _c("div", { staticClass: "col-12" }, [
+          _c("div", { staticClass: "contenedor-welcome-page" }, [
+            _c("div", { staticClass: "slider-welcome-page" }, [
+              _c("div", { staticClass: "welcome-page-slider" }, [
+                _c(
+                  "div",
+                  { staticClass: "slider-overflow" },
+                  [_c("input-hostal-search-component")],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  {
+                    staticClass: "slider-carousel",
+                    attrs: { id: "last-news" }
+                  },
+                  [
+                    _c(
+                      "div",
+                      {
+                        staticClass: "carousel slide pt-5",
+                        attrs: { id: "demonews", "data-ride": "carousel" }
+                      },
+                      [
+                        _c(
+                          "ul",
+                          { staticClass: "carousel-indicators" },
+                          _vm._l(_vm.noticias, function(noticia, index) {
+                            return _c("li", {
+                              class:
+                                index == 0 ? (_vm.activeClass = "active") : "",
+                              attrs: {
+                                "data-target": "demonews",
+                                id: "control-news" + index,
+                                "data-slide-to": index
+                              }
+                            })
+                          }),
+                          0
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "carousel-inner" },
+                          _vm._l(_vm.noticias, function(noticia, index) {
+                            return _c(
+                              "div",
+                              {
+                                staticClass: "carousel-item",
+                                class:
+                                  index == 0
+                                    ? (_vm.activeClass = "active")
+                                    : "",
+                                attrs: { id: "content-news" + index }
+                              },
+                              [
+                                _c(
+                                  "h2",
+                                  {
+                                    staticClass:
+                                      "pt-2 text-uppercase font-weight-bold"
+                                  },
+                                  [
+                                    _vm._v(
+                                      _vm._s(_vm.$trans("messages.News")) +
+                                        " " +
+                                        _vm._s(_vm.$trans("messages.About")) +
+                                        "!!- " +
+                                        _vm._s(noticia.tema_name)
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "h1",
+                                  {
+                                    staticClass: "text-warning text-uppercase"
+                                  },
+                                  [_vm._v(_vm._s(noticia.title) + " ")]
+                                ),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "block-quote" }, [
+                                  _c("p", [
+                                    _vm._v(_vm._s(noticia.description) + "...")
+                                  ])
+                                ]),
+                                _vm._v(" "),
+                                _c("div", { staticClass: "info" }, [
+                                  _c("div", { staticClass: "name" }, [
+                                    _vm._v(_vm._s(noticia.hostal_name))
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "position mb-5" }, [
+                                    _c(
+                                      "div",
+                                      { staticClass: "card shadow mt-5" },
+                                      [
+                                        _c(
+                                          "a",
+                                          {
+                                            staticClass:
+                                              "d-block card-header py-3 bg-warning",
+                                            attrs: {
+                                              href: "#collapseCardExample",
+                                              "data-toggle": "collapse",
+                                              role: "button",
+                                              "aria-expanded": "true",
+                                              "aria-controls":
+                                                "collapseCardExample"
+                                            }
+                                          },
+                                          [
+                                            _c(
+                                              "h6",
+                                              {
+                                                staticClass:
+                                                  "m-0 font-weight-bold bg-warning text- dark wow animate__animated animate__heartBeat animate__infinite"
+                                              },
+                                              [
+                                                _vm._v(
+                                                  _vm._s(
+                                                    _vm.$trans(
+                                                      "messages.Continue reading"
+                                                    )
+                                                  ) + "!...  "
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        ),
+                                        _vm._v(" "),
+                                        _c(
+                                          "div",
+                                          {
+                                            staticClass: "collapse",
+                                            attrs: { id: "collapseCardExample" }
+                                          },
+                                          [
+                                            _c(
+                                              "div",
+                                              { staticClass: "card-body" },
+                                              [
+                                                _c(
+                                                  "div",
+                                                  {
+                                                    staticClass:
+                                                      "card align-content-center",
+                                                    attrs: { id: "view-new" }
+                                                  },
+                                                  [
+                                                    _c(
+                                                      "div",
+                                                      {
+                                                        staticClass:
+                                                          "card-body h-5 w-5"
+                                                      },
+                                                      [
+                                                        _c("img", {
+                                                          staticClass:
+                                                            "img-fluid w-50 h-50 mx-auto d-block rounded-circle",
+                                                          attrs: {
+                                                            src:
+                                                              _vm.src +
+                                                              noticia.img_url
+                                                          }
+                                                        }),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "p",
+                                                          {
+                                                            staticClass:
+                                                              "text-dark"
+                                                          },
+                                                          [
+                                                            _vm._v(
+                                                              _vm._s(
+                                                                noticia.noticia
+                                                              )
+                                                            )
+                                                          ]
+                                                        )
+                                                      ]
+                                                    ),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "div",
+                                                      {
+                                                        staticClass:
+                                                          "card-footer"
+                                                      },
+                                                      [
+                                                        _c(
+                                                          "h3",
+                                                          {
+                                                            staticClass:
+                                                              "card-title text-dark text-uppercase text-center"
+                                                          },
+                                                          [
+                                                            _vm._v(
+                                                              _vm._s(
+                                                                _vm.$trans(
+                                                                  "messages.Writed By"
+                                                                )
+                                                              ) + ": "
+                                                            )
+                                                          ]
+                                                        ),
+                                                        _vm._v(" "),
+                                                        _c(
+                                                          "div",
+                                                          {
+                                                            staticClass: "row"
+                                                          },
+                                                          [
+                                                            _c(
+                                                              "h4",
+                                                              {
+                                                                staticClass:
+                                                                  "text-dark text-uppercase col-12"
+                                                              },
+                                                              [
+                                                                _c("img", {
+                                                                  staticClass:
+                                                                    "img-fluid w-10 h-10 rounded-circle border border-marning shadow",
+                                                                  attrs: {
+                                                                    src:
+                                                                      _vm.src_user +
+                                                                      noticia
+                                                                        .user_name
+                                                                        .imagen_url
+                                                                  }
+                                                                }),
+                                                                _vm._v(
+                                                                  "\n                                    " +
+                                                                    _vm._s(
+                                                                      noticia
+                                                                        .user_name
+                                                                        .name
+                                                                    ) +
+                                                                    "\n                                  "
+                                                                )
+                                                              ]
+                                                            ),
+                                                            _vm._v(" "),
+                                                            _c(
+                                                              "p",
+                                                              {
+                                                                staticClass:
+                                                                  "text-dark font-weight-bold text-center col-12"
+                                                              },
+                                                              [
+                                                                _vm._v(
+                                                                  _vm._s(
+                                                                    noticia
+                                                                      .user_name
+                                                                      .profile
+                                                                  )
+                                                                )
+                                                              ]
+                                                            )
+                                                          ]
+                                                        )
+                                                      ]
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            )
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              ]
+                            )
+                          }),
+                          0
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm._m(0),
+                    _vm._v(" "),
+                    _vm._m(1)
+                  ]
+                )
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "a",
+      {
+        staticClass: "carousel-control-prev",
+        attrs: { href: "#demonews", "data-slide": "prev" }
+      },
+      [_c("span", { staticClass: "carousel-control-prev-icon" })]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "a",
+      {
+        staticClass: "carousel-control-next",
+        attrs: { href: "#demonews", "data-slide": "next" }
+      },
+      [_c("span", { staticClass: "carousel-control-next-icon" })]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -90540,6 +91191,8 @@ Vue.component('tags-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_6__["
 Vue.component('keys-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_6__["default"]);
 Vue.component('keywords-input', _voerro_vue_tagsinput__WEBPACK_IMPORTED_MODULE_6__["default"]);
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]);
+Vue.component('welcome-search-component', __webpack_require__(/*! ./components/pages/WelcomeSearchComponent.vue */ "./resources/js/components/pages/WelcomeSearchComponent.vue")["default"]);
+Vue.component('input-hostal-search-component', __webpack_require__(/*! ./components/forms/InputHostalSearchComponent.vue */ "./resources/js/components/forms/InputHostalSearchComponent.vue")["default"]);
 Vue.component('cont-view-share-like-component', __webpack_require__(/*! ./components/forms/ContViewShareLikeComponent.vue */ "./resources/js/components/forms/ContViewShareLikeComponent.vue")["default"]);
 Vue.component('reservar-hostal-component', __webpack_require__(/*! ./components/forms/ReservarHostalComponent.vue */ "./resources/js/components/forms/ReservarHostalComponent.vue")["default"]);
 Vue.component('comentario-hostal-component', __webpack_require__(/*! ./components/forms/ComentarioHostalComponent.vue */ "./resources/js/components/forms/ComentarioHostalComponent.vue")["default"]);
@@ -92070,6 +92723,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/forms/InputHostalSearchComponent.vue":
+/*!**********************************************************************!*\
+  !*** ./resources/js/components/forms/InputHostalSearchComponent.vue ***!
+  \**********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _InputHostalSearchComponent_vue_vue_type_template_id_1974eefa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./InputHostalSearchComponent.vue?vue&type=template&id=1974eefa& */ "./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=template&id=1974eefa&");
+/* harmony import */ var _InputHostalSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InputHostalSearchComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _InputHostalSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _InputHostalSearchComponent_vue_vue_type_template_id_1974eefa___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _InputHostalSearchComponent_vue_vue_type_template_id_1974eefa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/forms/InputHostalSearchComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************!*\
+  !*** ./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_InputHostalSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./InputHostalSearchComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_InputHostalSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=template&id=1974eefa&":
+/*!*****************************************************************************************************!*\
+  !*** ./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=template&id=1974eefa& ***!
+  \*****************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_InputHostalSearchComponent_vue_vue_type_template_id_1974eefa___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./InputHostalSearchComponent.vue?vue&type=template&id=1974eefa& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/forms/InputHostalSearchComponent.vue?vue&type=template&id=1974eefa&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_InputHostalSearchComponent_vue_vue_type_template_id_1974eefa___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_InputHostalSearchComponent_vue_vue_type_template_id_1974eefa___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/components/forms/ListComentariosHostalComponent.vue":
 /*!**************************************************************************!*\
   !*** ./resources/js/components/forms/ListComentariosHostalComponent.vue ***!
@@ -92622,6 +93344,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/pages/WelcomeSearchComponent.vue":
+/*!******************************************************************!*\
+  !*** ./resources/js/components/pages/WelcomeSearchComponent.vue ***!
+  \******************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _WelcomeSearchComponent_vue_vue_type_template_id_6b785e09___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./WelcomeSearchComponent.vue?vue&type=template&id=6b785e09& */ "./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=template&id=6b785e09&");
+/* harmony import */ var _WelcomeSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./WelcomeSearchComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _WelcomeSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _WelcomeSearchComponent_vue_vue_type_template_id_6b785e09___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _WelcomeSearchComponent_vue_vue_type_template_id_6b785e09___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/pages/WelcomeSearchComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************************!*\
+  !*** ./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WelcomeSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./WelcomeSearchComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_WelcomeSearchComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=template&id=6b785e09&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=template&id=6b785e09& ***!
+  \*************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WelcomeSearchComponent_vue_vue_type_template_id_6b785e09___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./WelcomeSearchComponent.vue?vue&type=template&id=6b785e09& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/pages/WelcomeSearchComponent.vue?vue&type=template&id=6b785e09&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WelcomeSearchComponent_vue_vue_type_template_id_6b785e09___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WelcomeSearchComponent_vue_vue_type_template_id_6b785e09___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/src/directives/directives.js":
 /*!***************************************************!*\
   !*** ./resources/js/src/directives/directives.js ***!
@@ -92684,6 +93475,7 @@ module.exports = {
     "API Token Permissions": "API Token Permissions",
     "API Tokens": "API Tokens",
     "API tokens allow third-party services to authenticate with our application on your behalf.": "API tokens allow third-party services to authenticate with our application on your behalf.",
+    "About": "About",
     "About us": "About us",
     "Account User": "Account User",
     "Accounts": "Accounts",
@@ -92764,6 +93556,7 @@ module.exports = {
     "Deleted": "Deleted",
     "Description": "Description",
     "Disable": "Disable",
+    "Distance": "Distance",
     "Do you want publish the post": "Do you want publish the post",
     "Do you want unpublish the post": "Do you want unpublish the post",
     "Done.": "Done.",
@@ -92808,6 +93601,7 @@ module.exports = {
     "If you dont have a reservation finished with us, please you do not need do any thing with this email": "If you dont have a reservation finished with us, please you do not need do any thing with this email",
     "If you\u2019re having trouble clicking the \"=>actionText\" button, copy and paste the URL below\ninto your web browser=>": "If you\u2019re having trouble clicking the \"=>actionText\" button, copy and paste the URL below\ninto your web browser=>",
     "Image": "Image",
+    "Incluid": "Incluid",
     "Interface": "Interface",
     "Invalid signature.": "Invalid signature.",
     "Keywords": "Keywords",
@@ -92843,6 +93637,7 @@ module.exports = {
     "New Password": "New Password",
     "New Post": "New Post",
     "New User": "New User",
+    "News": "News",
     "Newsletter ": "Newsletter ",
     "Next": "Next",
     "None Post added yet": "None Post added yet",
@@ -92855,6 +93650,7 @@ module.exports = {
     "Oh no": "Oh no",
     "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.": "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.",
     "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.": "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.",
+    "Our house offers you quality services with fresh and totally natural products.": "Our house offers you quality services with fresh and totally natural products.",
     "Page Expired": "Page Expired",
     "Page Not Found": "Page Not Found",
     "Pagination Navigation": "Pagination Navigation",
@@ -92904,6 +93700,7 @@ module.exports = {
     "Ppal text8": "In addition, among our offers we want to include",
     "Ppal text9": "THE EXCHANGE, yes, you have read very well, we know that we find ourselves in very difficult situations in the world economy, and ",
     "Previous": "Previous",
+    "Price": "Price",
     "Profile": "Profile",
     "Profile Information": "Profile Information",
     "Publication State": "Publication state",
@@ -93035,12 +93832,15 @@ module.exports = {
     "Video": "Video",
     "Warning!": "Warning!",
     "We hope your days was you spended in our hostal magnificent very well. Can you share with other travelers your experience with our service? If you want  leave a review our hostal click in the below button please, we be greatfull of count with your opinion. Be WELCOME ALLWAYS!!": "We hope your days was you spended in our hostal magnificent very well. Can you share with other travelers your experience with our service? If you want  leave a review our hostal click in the below button please, we be greatfull of count with your opinion. Be WELCOME ALLWAYS!!",
+    "We provide you with several excursions, from included in your reservation price to others with an additional price, in different languages where you will know various attractions of the city.": "We provide you with several excursions, from included in your reservation price to others with an additional price, in different languages where you will know various attractions of the city.",
     "We were unable to find a registered user with this email address.": "We were unable to find a registered user with this email address.",
     "We won't ask for your password again for a few hours.": "We won't ask for your password again for a few hours.",
     "Welcome to our hostal web": "Welcome to our hostal web",
     "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.": "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.",
+    "Wherever you plan to go, we can help you manage your transfer from low prices to more specialized prices depending on the comfort and safety with which you like to travel.": "Wherever you plan to go, we can help you manage your transfer from low prices to more specialized prices depending on the comfort and safety with which you like to travel.",
     "Whoops!": "Whoops!",
     "Whoops! Something went wrong.": "Whoops! Something went wrong.",
+    "Writed By": "Writed By",
     "Yes": "Yes",
     "Yes, delete": "Yes, delete",
     "You are in Preview Post, the navbar no function, this is only for check how look before publish it": "You are in Preview Post, the navbar no function, this is only for check how look before publish it",
@@ -93210,6 +94010,7 @@ module.exports = {
     "API Token Permissions": "Permisos para el token API",
     "API Tokens": "Tokens API",
     "API tokens allow third-party services to authenticate with our application on your behalf.": "Los tokens API permiten a servicios de terceros autenticarse con nuestra aplicaci\xF3n en su nombre.",
+    "About": "Acerca",
     "About us": "Nosotros",
     "Account User": "Cuenta de Usuario",
     "Accounts": "Cuentas",
@@ -93290,6 +94091,7 @@ module.exports = {
     "Deleted": "Eliminado",
     "Description": "Descripci\xF3n",
     "Disable": "Inhabilitar",
+    "Distance": "Distancia",
     "Do you want publish the post": "Desea publicar el post",
     "Do you want unpublish the post": "Desea dejar de publicar el post",
     "Done.": "Hecho.",
@@ -93334,6 +94136,7 @@ module.exports = {
     "If you dont have a reservation finished with us, please you do not need do any thing with this email": "Si no ha finalizado una reserva con nosotros, no necesita hacer nada con este correo electr\xF3nico",
     "If you\u2019re having trouble clicking the \"=>actionText\" button, copy and paste the URL below\ninto your web browser=>": "Si tiene problemas para hacer clic en el bot\xF3n \"=>actionText\", copie y pegue la siguiente URL \nen su navegador web=>",
     "Image": "Imagen",
+    "Incluid": "Incluido",
     "Interface": "Interface",
     "Invalid signature.": "Firma no v\xE1lida.",
     "Keywords": "Palabras claves",
@@ -93369,6 +94172,7 @@ module.exports = {
     "New Password": "Nueva contrase\xF1a",
     "New Post": "Crear Post",
     "New User": "Crear Usuario",
+    "News": "Noticias",
     "Newsletter ": "Noticias ",
     "Next": "Siguiente",
     "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
@@ -93381,6 +94185,7 @@ module.exports = {
     "Oh no": "Ay no",
     "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.": "Una vez que se elimina un equipo, todos sus recursos y datos se eliminar\xE1n de forma permanente. Antes de eliminar este equipo, descargue cualquier dato o informaci\xF3n sobre este equipo que desee conservar.",
     "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.": "Una vez su cuenta sea borrada, todos sus recursos y datos se eliminar\xE1n de forma permanente. Antes de borrar su cuenta, por favor descargue cualquier dato o informaci\xF3n que desee conservar.",
+    "Our house offers you quality services with fresh and totally natural products.": "Nuestra casa pone a su disposici\xF3n servicios de calidad con productos frescos y totalmente naturales.",
     "Page Expired": "P\xE1gina Expirada",
     "Page Not Found": "P\xE1gina no encontrada",
     "Pagination Navigation": "Navegaci\xF3n por los enlaces de paginaci\xF3n",
@@ -93430,6 +94235,7 @@ module.exports = {
     "Ppal text8": "Adem\xE1s entre nuestras ofertas queremos incluir",
     "Ppal text9": "EL INTERCAMBIO, s\xED, has le\xEDdo muy bien, sabemos que nos encontramos en situaciones muy dif\xEDciles de la econom\xEDa mundial, y ",
     "Previous": "Anterior",
+    "Price": "Precio",
     "Profile": "Perfil",
     "Profile Information": "Informaci\xF3n de Perfil",
     "Publication State": "Estado de Publicacion",
@@ -93561,12 +94367,15 @@ module.exports = {
     "Video": "Video",
     "Warning!": "Atenci\xF3n!",
     "We hope your days was you spended in our hostal magnificent very well. Can you share with other travelers your experience with our service? If you want  leave a review our hostal click in the below button please, we be greatfull of count with your opinion. Be WELCOME ALLWAYS!!": "Esperamos que hayan pasado muy bien sus d\xEDas en nuestro magn\xEDfico hostal. \xBFPuedes compartir con otros viajeros tu experiencia con nuestro servicio? Si desea dejar un comentario sobre nuestro hostal, haga clic en el bot\xF3n de abajo, estaremos encantados de contar con su opini\xF3n. Sea BIENVENIDO SIEMPRE !!",
+    "We provide you with several excursions, from included in your reservation price to others with an additional price, in different languages where you will know various attractions of the city.": "Le proporcionamos a usted varias excursiones, desde incluidas en su precio de reserva hasta otras con precio adicional, en diferentes idiomas donde conocer\xE1n varios atractivos de la ciudad.",
     "We were unable to find a registered user with this email address.": "No pudimos encontrar un usuario registrado con esta direcci\xF3n de correo electr\xF3nico.",
     "We won't ask for your password again for a few hours.": "No pediremos su contrase\xF1a de nuevo por unas horas.",
     "Welcome to our hostal web": "Bienvenido a la web de nuestro hostal",
     "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.": "Cuando la autenticaci\xF3n de dos factores est\xE9 habilitada, le pediremos un token aleatorio seguro durante la autenticaci\xF3n. Puede recuperar este token desde la aplicaci\xF3n Google Authenticator de su tel\xE9fono.",
+    "Wherever you plan to go, we can help you manage your transfer from low prices to more specialized prices depending on the comfort and safety with which you like to travel.": "Donde quiera que usted piense ir nosotros podremos ayudar a gestionar su traslado desde precios econ\xF3micos hasta precios m\xE1s especializados dependiendo del confort y seguridad con el que guste viajar.",
     "Whoops!": "\xA1Vaya!",
     "Whoops! Something went wrong.": "\xA1Vaya! Algo sali\xF3 mal",
+    "Writed By": "Escrito Por",
     "Yes": "S\xED",
     "Yes, delete": "S\xED, elimiinar",
     "You are in Preview Post, the navbar no function, this is only for check how look before publish it": "Est\xE1s en Vista previa del Post, la barra de men\xFA no funciona, esto es solo para que vea como luce antes de publicarlo",
@@ -93620,6 +94429,7 @@ module.exports = {
     "API Token Permissions": "Permisos para el token API",
     "API Tokens": "Tokens API",
     "API tokens allow third-party services to authenticate with our application on your behalf.": "Los tokens API permiten a servicios de terceros autenticarse con nuestra aplicaci\xF3n en su nombre.",
+    "About": "Acerca",
     "About us": "Nosotros",
     "Account User": "Cuenta de Usuario",
     "Accounts": "Cuentas",
@@ -93700,6 +94510,7 @@ module.exports = {
     "Deleted": "Eliminado",
     "Description": "Descripci\xF3n",
     "Disable": "Inhabilitar",
+    "Distance": "Distancia",
     "Do you know what differentiates us from the rest of the great community of hostels that exist in Trinidad? Surely you will think that there we go with new old women that everyone says": "Sabe qu\xE9 nos diferencia del resto de la gran comunidad de hostales que existen en Trinidad? Seguro pensar\xE1s que all\xE1 vamos con nuevas viejas que todos dicen",
     "Do you want publish the post": "Desea publicar el post",
     "Do you want unpublish the post": "Desea dejar de publicar el post",
@@ -93743,6 +94554,7 @@ module.exports = {
     "If you dont have a reservation finished with us, please you do not need do any thing with this email": "Si no ha finalizado una reserva con nosotros, no necesita hacer nada con este correo electr\xF3nico",
     "If you\u2019re having trouble clicking the \":actionText\" button, copy and paste the URL below\ninto your web browser:": "Si tiene problemas para hacer clic en el bot\xF3n \":actionText\", copie y pegue la siguiente URL \nen su navegador web:",
     "In addition, among our offers we want to include": "Adem\xE1s entre nuestras ofertas queremos incluir",
+    "Incluid": "Incluido",
     "Interface": "Interface",
     "Invalid signature.": "Firma no v\xE1lida.",
     "Keywords": "Palabras claves",
@@ -93774,6 +94586,7 @@ module.exports = {
     "Nevermind": "Olvidar",
     "New Password": "Nueva contrase\xF1a",
     "New User": "Crear Usuario",
+    "News": "Noticias",
     "Newsletter ": "Noticias ",
     "Next": "Siguiente",
     "None Post added yet": "Ning\xFAn Post a\xF1adido a\xFAn",
@@ -93786,6 +94599,7 @@ module.exports = {
     "Oh no": "Ay no",
     "Once a team is deleted, all of its resources and data will be permanently deleted. Before deleting this team, please download any data or information regarding this team that you wish to retain.": "Una vez que se elimina un equipo, todos sus recursos y datos se eliminar\xE1n de forma permanente. Antes de eliminar este equipo, descargue cualquier dato o informaci\xF3n sobre este equipo que desee conservar.",
     "Once your account is deleted, all of its resources and data will be permanently deleted. Before deleting your account, please download any data or information that you wish to retain.": "Una vez su cuenta sea borrada, todos sus recursos y datos se eliminar\xE1n de forma permanente. Antes de borrar su cuenta, por favor descargue cualquier dato o informaci\xF3n que desee conservar.",
+    "Our house offers you quality services with fresh and totally natural products.": "Nuestra casa pone a su disposici\xF3n servicios de calidad con productos frescos y totalmente naturales.",
     "Page Expired": "P\xE1gina Expirada",
     "Page Not Found": "P\xE1gina no encontrada",
     "Pagination Navigation": "Navegaci\xF3n por los enlaces de paginaci\xF3n",
@@ -93814,6 +94628,7 @@ module.exports = {
     "Posts": "Posts",
     "Posts Category": "Categoria de Posts",
     "Previous": "Anterior",
+    "Price": "Precio",
     "Profile": "Perfil",
     "Profile Information": "Informaci\xF3n de Perfil",
     "Publish Post": "Publicar Post",
@@ -93941,13 +94756,16 @@ module.exports = {
     "WHAT BETTER": "QU\xC9 MEJOR",
     "Warning!": "Atenci\xF3n!",
     "We hope your days was you spended in our hostal magnificent very well. Can you share with other travelers your experience with our service? If you want  leave a review our hostal click in the below button please, we be greatfull of count with your opinion. Be WELCOME ALLWAYS!!": "Esperamos que hayan pasado muy bien sus d\xEDas en nuestro magn\xEDfico hostal. \xBFPuedes compartir con otros viajeros tu experiencia con nuestro servicio? Si desea dejar un comentario sobre nuestro hostal, haga clic en el bot\xF3n de abajo, estaremos encantados de contar con su opini\xF3n. Sea BIENVENIDO SIEMPRE !!",
+    "We provide you with several excursions, from included in your reservation price to others with an additional price, in different languages where you will know various attractions of the city.": "Le proporcionamos a usted varias excursiones, desde incluidas en su precio de reserva hasta otras con precio adicional, en diferentes idiomas donde conocer\xE1n varios atractivos de la ciudad.",
     "We were unable to find a registered user with this email address.": "No pudimos encontrar un usuario registrado con esta direcci\xF3n de correo electr\xF3nico.",
     "We won't ask for your password again for a few hours.": "No pediremos su contrase\xF1a de nuevo por unas horas.",
     "Welcome to our hostal web": "Bienvenido a la web de nuestro hostal",
     "Well no, let me tell you in a few lines what we believe in a lot that differentiates us from the rest. First of all, we charge a price very similar to the rest, with the difference that in many cases we put an added value that can range from a simple": "Pues no, d\xE9jeme decirle en pocas l\xEDneas lo que creemos con mucho a\xEDnco que nos diferencia del resto. Primero que todo, cobramos un precio muy similar al resto, con la diferencia que en muchos casos le ponemos un valor a\xF1adido que puede ir desde un",
     "When two factor authentication is enabled, you will be prompted for a secure, random token during authentication. You may retrieve this token from your phone's Google Authenticator application.": "Cuando la autenticaci\xF3n de dos factores est\xE9 habilitada, le pediremos un token aleatorio seguro durante la autenticaci\xF3n. Puede recuperar este token desde la aplicaci\xF3n Google Authenticator de su tel\xE9fono.",
+    "Wherever you plan to go, we can help you manage your transfer from low prices to more specialized prices depending on the comfort and safety with which you like to travel.": "Donde quiera que usted piense ir nosotros podremos ayudar a gestionar su traslado desde precios econ\xF3micos hasta precios m\xE1s especializados dependiendo del confort y seguridad con el que guste viajar.",
     "Whoops!": "\xA1Vaya!",
     "Whoops! Something went wrong.": "\xA1Vaya! Algo sali\xF3 mal",
+    "Writed By": "Escrito Por",
     "YOU DIDN'T THINK TO VISIT TRINIDAD": "NO PENSABA VISITAR TRINIDAD",
     "Yes": "S\xED",
     "Yes, delete": "S\xED, elimiinar",

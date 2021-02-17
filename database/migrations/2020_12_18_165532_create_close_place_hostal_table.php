@@ -17,6 +17,8 @@ class CreateClosePlaceHostalTable extends Migration
             $table->id();
             $table->unsignedBigInteger('close_place_id');
             $table->unsignedBigInteger('hostal_id');
+            $table->string('distance_km');
+            $table->string('distance_walking');
             $table->timestamps();
             $table->foreign('close_place_id')->references('id')->on('close_places')->onDelete('cascade');
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');

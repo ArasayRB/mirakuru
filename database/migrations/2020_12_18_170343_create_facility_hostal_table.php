@@ -17,6 +17,7 @@ class CreateFacilityHostalTable extends Migration
             $table->id();
             $table->unsignedBigInteger('facility_id');
             $table->unsignedBigInteger('hostal_id');
+            $table->float('price',8,2)->default(0.00);
             $table->timestamps();
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');
             $table->foreign('facility_id')->references('id')->on('facilities')->onDelete('cascade');

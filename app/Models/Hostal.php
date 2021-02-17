@@ -17,6 +17,7 @@ use App\Models\Suscripcion;
 use App\Models\ClosePlace;
 use App\Models\User;
 use App\Models\Facility;
+use App\Models\Owner;
 use App\Models\Temporada;
 use Conner\Tagging\Taggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -39,12 +40,23 @@ class Hostal extends Model
         'keywords',
     ];
 
+    public function scopeFilterByNameAdress($query,$filter){
+      if(!empty($filter)){
+        $query->where('name', 'LIKE', '%'.$filter.'%')
+                        ->orWhere('address', 'LIKE', '%'.$filter.'%');
+      }
+    }
+
     public function users(){
       return $this->belongsTo(User::class)->withTimestamps();
     }
 
     public function temporadas(){
       return $this->belongsToMany(Temporada::class,'hostal_temporada','hostal_id','temporada_id')->withPivot('active','active_date','inactive_date')->withTimestamps();
+    }
+
+    public function owners(){
+      return $this->belongsToMany(Owner::class,'hostal_owner','hostal_id','owner_id')->withTimestamps();
     }
 
     public function keywords(){
@@ -56,11 +68,11 @@ class Hostal extends Model
     }
 
     public function closePlaces(){
-      return $this->belongsToMany(ClosePlace::class,'close_place_hostal','hostal_id','close_place_id')->withTimestamps();
+      return $this->belongsToMany(ClosePlace::class,'close_place_hostal','hostal_id','close_place_id')->withPivot('distance_km','distance_walking')->withTimestamps();
     }
 
     public function facilities(){
-      return $this->belongsToMany(Hostal::class,'facility_hostal','hostal_id','facility_id')->withTimestamps();
+      return $this->belongsToMany(Facility::class,'facility_hostal','hostal_id','facility_id')->withPivot('price')->withTimestamps();
     }
 
     public function contactos(){

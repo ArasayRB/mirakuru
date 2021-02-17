@@ -23,7 +23,7 @@ class CreatePublicacionHostalsTable extends Migration
             $table->boolean('publicate_state');
             $table->unsignedBigInteger('hostal_id');
             $table->text('tags');
-            $table->text('slug');
+            $table->text('slug')->unique();
             $table->text('keywords');
             $table->timestamps();
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');

@@ -17,7 +17,8 @@ class CreateFotosTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('qr_img_web_url')->nullable();
-            $table->string('description');
+            $table->text('description');
+            $table->string('slug')->unique();
             $table->string('img_url');
             $table->unsignedBigInteger('hostal_id');
             $table->unsignedBigInteger('area_id');

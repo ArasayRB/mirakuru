@@ -23,6 +23,8 @@ class ServicioTableSeeder extends Seeder
       $categoria->person_min=1;
       $categoria->person_max=1;
       $categoria->save();
+      $categoria->hostales()->attach(1);
+      $categoria->hostales()->attach(2);
 
       $categoria=new Servicio();
       $categoria->name='Desayuno Sencillo';
@@ -33,6 +35,8 @@ class ServicioTableSeeder extends Seeder
       $categoria->person_min=1;
       $categoria->person_max=1;
       $categoria->save();
+      $categoria->hostales()->attach(1);
+      $categoria->hostales()->attach(2);
 
       $categoria=new Servicio();
       $categoria->name='Desayuno Normal';
@@ -43,5 +47,7 @@ class ServicioTableSeeder extends Seeder
       $categoria->person_min=1;
       $categoria->person_max=1;
       $categoria->save();
+      $categoria->hostales()->attach(1);
+      $categoria->hostales()->attach(2);
     }
 }

@@ -16,9 +16,7 @@ class CreateClosePlacesTable extends Migration
         Schema::create('close_places', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('distance_km');
-            $table->string('distance_walking');
-            $table->string('description_place');
+            $table->string('description_place')->nullable();
             $table->string('img')->nullable();
             $table->timestamps();
         });

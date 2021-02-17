@@ -14,15 +14,18 @@ class Foto extends File
     protected $fillable = [
         'name',
         'qr_img_web_url',
+        'description',
+        'slug',
+        'img_url',
         'hostal_id',
         'area_id',
     ];
 
     public function hostales(){
-      return $this->belongsTo(Hostal::class)->withTimestamps();
+      return $this->belongsTo(Hostal::class,'hostal_id')->withTimestamps();
     }
     public function areas(){
-      return $this->belongsTo(AreaPicture::class)->withTimestamps();
+      return $this->belongsTo(AreaPicture::class,'area_id')->withTimestamps();
     }
 
 }

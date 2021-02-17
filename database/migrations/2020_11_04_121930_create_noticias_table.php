@@ -16,7 +16,8 @@ class CreateNoticiasTable extends Migration
         Schema::create('noticias', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->string('noticia');
+            $table->text('noticia');
+            $table->text('description',250);
             $table->boolean('publicate_state');
             $table->integer('cant_access_read')->nullable();
             $table->integer('cant_likes')->nullable();
@@ -26,12 +27,14 @@ class CreateNoticiasTable extends Migration
             $table->string('qr_img_url')->nullable();
             $table->unsignedBigInteger('tema_id');
             $table->unsignedBigInteger('hostal_id');
-            $table->text('tags');
-            $table->text('slug');
-            $table->text('keywords');
+            $table->unsignedBigInteger('user_id');
+            $table->string('tags');
+            $table->string('slug')->unique();
+            $table->string('keywords');
             $table->timestamps();
             $table->foreign('tema_id')->references('id')->on('tema_noticias')->onDelete('cascade');
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

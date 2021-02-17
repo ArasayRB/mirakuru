@@ -16,6 +16,7 @@ class Noticia extends Model
     protected $fillable = [
         'title',
         'noticia',
+        'description',
         'publicate_state',
         'cant_access_read',
         'cant_likes',
@@ -25,6 +26,7 @@ class Noticia extends Model
         'qr_img_url',
         'tema_id',
         'hostal_id',
+        'user_id',
         'tags',
         'slug',
         'keywords',

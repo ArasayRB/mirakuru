@@ -7,12 +7,12 @@
 <div class="carousel slide" id="demo" data-ride="carousel">
   <!--Indicadores-->
   <ul class="carousel-indicators">
-    <li data-target="demo" :id="'control'+index" :data-slide-to="index" v-for="(comentario,index) in comentarios" :class="index==0?activeClass:'active'"></li>
+    <li data-target="demo" :id="'control'+index" :data-slide-to="index" v-for="(comentario,index) in comentarios" :class="index==0?activeClass='active':''"></li>
 
   </ul>
   <!--Imagenes-->
   <div class="carousel-inner">
-    <div class="carousel-item" :id="'coment'+index" v-for="(comentario,index) in comentarios" :class="index==0?activeClass:'active'">
+    <div class="carousel-item" :id="'coment'+index" v-for="(comentario,index) in comentarios" :class="index==0?activeClass='active':''">
     <form class="text-center" id="form">
 <p class="clasificacion">
 <input id="radio1" type="radio" v-if="comentario.calification_id===5" name="estrellas" value="5" disabled checked>
@@ -65,7 +65,6 @@
         return {
           comentarios:[],
           comentario:[],
-          activeClass:'',
           src:'/storage/img_web/login_img/',
           token   : window.CSRF_TOKEN,
 

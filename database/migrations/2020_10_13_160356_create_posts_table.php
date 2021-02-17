@@ -29,7 +29,7 @@ class CreatePostsTable extends Migration
             $table->integer('cant_likes')->nullable();
             $table->integer('cant_shares')->nullable();
             $table->text('tags');
-            $table->text('slug');
+            $table->text('slug')->unique();
             $table->text('keywords')->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

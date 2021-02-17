@@ -21,6 +21,8 @@ use Illuminate\Support\Str;
 App::setLocale("en");
 
 Route::get('/', [App\Http\Controllers\WelcomeController::class, 'welcome'])->name('welcome');
+Route::get('/hostal/{slug}', [App\Http\Controllers\WelcomeController::class, 'hostalLink'])->name('hostal');
+Route::get('/data-hostal/{id}', [App\Http\Controllers\WelcomeController::class, 'getNameHostalById'])->name('data-hostal');
 
 
 Route::get('/post-list/{id}', [App\Http\Controllers\WelcomeController::class, 'showPost']);
@@ -53,12 +55,11 @@ Route::get('/translated-language-post/{id}',[App\Http\Controllers\PostController
 Route::get('/get-translated-post-by-lang/{lang}/{id_post}',[App\Http\Controllers\PostController::class, 'getTranslatedPostByLang']);
 Route::post('/posts-translated-edited/{id_post}/{lang_name}',[App\Http\Controllers\PostController::class, 'updateTranslatedPostByLang']);
 Route::post('/share/{id}/{media}', [App\Http\Controllers\WelcomeController::class, 'sharePostMedia']);
-Route::get('/gallery', function(){
-  return view('galeria');
-});
 Route::get('/verify-testimonial/{hostal_name}/{cant}', [App\Http\Controllers\WelcomeController::class, 'verifyTestimonialComent']);
 Route::get('/view-testimonial', [App\Http\Controllers\WelcomeController::class, 'indexComentarioHostal']);
 Route::get('/comment-book', [App\Http\Controllers\HomeController::class, 'showMsgMakeComent']);
 Route::get('/mails-review-advice', [App\Http\Controllers\WelcomeController::class, 'sendEmailForReview']);
 Route::resource('/comentario-hostal', App\Http\Controllers\ComentarioHostalController::class,['only'=>['store','destroy']]);
 Route::get('/indices-valuation-hostal', [App\Http\Controllers\WelcomeController::class, 'getIndicesComentHostal']);
+Route::get('/read-news', [App\Http\Controllers\WelcomeController::class, 'getLastNewsWelcome']);
+Route::get('/all-hostals', [App\Http\Controllers\WelcomeController::class, 'getAllHostals']);

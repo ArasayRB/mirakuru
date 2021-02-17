@@ -8,16 +8,15 @@ use App\Models\Hostal;
 
 class ClosePlace extends Model
 {
-    use HasFactory;protected $fillable = [
+    use HasFactory;
+    protected $fillable = [
         'name',
-        'distance_km',
-        'distance_walking',
         'description_place',
         'img',
     ];
 
 
     public function hostales(){
-      return $this->belongsToMany(Hostal::class,'close_place_hostal','close_place_id','hostal_id')->withTimestamps();
+      return $this->belongsToMany(Hostal::class,'close_place_hostal','close_place_id','hostal_id')->withPivot('distance_km','distance_walking')->withTimestamps();
     }
 }

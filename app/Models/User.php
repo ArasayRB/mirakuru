@@ -10,6 +10,7 @@ use App\Models\Pago;
 use App\Models\Post;
 use App\Models\Reserva;
 use App\Models\Role;
+use App\Models\Owner;
 use App\Models\Permission;
 use App\Notifications\MirakuruVerifyEmail;
 use App\Notifications\MirakuruResetPassword;
@@ -34,6 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'imagen_url',
+        'profile',
     ];
 
     /**
@@ -61,6 +63,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hostales(){
       return $this->hasOne(Hostal::class)->withTimestamps();
+    }
+
+    public function owners(){
+      return $this->hasOne(Owner::class,'owner_user','user_id','owner_id');
     }
 
     public function hostalComentarios(){

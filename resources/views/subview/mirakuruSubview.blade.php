@@ -31,11 +31,28 @@
 <div class="row pb-5 pt-5">
   <div id="fac_plac" class="panel panel-primary col-xs-12 col-md-6 animate__animated animate__slideInLeft">
     <div class="bg-primary rounded container pt-2"><img src="/images/img/facilidades.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2"><h3 class="text-center text-uppercase text-light">{{ __('Facilities') }}</h3></div>
-  <section class="border border-primary rounded"><p>Facilities</p></section>
+  <section class="border border-primary rounded">
+    @for ($i=0; $i < count($hostal[0]->facilities); $i++)
+      <p class="mr-2 h6 font-weight-bold text-center"><i class="fas fa-asterisk pl-2"></i> {{$hostal[0]->facilities[$i]->name}} |
+        @if ($hostal[0]->facilities[$i]->pivot->price===0.00)
+          {{ __('Incluid') }}
+          @else
+          {{$hostal[0]->facilities[$i]->pivot->price}} {{ __('Price') }} USD
+        @endif
+        | {{$hostal[0]->facilities[$i]->description}}
+
+      </p><br>
+    @endfor
+  </section>
   </div>
   <div id="plac_fac" class="panel panel-primary col-xs-12 col-md-6 animate__animated animate__slideInRight">
     <div class="bg-primary rounded container pt-2"><img src="/images/img/Lugares.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2"><h3 class="text-center text-uppercase text-light">{{ __('CLose Places') }}</h3></div>
-  <section class="border border-primary rounded"><p>CLose Places</p></section>
+  <section class="border border-primary rounded">
+    @for ($i=0; $i < count($hostal[0]->closePlaces); $i++)
+      <p class="mr-2 h6 font-weight-bold text-center"><i class="fas fa-asterisk pl-2"></i> {{$hostal[0]->closePlaces[$i]->name}} | {{$hostal[0]->closePlaces[$i]->pivot->distance_km}} {{ __('Distance') }} Km</p><br>
+    @endfor
+
+  </section>
   </div>
 </div>
 </section><!--END Section Nosotros-->
@@ -43,41 +60,31 @@
 <section class="galeria pt-5">
   <h1 id="galer" class="text-center text-uppercase text-light pt-5 animate__animated animate__slideInRight">{{ __('Know our places') }}</h1>
 
-  <div class="gallery-container">
-    <div class="gallery-card">
-      <a href="/images/images_galery/Amanecer Terraza.jpg" data-lightbox="roadtrip">
-        <img src="/images/images_galery/Amanecer Terraza.jpg" alt="">
-      </a>
-    </div>
-    <div class="gallery-card">
-      <a href="/images/images_galery/Frente New.jpg" data-lightbox="roadtrip">
-        <img src="/images/images_galery/Frente New.jpg" alt="">
-      </a>
-    </div>
-    <div class="gallery-card">
-      <a href="/images/images_galery/Habitacion_Azul-1.jpg" data-lightbox="roadtrip">
-        <img src="/images/images_galery/Habitacion_Azul-1.jpg" alt="">
-      </a>
-    </div>
-    <div class="gallery-card">
-      <a href="/images/images_galery/Habitacion_Azul-2.jpg" data-lightbox="roadtrip">
-        <img src="/images/images_galery/Habitacion_Azul-2.jpg" alt="">
-      </a>
-    </div>
-    <div class="gallery-card">
-      <a href="/images/images_galery/Habitacion_Verde-1.jpg" data-lightbox="roadtrip">
-        <img src="/images/images_galery/Habitacion_Verde-1.jpg" alt="">
-      </a>
-    </div>
-    <div class="gallery-card">
-      <a href="/images/images_galery/Terraza.jpg" data-lightbox="roadtrip">
-        <img src="/images/images_galery/Terraza.jpg" alt="">
-      </a>
-    </div>
+
+    <div class="gallery-container">
+      @if (count($hostal->pictures)>6)
+        @for ($i=0; $i < 6; $i++)
+      <div class="gallery-card">
+        <a href="{!! asset('/storage/hostales/'.$hostal[0]->slug.'/'.$hostal->pictures[$i]->area_picture.'/'.$hostal->pictures[$i]->img_url) !!}" data-lightbox="roadtrip">
+          <img src="{!! asset('/storage/hostales/'.$hostal[0]->slug.'/'.$hostal->pictures[$i]->area_picture.'/'.$hostal->pictures[$i]->img_url) !!}" alt="">
+        </a>
+      </div>
+  @endfor
+  @else
+    @for ($i=0; $i < count($hostal->pictures); $i++)
+  <div class="gallery-card">
+    <a href="{!! asset('/storage/hostales/'.$hostal[0]->slug.'/'.$hostal->pictures[$i]->area_picture.'/'.$hostal->pictures[$i]->img_url) !!}" data-lightbox="roadtrip">
+      <img src="{!! asset('/storage/hostales/'.$hostal[0]->slug.'/'.$hostal->pictures[$i]->area_picture.'/'.$hostal->pictures[$i]->img_url) !!}" alt="">
+    </a>
+  </div>
+  @endfor
+@endif
+
+
   </br>
 </br>
     <div class="">
-      <a href="/gallery" class="btn w-20 rounded btn-warning btn-lg mt-5 text-dark">{{__('More Pictures')}}</a>
+      <a href="{{route('gallery',['hostal'=>$hostal[0]->slug])}}" class="btn w-20 rounded btn-warning btn-lg mt-5 text-dark">{{__('More Pictures')}}</a>
     </div>
   </div>
 </section>
@@ -92,21 +99,21 @@
     <img src="/images/img/cenas.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2">
     <h3 class="text-center text-uppercase text-light">{{ __('Foods') }}</h3>
   </div>
-  <section class="border border-primary rounded h-100"><p class="pt-2 mx-2 my-2 text-justify">Nuestra casa pone a su disposición los servicios de cena y desayuno con productos frescos y totalmente naturales</p></section>
+  <section class="border border-primary rounded h-100"><p class="pt-2 mx-2 my-2 text-justify">{{ __('Our house offers you quality services with fresh and totally natural products.') }}</p></section>
 </div>
 <div id="excurs" class="panel panel-primary col-xs-12 col-md-6 col-lg-4 h-500px pb-5">
   <div class="bg-primary rounded container pt-2 pb-2">
     <img src="/images/img/excursiones.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2">
     <h3 class="text-center text-uppercase text-light">{{ __('Excursions') }}</h3>
   </div>
-  <section class="border border-primary rounded h-100"><p class="pt-2 mx-2 my-2 text-justify">Le proporcionamos a usted varias excursiones, desde incluidas en su precio de reserva hasta otras con precio adicional, en diferentes idiomas donde conocerán varios atractivos de la ciudad</p></section>
+  <section class="border border-primary rounded h-100"><p class="pt-2 mx-2 my-2 text-justify">{{ __('We provide you with several excursions, from included in your reservation price to others with an additional price, in different languages where you will know various attractions of the city.') }}</p></section>
 </div>
 <div id="transp" class="panel panel-primary col-xs-12 col-md-12 col-lg-4 h-500px pb-5">
   <div class="bg-primary rounded container pt-2 pb-2">
     <img src="/images/img/transporte.png" alt="" class="rounded-circle bg-light mx-auto d-block py-2 px-2">
     <h3 class="text-center text-uppercase text-light">{{ __('Transportation') }}</h3>
   </div>
-  <section class="border border-primary rounded h-100"><p class="pt-2 mx-2 my-2 text-justify">Donde quiera que usted piense ir nosotros podremos ayudar a gestionar su traslado desde precios económicos hasta precios más especializados dependiendo del confort y seguridad con el que guste viajar.</p></section>
+  <section class="border border-primary rounded h-100"><p class="pt-2 mx-2 my-2 text-justify">{{ __('Wherever you plan to go, we can help you manage your transfer from low prices to more specialized prices depending on the comfort and safety with which you like to travel.') }}</p></section>
 </div>
 </div>
 </section>
@@ -135,7 +142,7 @@
       </div>
     </div>
   </div>
-  <contacto-hostal-component v-if="ventanaContact" @close="ventanaContact = false">
+  <contacto-hostal-component hostal_id="{{$hostal[0]->id}}" v-if="ventanaContact" @close="ventanaContact = false">
   </contacto-hostal-component>
 </section><!--END Section Contacto-->
 @include('forms.loginForm')
@@ -146,6 +153,6 @@
 </section><!--END Section Newsletter-->
 @auth
     <section id="reserva" name="reserva" class="mt-5 pt-5 bg-primary pb-5 mb-5"><!--Section Reserva-->
-<reservar-hostal-component email="{{Auth::user()->email}}" locale="{{ App::getLocale() }}"></reservar-hostal-component>
+<reservar-hostal-component hostal_id="{{$hostal[0]->id}}" email="{{Auth::user()->email}}" locale="{{ App::getLocale() }}"></reservar-hostal-component>
 </section><!--END Section Reserva-->
 @endauth

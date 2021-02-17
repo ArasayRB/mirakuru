@@ -63,6 +63,8 @@ Vue.component('tags-input', VoerroTagsInput);
 Vue.component('keys-input', VoerroTagsInput);
 Vue.component('keywords-input', VoerroTagsInput);
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('welcome-search-component', require('./components/pages/WelcomeSearchComponent.vue').default);
+Vue.component('input-hostal-search-component', require('./components/forms/InputHostalSearchComponent.vue').default);
 Vue.component('cont-view-share-like-component', require('./components/forms/ContViewShareLikeComponent.vue').default);
 Vue.component('reservar-hostal-component', require('./components/forms/ReservarHostalComponent.vue').default);
 Vue.component('comentario-hostal-component', require('./components/forms/ComentarioHostalComponent.vue').default);

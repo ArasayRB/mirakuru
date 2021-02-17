@@ -119,6 +119,8 @@ import moment from 'moment';
      },
           email:this.$attrs.email,
           name:'',
+          hostal:this.$attrs.hostal_id,
+          hostal_data:[],
           adress:'',
           pais:'',
           phone:'',
@@ -150,6 +152,13 @@ import moment from 'moment';
         }
       },
       methods:{
+        hostalData:function(){
+          axios.get('/data-hostal/'+this.hostal)
+               .then(response =>{
+                 this.hostal_data=response.data;
+
+               });
+        },
         esconderMensage:function(){
         $("#mensage").hide(true);
         },
@@ -360,7 +369,7 @@ import moment from 'moment';
             data.append("amount", this.amount);
             data.append("date_in", this.range['start']);
             data.append("date_out", this.range['end']);
-            data.append("hostal_id", 'Hostal Mirakuru Gran Familia');
+            data.append("hostal_id", this.hostal_data.name);
             data.append("reservation_days", this.reservation_days);
 
           axios.post(url,data)
@@ -500,7 +509,7 @@ import moment from 'moment';
     },
   },
       created: function(){
-        let hostalName='Hostal Mirakuru Gran Familia';
+        let hostalName=this.hostal_data.name;
         this.getAvailableServices(hostalName);
         this.getAvailableRooms(hostalName);
         this.getCountryList();

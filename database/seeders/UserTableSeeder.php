@@ -37,9 +37,21 @@ class UserTableSeeder extends Seeder
       }
 
       $user = new User();
+      $user->name = 'Arasay Rodriguez Bastida';
+      $user->email = 'arasay@example.com';
+      $user->password = bcrypt('secret/*1234');
+      $user->profile = 'CEO co-fundator of the page, manager and writer content';
+      $user->save();
+      $user->roles()->attach($role_admin);
+      foreach ($role_admin->permissions as $permission) {
+        $user->permissions()->attach($permission);
+      }
+
+      $user = new User();
       $user->name = 'Admin';
       $user->email = 'admin@example.com';
       $user->password = bcrypt('secret/*1234');
+      $user->profile = 'Co-fundator of the page, manager and writer content';
       $user->save();
       $user->roles()->attach($role_admin);
       foreach ($role_admin->permissions as $permission) {
@@ -50,6 +62,7 @@ class UserTableSeeder extends Seeder
       $user->name = 'Ana Lidia Fernandez';
       $user->email = 'ana@example.com';
       $user->password = bcrypt('secret/*1234');
+      $user->profile = 'Viewer content of the web since 2 years ago, programmer and fanatic to excursions';
       $user->save();
       $user->roles()->attach($role_viewer);
       foreach ($role_viewer->permissions as $permission) {
@@ -60,6 +73,7 @@ class UserTableSeeder extends Seeder
       $user->name = 'Ramón Gonzalez';
       $user->email = 'ramonglez@example.com';
       $user->password = bcrypt('secret/*1234');
+      $user->profile = 'Writer content';
       $user->save();
       $user->roles()->attach($role_writer);
       foreach ($role_writer->permissions as $permission) {
@@ -80,6 +94,7 @@ class UserTableSeeder extends Seeder
       $user->name = 'Julio Cuevas';
       $user->email = 'julio@example.com';
       $user->password = bcrypt('secret/*1234');
+      $user->profile = 'Co-fundator of the page, manager and writer content';
       $user->save();
       $user->roles()->attach($role_admin);
       foreach ($role_admin->permissions as $permission) {

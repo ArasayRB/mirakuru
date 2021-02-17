@@ -8,6 +8,8 @@ use App\Traits\TranslateTrait;
 use App\Traits\LanguageTrait;
 use App\Traits\HostalTrait;
 use App\Traits\UserTrait;
+use App\Traits\FotoTrait;
+use App\Traits\NoticiaTrait;
 use App\Traits\MessageTrait;
 use App\Traits\ComentarioHostalTrait;
 use App\Traits\IndiceComentarioHostalTrait;
@@ -17,7 +19,7 @@ use Carbon\Carbon;
 
 class WelcomeController extends Controller
 {
-  use PostTrait; use ComentarioHostalTrait; use HostalTrait;use IndiceComentarioHostalTrait; use UserTrait; use MessageTrait; use ReservaTrait;use ReservaTokenTrait; use TranslateTrait; use LanguageTrait;
+  use PostTrait;use FotoTrait; use ComentarioHostalTrait;use NoticiaTrait; use HostalTrait;use IndiceComentarioHostalTrait; use UserTrait; use MessageTrait; use ReservaTrait;use ReservaTokenTrait; use TranslateTrait; use LanguageTrait;
     /**
      * Create a new controller instance.
      *
@@ -86,8 +88,14 @@ class WelcomeController extends Controller
 
     public function welcome()
     {
-      $posts=$this->existPost();
-        return view('home',['posts'=>$posts]);
+        return view('welcome_search');
+    }
+
+    public function hostalLink($slug){
+        $posts=$this->existPost();
+        $hostal=$this->getHostalBySlug($slug);
+        $hostal->pictures=$this->getPicturesByHostal($hostal[0]->id);
+        return view('welcome',['posts'=>$posts,'hostal'=>$hostal]);
     }
 
     public function getPostsList(){
