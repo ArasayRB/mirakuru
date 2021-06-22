@@ -128,7 +128,7 @@
       @if (config('locale.status') && count(config('locale.languages')) > 1)
                        <li class="nav-item dropdown">
                          <a class="nav-link dropdown-toggle text-light"  id="dropdownMenuLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
-                           {{__('Languages')}}
+                           <img src="{{ asset('images/lang/'.app()->getLocale().'.ico') }}"/>   {!! app()->getLocale() !!}
                          </a>
                          <div class="dropdown-menu">
                            @foreach (array_keys(config('locale.languages')) as $lang)

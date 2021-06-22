@@ -88,7 +88,7 @@
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" href="charts.html">
+        <a class="nav-link" href="/services">
           <i class="fas fa-fw fa-luggage-cart"></i>
           <span>{{__('Services')}}</span></a>
       </li>
@@ -247,7 +247,7 @@
                                 <ul class="navbar-nav ml-auto">
                                    <li class="nav-item dropdown">
                                      <a class="nav-link dropdown-toggle text-active"  id="dropdownMenuLanguage" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" href="#">
-                                       {{__('Languages')}}
+                                       <img src="{{ asset('images/lang/'.app()->getLocale().'.ico') }}"/>   {!! app()->getLocale() !!}
                                      </a>
                                      <div class="dropdown-menu">
                                        @foreach (array_keys(config('locale.languages')) as $lang)
