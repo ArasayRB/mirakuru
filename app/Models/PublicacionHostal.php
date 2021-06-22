@@ -2,22 +2,27 @@
 
 namespace App\Models;
 
+use App\Models\File;
 use App\Models\Hostal;
 use App\Models\Keyword;
-use App\Models\Tag;
+use Conner\Tagging\Taggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class PublicacionHostal extends Model
 {
-    use HasFactory;
+    use HasFactory; use Taggable;
     protected $fillable = [
         'title',
         'content',
         'img_url',
         'video_url',
         'qr_img_url',
+        'publicate_state',
         'hostal_id',
+        'tags',
+        'slug',
+        'keywords',
     ];
 
     public function hostales(){
@@ -28,7 +33,7 @@ class PublicacionHostal extends Model
       return hasMany(Keyword::class)->withTimestamps();
     }
 
-    public function tags(){
-      return hasMany(Tag::class)->withTimestamps();
+    public function files(){
+      return $this->belongsToMany(File::class)->withTimestamps();
     }
 }

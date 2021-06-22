@@ -11,10 +11,9 @@ class Suscripcion extends Model
     use HasFactory;
     protected $fillable = [
         'email',
-        'fullName',
     ];
 
     public function hostales(){
-      return belongsToMany(Hostal::class)->withTimestamps();
+      return $this->belongsToMany(Hostal::class,'hostal_suscripcion','suscripcion_id','hostal_id')->withTimestamps();
     }
 }

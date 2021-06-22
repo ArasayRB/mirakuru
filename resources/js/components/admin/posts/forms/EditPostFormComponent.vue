@@ -18,12 +18,14 @@
         <div class="container mt-5">
           <div class="row justify-content-center">
             <div class="col-12">
+
+
               <div class="form-group">
                 <label for="title">{{ $trans('messages.Title') }}</label>
                 <input type="text" name="title" v-model="post.title" class="form-control font-italic mb-2">
               </div>
 
-              <div class="form-group">
+              <div class="form-group" v-if="lan_to_edit==='none'">
 
                 <label for="image">{{ $trans('messages.Image') }}</label>
               <input type="file" name="image" v-on:change="image" class="form-control-file font-italic mb-2">
@@ -31,7 +33,7 @@
                 <img :src="src+post.img_url" :alt="post.img_url" width="100">
               </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" v-if="lan_to_edit==='none'">
                 <label for="category">{{ $trans('messages.Category') }}</label>
                 <select class="form-control" v-model="categoria" name="category" required>
                  <option value=''>Seleccionar Actividad</option>
@@ -53,6 +55,34 @@
                  @dialogDefinition="onDialogDefinition($event)"
                  @fileUploadRequest="onFileUploadRequest($event)"
                  @fileUploadResponse="onFileUploadResponse($event)" />
+                </div>
+
+                <div class="form-group">
+                           <label>{{ $trans('messages.Tags') }} : <span class="text-danger">*</span></label>
+                           <br>
+                           <tags-input element-id="tags" :add-tags-on-comma=true	class=""
+    v-model="selectedTags"
+    :existing-tags="tags"
+    id-field="key"
+    text-field="value"
+    :typeahead="true"></tags-input>
+
+
+                </div>
+
+                <div class="form-group">
+                  <label for="title">{{ $trans('messages.Keywords') }}: <span class="text-danger">{{ $trans('messages.Separate with (,) please') }}</span></label></label>
+
+                  <tags-input element-id="keys" :add-tags-on-comma=true	class=""
+v-model="selectedKeys"
+:existing-tags="keywords"
+id-field="key"
+text-field="value"
+placeholder="Add a keyword"
+
+:typeahead="true"></tags-input>
+
+
                 </div>
 
 
@@ -85,13 +115,18 @@
 </template>
 
 <script>
-  import VueCkeditor from '@ckeditor/ckeditor5-build-classic';
+  import VueCkeditor from 'vue-ckeditor2';
     export default {
       components: { VueCkeditor },
       props:['post',
-              'locale'],
+             'locale',
+             'lan_to_edit'],
       data(){
         return {
+          tags: [],
+          selectedTags: [],
+          keywords: [],
+          selectedKeys: [],
           config: {
        toolbar: [
 
@@ -114,6 +149,9 @@
           urlPostUp:this.$attrs.urlpostup,
           categories:'',
           categori:'',
+          languages:[],
+          language:'',
+          lang_trans:'',
           value:'',
           src:'storage/img_web/posts_img/',
           imagenPost:'',
@@ -147,32 +185,79 @@
           this.imagenPost=e.target.files[0];
         },
         editedPost:function(post){
+          let url;
+          let data;
+          let msg_edited;
+          let default_lang=this.$lang.getLocale();
           let config= { headers: {"Content-Type": "multipart/form-data" }};
-          let data = new FormData();
-	          data.append('_method', 'patch');
-            data.append("title", post.title);
-            data.append("img_url", this.imagenPost);
-            data.append("category_id", this.categoria);
-            data.append("summary", post.summary);
-            data.append("content", post.content);
-          let url="/posts/"+post.id;
-          post.img_url=this.imagenPost;
+
+            let tagsList=this.selectedTags;
+            let postTags="";
+            for(var i=0; i<tagsList.length;i=i+1){
+              if(i==(tagsList.length-1)){
+              postTags= ''+postTags+tagsList[i].value;
+            }
+            else{
+              postTags= ''+postTags+tagsList[i].value+',';
+            }
+            }
+
+            let keysList=this.selectedKeys;
+            let postKeys="";
+            for(var i=0; i<keysList.length;i=i+1){
+              if(i==(keysList.length-1)){
+              postKeys= ''+postKeys+keysList[i].value;
+            }
+            else{
+              postKeys= ''+postKeys+keysList[i].value+',';
+            }
+            }
+            if(this.lan_to_edit==='none'){
+              data = new FormData();
+    	          data.append('_method', 'patch');
+                data.append("title", post.title);
+                data.append("default-lang", default_lang);
+                data.append("img_url", this.imagenPost);
+                data.append("category_id", this.categoria);
+                data.append("summary", post.summary);
+                data.append("content", post.content);
+                data.append("tags", postTags);
+                data.append("keywords", postKeys);
+              url="/posts/"+post.id;
+              post.img_url=this.imagenPost;
+              msg_edited=this.$trans('messages.The post has been successfully modified');
+            }
+
+            else{
+              data = new FormData();
+                data.append("title", post.title);
+                data.append("summary", post.summary);
+                data.append("content", post.content);
+                //data.append("tags", postTags);
+                //data.append("keywords", postKeys);
+              url="/posts-translated-edited/"+post.id+"/"+this.lan_to_edit;
+              msg_edited=this.$trans('messages.The post translation has been successfully modified');
+            }
           axios.post(url,data,config)
                .then(response=>{
                  swal({title:this.$trans('messages.Post'),
-                       text:this.$trans('messages.The post has been successfully modified'),
+                       text:msg_edited,
                        icon:'success',
                        closeOnClickOutside:false,
                        closeOnEsc:false
                      }).then(select=>{
                        if (select){
                          let postUpdate=response.data;
-                         this.$emit('postupd',postUpdate);
+                         this.lan_to_edit='none';
+                         this.$emit('postupd',postUpdate,this.lan_to_edit);
                        }
                      });
                  //console.log(response);
                })
                .catch(error=>{
+                 if(error.response.data.message){
+                   swal('Error',''+error.response.data.message,'error');
+                 }
                  let wrong=error.response.data.errors;
                  if(wrong.hasOwnProperty('title')){
                    mensaje+='-'+wrong.title[0];
@@ -189,6 +274,9 @@
                 if (wrong.hasOwnProperty('content')) {
                    mensaje+='-'+wrong.content[0];
                  }
+                if (wrong.hasOwnProperty('tags')) {
+                   mensaje+='-'+wrong.tags[0];
+                 }
                  else if (wrong.hasOwnProperty('login')){
                    mensaje+='-'+wrong.login[0];
                  }
@@ -199,12 +287,39 @@
 
       },
       created: function () {
+          for(var i=0; i<this.post.tags.length;i++){
+            this.selectedTags.push({'key':'',
+                                      'value':this.post.tags[i].name});
+          }
+
+          for(var i=0; i<this.post.keywords.length;i++){
+            this.selectedKeys.push({'key':'',
+                                      'value':this.post.keywords[i].name});
+          }
+        axios.get('/languagesList')
+              .then(response=> this.languages=response.data)
+              .catch(error=>this.error.push(error));
+
         this.categoria=this.post.category_id;
          axios.get('/categoriesList')
               .then(response =>{
                  this.categories = response.data;
                })
               .catch(error => this.errors.push(error));
+
+         axios.get('/available-tags')
+              .then(response =>{
+                this.tags = response.data;
+                console.log(this.tags);
+              })
+              .catch(error => this.errors.push(error));
+
+              axios.get('/available-keys')
+                   .then(response =>{
+                     this.keywords = response.data;
+                     console.log(this.keywords);
+                   })
+                   .catch(error => this.errors.push(error));
          },
         mounted() {
           if (this.$attrs.locale) {

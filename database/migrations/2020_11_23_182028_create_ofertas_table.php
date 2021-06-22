@@ -17,7 +17,7 @@ class CreateOfertasTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('description');
-            $table->string('img_ppal_url');
+            $table->string('img_ppal_url')->default('offerFoto.jpg');
             $table->string('qr_img_web_url')->nullable();
             $table->boolean('active');
             $table->float('price',8,2);
@@ -25,6 +25,9 @@ class CreateOfertasTable extends Migration
             $table->date('fecha_final');
             $table->unsignedBigInteger('hostal_id');
             $table->unsignedBigInteger('type_oferta_id');
+            $table->text('tags');
+            $table->text('slug')->unique();
+            $table->text('keywords');
             $table->timestamps();
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');
             $table->foreign('type_oferta_id')->references('id')->on('oferta_tipos')->onDelete('cascade');

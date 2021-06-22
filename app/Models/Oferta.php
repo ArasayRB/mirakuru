@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\File;
 use App\Models\Hostal;
 use App\Models\Keyword;
 use App\Models\OfertaTipo;
-use App\Models\Tag;
+use Conner\Tagging\Taggable;
 use Illuminate\Database\Eloquent\Model;
 
 class Oferta extends Model
 {
-    use HasFactory;
+    use HasFactory; use Taggable;
     protected $fillable = [
         'name',
         'description',
@@ -23,6 +24,9 @@ class Oferta extends Model
         'fecha_final',
         'hostal_id',
         'type_oferta_id',
+        'tags',
+        'slug',
+        'keywords',
     ];
 
     public function hostales(){
@@ -33,11 +37,11 @@ class Oferta extends Model
       return belongsTo(OfertaTipo::class)->withTimestamps();
     }
 
-    public function keywords(){
-      return hasMany(Keyword::class)->withTimestamps();
+    public function files(){
+      return $this->belongsToMany(File::class)->withTimestamps();
     }
 
-    public function tags(){
-      return hasMany(Tag::class)->withTimestamps();
+    public function keywords(){
+      return hasMany(Keyword::class)->withTimestamps();
     }
 }

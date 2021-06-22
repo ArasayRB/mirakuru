@@ -17,7 +17,10 @@ class CreateHostalServicioTable extends Migration
             $table->id();
             $table->unsignedBigInteger('hostal_id');
             $table->unsignedBigInteger('servicio_id');
-            $table->integer('cant_personas');
+            $table->integer('cant_personas')->nullable();
+            $table->boolean('active')->default(1);
+            $table->date('active_date')->nullable();
+            $table->date('inactive_date')->nullable();
             $table->timestamps();
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');
             $table->foreign('servicio_id')->references('id')->on('servicios')->onDelete('cascade');

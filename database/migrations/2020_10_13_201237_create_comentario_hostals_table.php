@@ -18,11 +18,9 @@ class CreateComentarioHostalsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->string('comment');
             $table->string('url_video')->nullable();
-            $table->unsignedBigInteger('calification_id');
             $table->unsignedBigInteger('hostal_id');
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('calification_id')->references('id')->on('calificacion_comment_hostals')->onDelete('cascade');
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');
         });
     }

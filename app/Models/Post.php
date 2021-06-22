@@ -3,18 +3,20 @@
 namespace App\Models;
 
 use App\Models\CategoriaPost;
+use App\Models\File;
 use App\Models\ComentarioPost;
 use App\Models\Keyword;
-use App\Models\Tag;
 use App\Models\User;
+use Conner\Tagging\Taggable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model
 {
-    use HasFactory;
+    use HasFactory; use Taggable;
     protected $fillable = [
         'title',
+        'default_lang',
         'content',
         'summary',
         'publicate_state',
@@ -26,30 +28,29 @@ class Post extends Model
         'cant_access_read',
         'cant_likes',
         'cant_shares',
+        'tags',
+        'slug',
+        'keywords',
     ];
 
     public function users(){
       return $this->belongsTo(User::class,'user_id');
     }
 
+    
     public function categoriaPosts(){
-      return $this->belongsTo(CategoriaPost::class,'category_id');
+      return $this->belongsTo('App\Models\CategoriaPost','category_id');
     }
 
     public function keywords(){
-      return hasMany(Keyword::class)->withTimestamps();
+      return $this->belongsToMany(Keyword::class)->withTimestamps();
     }
 
     public function comentarioPosts(){
       return $this->hasMany(ComentarioPost::class)->withTimestamps();
     }
 
-    public function allCategories(){
-      $categories=CategoriaPost::all();
-    return  $categories;
-    }
-
-    public function tags(){
-      return hasMany(Tag::class)->withTimestamps();
+    public function files(){
+      return $this->belongsToMany(File::class)->withTimestamps();
     }
 }

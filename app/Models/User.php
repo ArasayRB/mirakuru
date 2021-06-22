@@ -3,11 +3,15 @@
 namespace App\Models;
 
 use App\Models\Cuenta;
+use App\Models\File;
+use App\Models\ComentarioHostal;
 use App\Models\Hostal;
 use App\Models\Pago;
 use App\Models\Post;
 use App\Models\Reserva;
 use App\Models\Role;
+use App\Models\Owner;
+use App\Models\Permission;
 use App\Notifications\MirakuruVerifyEmail;
 use App\Notifications\MirakuruResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -30,6 +34,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'name',
         'email',
         'password',
+        'imagen_url',
+        'profile',
     ];
 
     /**
@@ -52,11 +58,19 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     public function roles(){
-      return $this->belongsToMany(Role::class)->withTimestamps();
+      return $this->belongsToMany(Role::class,'role_user','user_id','role_id')->withTimestamps();
     }
 
     public function hostales(){
       return $this->hasOne(Hostal::class)->withTimestamps();
+    }
+
+    public function owners(){
+      return $this->hasOne(Owner::class,'owner_user','user_id','owner_id');
+    }
+
+    public function hostalComentarios(){
+      return $this->hasMany(ComentarioHostal::class)->withTimestamps();
     }
 
     public function reservas(){
@@ -71,8 +85,16 @@ class User extends Authenticatable implements MustVerifyEmail
       return $this->hasMany(Pago::class)->withTimestamps();
     }
 
+    public function files(){
+      return $this->belongsToMany(File::class)->withTimestamps();
+    }
+
     public function cuentas(){
       return $this->hasMany(Cuenta::class)->withTimestamps();
+    }
+
+    public function permissions(){
+      return $this->belongsToMany(Permission::class,'permission_user','user_id','permission_id')->withTimestamps();
     }
 
     public function authorizeRoles($roles)
@@ -96,6 +118,23 @@ class User extends Authenticatable implements MustVerifyEmail
         return false;
     }
 
+    public function checkPermission(){
+      $permissions=[];
+      foreach (auth()->user()->permissions as $permiso) {
+        $permissions[]=$permiso->slug;
+      }
+      //$result=in_array($permiso,$permission);
+      return $permissions;
+    }
+
+    public function isAdmin()
+    {
+      if($this->roles->contains('slug','admin'))
+      {
+        return true;
+      }
+    }
+
     public function hasRole($role)
     {
         if ($this->roles()->where('name', $role)->first()) {
@@ -103,6 +142,25 @@ class User extends Authenticatable implements MustVerifyEmail
         }
         return false;
     }
+
+    public function hasRoleBySlug($role){
+
+      if(strpos($role,',')!==false){
+        $listRoles=explode(',',$role);
+        foreach ($listRoles as $rol) {
+          if($this->roles->contains('slug',$rol)){
+            return true;
+          }
+        }
+
+
+        }
+        else if($this->roles->contains('slug',$role)){
+          return true;
+        }
+        return false;
+      }
+
 
     public function sendEmailVerificationNotification()
   {

@@ -24,6 +24,9 @@
     <!-- Custom styles for this template-->
     <link href="{{ asset('css/admin/sb-admin-2.min.css') }}" rel="stylesheet">
 
+    <!--Tags Style-->
+    <link href="{{ asset('vendor/css/tagsstyle.css') }}" rel="stylesheet">
+
   </head>
 @show
 
@@ -63,6 +66,7 @@
       </div>
 
       <!-- Nav Item - Pages Collapse Menu -->
+      @can ('admin')
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
           <i class="fas fa-fw fa-cog"></i>
@@ -71,12 +75,15 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">{{__('Tabs')}}:</h6>
-            <a class="collapse-item" href="buttons.html">{{__('Users')}}</a>
-            <a class="collapse-item" href="cards.html">{{__('Role')}}</a>
-            <a class="collapse-item" href="cards.html">{{__('Permissions')}}</a>
+            <a class="collapse-item" href="/users">{{__('Users')}}</a>
+
+              <a class="collapse-item" href="/roles">{{__('Role')}}</a>
+
+            <a class="collapse-item" href="/permissions">{{__('Permissions')}}</a>
           </div>
         </div>
       </li>
+      @endcan
 
 
       <!-- Nav Item - Charts -->
@@ -166,25 +173,33 @@
         <div id="collapsePost" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">{{__('Tabs')}}:</h6>
+            @role('admin,viewer-content,writer-content,publisher-content')
             <a class="collapse-item" href="/posts">{{__('Posts')}}</a>
+            @endrole
+            @role('admin,viewer-content')
             <a class="collapse-item" href="utilities-color.html">{{__('Posts Category')}}</a>
+            @endrole
+            @can('admin')
             <a class="collapse-item" href="utilities-border.html">{{__('Testimonials')}}</a>
             <a class="collapse-item" href="utilities-border.html">{{__('Testimonials Calification')}}</a>
+            @endcan
           </div>
         </div>
       </li>
       <!-- Nav Item - Pages Collapse Menu -->
       <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-user"></i>
+          @auth
+            <img class="img-profile rounded-circle" src="{{ asset('storage/img_web/login_img/'.Auth::user()->imagen_url) }}">
+          @endauth
           <span>{{__('User')}}</span>
         </a>
         <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">{{__('Utilities User')}}:</h6>
-            <a class="collapse-item" href="#" data-toggle="modal" data-target="#loginModal">{{__('Account User')}}</a>
+            <a class="collapse-item" href="/user-perfil" ><i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>{{__('Profile')}}</a>
             <a class="collapse-item" href="{{ route('logout') }}" onclick="event.preventDefault();
-                          document.getElementById('logout-form').submit();">{{__('Logout')}}</a>
+                          document.getElementById('logout-form').submit();"><i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>{{__('Logout')}}</a>
                           <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                               @csrf
                           </form>
@@ -383,28 +398,26 @@
                 <!-- Nav Item - User Information -->
                 <li class="nav-item dropdown no-arrow">
                   <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="mr-2 d-none d-lg-inline text-gray-600 small">Valerie Luna</span>
-                    <img class="img-profile rounded-circle" src="https://source.unsplash.com/QAB-WJcbgJk/60x60">
+                    @auth
+                      <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{Auth::user()->name}}</span>
+                    <img class="img-profile rounded-circle" src="{{ asset('storage/img_web/login_img/'.Auth::user()->imagen_url) }}">
+                  @endauth
                   </a>
                   <!-- Dropdown - User Information -->
                   <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
-                    <a class="dropdown-item" href="#">
+                    <a class="dropdown-item" href="/user-perfil">
                       <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                      Profile
-                    </a>
-                    <a class="dropdown-item" href="#">
-                      <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                      Settings
-                    </a>
-                    <a class="dropdown-item" href="#">
-                      <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                      Activity Log
+                    {{__('Profile')}}
                     </a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
+                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                  document.getElementById('logout-form').submit();">
                       <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                      Logout
+                      {{__('Logout')}}
                     </a>
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                        @csrf
+                    </form>
                   </div>
                 </li>
 
@@ -477,6 +490,16 @@
                 <script src="{{ asset('vendor/ckeditor/ckeditor.js') }}"></script>
                 <script src="{{ asset('vendor/ckeditor/adapters/jquery.js') }}"></script>
               @show
+              <script type="text/javascript">
+                window.CSRF_TOKEN = '{{ csrf_token() }}';
+                @auth
+                   window.Permissions = {!! json_encode(Auth::user()->checkPermission(), true) !!};
+                   window.UserId = {!! json_encode(Auth::user(), true) !!};
+                @else
+                   window.Permissions = [];
+                   window.UserId =[];
+                @endauth
+              </script>
 
             </body>
 

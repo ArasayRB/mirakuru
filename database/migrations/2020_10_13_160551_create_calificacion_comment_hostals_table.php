@@ -17,7 +17,7 @@ class CreateCalificacionCommentHostalsTable extends Migration
             $table->id();
             $table->string('calification');
             $table->string('description');
-            $table->string('img_url');
+            $table->string('img_url')->nullable();
             $table->timestamps();
         });
     }

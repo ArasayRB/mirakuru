@@ -27,10 +27,11 @@ class PostFactory extends Factory
       $cantCatPost=CategoriaPost::all()->count();
         return [
           'title' => $this->faker->jobTitle,
+          'default_lang' => 'en',
           'content' => $this->faker->paragraph,
           'summary' => $this->faker->text($maxNbChars = 100),
           'publicate_state' => $this->faker->boolean,
-          'img_url' => $this->faker->url,
+          'img_url' => 'postDefault.jpg',
           'video_url' => $this->faker->url,
           'qr_img_url'=> $this->faker->url,
           'user_id' => $this->faker->numberBetween(1,$cantUser),
@@ -38,6 +39,9 @@ class PostFactory extends Factory
           'cant_access_read' => $this->faker->randomDigitNotNull,
           'cant_likes' => $this->faker->randomDigitNotNull,
           'cant_shares' => $this->faker->randomDigitNotNull,
+          'tags' => $this->faker->text($maxNbChars = 50),
+          'slug' => $this->faker->text($maxNbChars = 50),
+          'keywords' => $this->faker->text($maxNbChars = 50),
         ];
     }
 }

@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Models\KeywordConfig;
 use App\Models\Keyword;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -22,10 +21,8 @@ class KeywordFactory extends Factory
      */
     public function definition()
     {
-      $cantConfig=KeywordConfig::all()->count();
-        return [
-          'name' => $this->faker->word,
-          'keyconfig_id' => $this->faker->numberBetween(1,$cantConfig),
+      return [
+          'name' => $this->faker->word
         ];
     }
 }
