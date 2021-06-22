@@ -62,23 +62,16 @@
 
 
     <div class="gallery-container">
-      @if (count($hostal->pictures)>6)
-        @for ($i=0; $i < 6; $i++)
-      <div class="gallery-card">
-        <a href="{!! asset('/storage/hostales/'.$hostal[0]->slug.'/'.$hostal->pictures[$i]->area_picture.'/'.$hostal->pictures[$i]->img_url) !!}" data-lightbox="roadtrip">
-          <img src="{!! asset('/storage/hostales/'.$hostal[0]->slug.'/'.$hostal->pictures[$i]->area_picture.'/'.$hostal->pictures[$i]->img_url) !!}" alt="">
-        </a>
-      </div>
-  @endfor
-  @else
     @for ($i=0; $i < count($hostal->pictures); $i++)
+      @if ($hostal->pictures[$i]->ppal==1)
   <div class="gallery-card">
     <a href="{!! asset('/storage/hostales/'.$hostal[0]->slug.'/'.$hostal->pictures[$i]->area_picture.'/'.$hostal->pictures[$i]->img_url) !!}" data-lightbox="roadtrip">
       <img src="{!! asset('/storage/hostales/'.$hostal[0]->slug.'/'.$hostal->pictures[$i]->area_picture.'/'.$hostal->pictures[$i]->img_url) !!}" alt="">
     </a>
   </div>
+
+  @endif
   @endfor
-@endif
 
 
   </br>

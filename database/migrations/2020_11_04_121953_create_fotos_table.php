@@ -22,6 +22,7 @@ class CreateFotosTable extends Migration
             $table->string('img_url');
             $table->unsignedBigInteger('hostal_id');
             $table->unsignedBigInteger('area_id');
+            $table->boolean('ppal')->default(0);
 
             $table->foreign('hostal_id')->references('id')->on('hostals')->onDelete('cascade');
             $table->foreign('area_id')->references('id')->on('area_pictures')->onDelete('cascade');

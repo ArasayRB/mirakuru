@@ -19,6 +19,7 @@ class Foto extends File
         'img_url',
         'hostal_id',
         'area_id',
+        'ppal'
     ];
 
     public function hostales(){

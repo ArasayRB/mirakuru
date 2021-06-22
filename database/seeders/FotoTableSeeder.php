@@ -32,6 +32,7 @@ class FotoTableSeeder extends Seeder
         $foto->slug=Str::slug($foto->name, '-');
         $foto->hostal_id=1;
         $foto->area_id=6;
+        $foto->ppal=1;
         $foto->save();
 
         $foto=new Foto();
@@ -44,12 +45,13 @@ class FotoTableSeeder extends Seeder
         $foto->save();
 
         $foto=new Foto();
-        $foto->img_url='Habitacion_Azul-2-perfil.jpg';
+        $foto->img_url='Habitacion_Azul-2.jpg';
         $foto->name='Habitacion triple Azul';
         $foto->description='Cuenta con 2 camas, cama camera, cama personal, baño privado, con capacidad máxima de 3 personas';
         $foto->slug=Str::slug($foto->name, '-');
         $foto->hostal_id=1;
         $foto->area_id=3;
+        $foto->ppal=1;
         $foto->save();
 
         $foto=new Foto();
@@ -59,6 +61,7 @@ class FotoTableSeeder extends Seeder
         $foto->slug=Str::slug($foto->name, '-');
         $foto->hostal_id=1;
         $foto->area_id=3;
+        $foto->ppal=1;
         $foto->save();
 
         $foto=new Foto();
@@ -95,6 +98,7 @@ class FotoTableSeeder extends Seeder
         $foto->slug=Str::slug($foto->name, '-');
         $foto->hostal_id=1;
         $foto->area_id=1;
+        $foto->ppal=1;
         $foto->save();
 
         $foto=new Foto();
@@ -131,6 +135,7 @@ class FotoTableSeeder extends Seeder
         $foto->slug=Str::slug($foto->name, '-');
         $foto->hostal_id=1;
         $foto->area_id=5;
+        $foto->ppal=1;
         $foto->save();
 
         $foto=new Foto();
@@ -158,6 +163,7 @@ class FotoTableSeeder extends Seeder
         $foto->slug=Str::slug($foto->name, '-');
         $foto->hostal_id=1;
         $foto->area_id=5;
+        $foto->ppal=1;
         $foto->save();
     }
 }
