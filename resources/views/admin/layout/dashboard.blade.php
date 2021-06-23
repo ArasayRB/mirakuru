@@ -88,7 +88,7 @@
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" href="/services">
+        <a class="nav-link" href="/admin/services">
           <i class="fas fa-fw fa-luggage-cart"></i>
           <span>{{__('Services')}}</span></a>
       </li>

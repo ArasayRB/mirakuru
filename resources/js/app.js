@@ -85,6 +85,8 @@ Vue.component('add-role-form-component', require('./components/admin/roles/forms
 Vue.component('edit-permiso-form-component', require('./components/admin/permisos/forms/EditPermisoFormComponent.vue').default);
 Vue.component('add-permiso-form-component', require('./components/admin/permisos/forms/AddPermisoFormComponent.vue').default);
 Vue.component('edit-post-form-component', require('./components/admin/posts/forms/EditPostFormComponent.vue').default);
+Vue.component('manage-service-form-component', require('./components/admin/services/forms/ServiceFormComponent.vue').default);
+Vue.component('index-service-component', require('./components/admin/services/indexServiceComponent.vue').default);
 Vue.component('index-post-component', require('./components/admin/posts/indexPostComponent.vue').default);
 Vue.component('index-user-component', require('./components/admin/users/indexUserComponent.vue').default);
 Vue.component('index-role-component', require('./components/admin/roles/indexRoleComponent.vue').default);

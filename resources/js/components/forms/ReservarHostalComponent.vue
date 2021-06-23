@@ -65,7 +65,7 @@
                   </div>
                   <div class="col-6">
                     <input type="number"  id="personas" required name="personas" v-model="cant_person" min="1" :max="roomCapacityMax" step="1" class="form-control font-italic mb-2" placeholder="Huéspedes/Guests...">
-                    <input type="number"  id="ninos" nrequired ame="ninos" v-model="childs" min="1" step="1" :max="childCapacityMax" class="form-control font-italic mb-2" placeholder="#Niños de Huéspedes/#Childs of Guests...">
+                    <input type="number"  id="ninos" required name="ninos" v-model="childs" min="1" step="1" :max="childCapacityMax" class="form-control font-italic mb-2" placeholder="#Niños de Huéspedes/#Childs of Guests...">
                     <input type="email" disabled=true name="email" v-model="email" class="form-control font-italic mb-2" placeholder="Correo/Email...">
 
 
