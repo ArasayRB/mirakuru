@@ -161,7 +161,7 @@
                 data.append("password_confirm", user.password_confirm);
                 data.append("role", this.roll);
                 data.append("permissions", permissions_array);
-              url="/users/"+user.id;
+              url=window.location.origin +"/admin/users/"+user.id;
               msg_edited=this.$trans('messages.User')+' '+this.$trans('messages.Edited');
 
           axios.post(url,data,config)
@@ -198,7 +198,7 @@
         getPermissionsByRole:function(role){
          console.log('permiss-user-array:',this.user.permissions);
           console.log('permiss-old-array:',this.permissions);
-          axios.get('/available-permissions/'+role)
+          axios.get(window.location.origin +'/admin/available-permissions/'+role)
                .then(response =>{
                  this.permissions = response.data;
 
@@ -227,7 +227,7 @@
         },
       },
       created: function () {
-        axios.get('/roles-list')
+        axios.get(window.location.origin +'/admin/roles-list')
              .then(response => this.roles = response.data)
              .catch(error => this.errors.push(error));
          },

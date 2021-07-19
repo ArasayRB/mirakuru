@@ -52,7 +52,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item active">
-        <a class="nav-link" href="/admin">
+        <a class="nav-link" href="{{url('/admin')}}">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>{{__('Administration Bar')}}</span></a>
       </li>
@@ -75,11 +75,11 @@
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">{{__('Tabs')}}:</h6>
-            <a class="collapse-item" href="/users">{{__('Users')}}</a>
+            <a class="collapse-item" href="{{url('/admin/users')}}">{{__('Users')}}</a>
 
-              <a class="collapse-item" href="/roles">{{__('Role')}}</a>
+              <a class="collapse-item" href="{{url('/admin/roles')}}">{{__('Role')}}</a>
 
-            <a class="collapse-item" href="/permissions">{{__('Permissions')}}</a>
+            <a class="collapse-item" href="{{url('/admin/permissions')}}">{{__('Permissions')}}</a>
           </div>
         </div>
       </li>
@@ -88,7 +88,7 @@
 
       <!-- Nav Item - Charts -->
       <li class="nav-item">
-        <a class="nav-link" href="/admin/services">
+        <a class="nav-link" href="{{url('/admin/services')}}">
           <i class="fas fa-fw fa-luggage-cart"></i>
           <span>{{__('Services')}}</span></a>
       </li>
@@ -102,7 +102,7 @@
         <div id="collapseHostal" class="collapse" aria-labelledby="headingUtilities" data-parent="#accordionSidebar">
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">{{__('Tabs')}}:</h6>
-            <a class="collapse-item" href="utilities-border.html">{{__('Hostals')}}</a>
+            <a class="collapse-item" href="{{url('/admin/hostals')}}">{{__('Hostals')}}</a>
             <a class="collapse-item" href="utilities-border.html">{{__('Suscription')}}</a>
             <a class="collapse-item" href="utilities-color.html">{{__('Testimonials')}}</a>
             <a class="collapse-item" href="utilities-border.html">{{__('Testimonials Calification')}}</a>

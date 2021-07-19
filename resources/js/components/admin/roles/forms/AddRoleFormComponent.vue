@@ -137,7 +137,7 @@
     },
         createRole:function(){
 
-            let  url="/roles";
+            let  url=window.location.origin +"/admin/roles";
             let msg_succ=this.$trans('messages.Role')+' '+this.$trans('messages.Created.');
             let mensaje=this.$trans('messages.Unidentified error');
             if (this.name==''||this.description==''||this.selectedPermissions.length==0) {
@@ -188,7 +188,7 @@
 
         },
         getPermissions:function(){
-          axios.get('/permissions-list')
+          axios.get(window.location.origin +'/admin/permissions-list')
                .then(response => this.permissions = response.data)
                .catch(error => this.errors.push(error));
         },

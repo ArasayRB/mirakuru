@@ -63,19 +63,19 @@
 </div>
 
 <div class="form-group">
-  <label for="contact_person">{{ $trans('messages.Contact') }} {{ $trans('messages.Person') }}</label>
+  <label for="contact_person">{{ $trans('messages.Contact') }} {{ $trans('messages.Persons') }}</label>
   <input type="text" name="contact_person" v-model="name_contact" class="form-control font-italic mb-2" v-if="operation==='add'">
   <input type="text" name="contact_person" v-model="service.name_contact" class="form-control font-italic mb-2" v-if="operation==='update'">
 </div>
 
 <div class="form-group">
-  <label for="person_max">Max {{ $trans('messages.Person') }}</label>
+  <label for="person_max">Max {{ $trans('messages.Persons') }}</label>
   <input type="number"  id="person_max" required name="person_max" v-model="person_max" min="1" step="1" class="form-control font-italic mb-2" v-if="operation==='add'">
   <input type="number"  id="person_max" required name="person_max" v-model="service.person_max" min="1" step="1" class="form-control font-italic mb-2" v-if="operation==='update'">
 </div>
 
 <div class="form-group">
-  <label for="person_min">Min {{ $trans('messages.Person') }}</label>
+  <label for="person_min">Min {{ $trans('messages.Persons') }}</label>
   <input type="number"  id="person_min" required name="person_min" v-model="person_min" min="1" step="1" :max="person_max" class="form-control font-italic mb-2" v-if="operation==='add'">
   <input type="number"  id="person_min" required name="person_min" v-model="service.person_min" min="1" step="1" :max="service.person_max" class="form-control font-italic mb-2" v-if="operation==='update'">
 </div>

@@ -87,6 +87,8 @@ Vue.component('add-permiso-form-component', require('./components/admin/permisos
 Vue.component('edit-post-form-component', require('./components/admin/posts/forms/EditPostFormComponent.vue').default);
 Vue.component('manage-service-form-component', require('./components/admin/services/forms/ServiceFormComponent.vue').default);
 Vue.component('index-service-component', require('./components/admin/services/indexServiceComponent.vue').default);
+Vue.component('manage-hostal-form-component', require('./components/admin/hostals/forms/HostalFormComponent.vue').default);
+Vue.component('index-hostal-component', require('./components/admin/hostals/indexHostalComponent.vue').default);
 Vue.component('index-post-component', require('./components/admin/posts/indexPostComponent.vue').default);
 Vue.component('index-user-component', require('./components/admin/users/indexUserComponent.vue').default);
 Vue.component('index-role-component', require('./components/admin/roles/indexRoleComponent.vue').default);

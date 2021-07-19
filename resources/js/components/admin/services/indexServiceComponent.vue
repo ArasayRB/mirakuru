@@ -194,7 +194,7 @@
           this.imagenpermission=e.target.files[0];
         },
         serviceList:function(){
-          axios.get('/admin/serviceList')
+          axios.get(window.location.origin +'/admin/serviceList')
                .then(response =>{
                  this.services = response.data;
                  console.log('Services: '+response.data);

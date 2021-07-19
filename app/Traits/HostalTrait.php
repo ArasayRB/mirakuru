@@ -45,6 +45,20 @@ trait HostalTrait {
                   return $hostal;
 
   }
+  public function getHostal($hostal){
+    $hostals=Hostal::with('keywords')
+                 ->where('id',$hostal)
+                 ->first();
+
+     if($hostals->publicate_state===0){
+       $hostals->show=false;
+     }
+     else{
+       $hostals->show=true;
+      }
+
+                 return $hostals;
+  }
 
   public function getAllHostals(Request $request){
     $filter=$request->searcher;

@@ -175,7 +175,7 @@
           this.imagenpermission=e.target.files[0];
         },
         permissionList:function(){
-          axios.get('/permissionsList')
+          axios.get(window.location.origin +'/admin/permissionsList')
                .then(response =>{
                  this.permissions = response.data;
                  if (response.data==''){
@@ -208,7 +208,7 @@
                   cancelButtonText: this.$trans('messages.Cancel'),
                 }).then(select=>{
                   if (select){
-                    let  url='/permissions/'+permission_id;
+                    let  url=window.location.origin +'/admin/permissions/'+permission_id;
                     axios.delete(url)
                          .then(response=>{
                            swal({title:this.$trans('messages.Correct data'),

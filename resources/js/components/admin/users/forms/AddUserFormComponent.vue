@@ -157,7 +157,7 @@
     },
         createPost:function(){
 
-            let  url="/users";
+            let  url=window.location.origin +"/admin/users";
             let msg_succ=this.$trans('messages.User')+' '+this.$trans('messages.Created.');
             let mensaje=this.$trans('messages.Unidentified error');
             if (this.name==''||this.email==''||this.password==''||this.confirm_password==''||this.roll==''||this.selectedPermissions.length==0) {
@@ -228,7 +228,7 @@
       },
       watch:{
         roll(val){
-          axios.get('/available-permissions/'+val)
+          axios.get(window.location.origin +'/admin/available-permissions/'+val)
                .then(response =>{
                  this.permissions = response.data
                })
@@ -237,7 +237,7 @@
         },
       },
       created: function () {
-         axios.get('/roles-list')
+         axios.get(window.location.origin +'/admin/roles-list')
               .then(response => this.roles = response.data)
               .catch(error => this.errors.push(error));
 

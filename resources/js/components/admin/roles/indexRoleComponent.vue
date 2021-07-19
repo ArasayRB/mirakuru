@@ -185,7 +185,7 @@
           this.imagenrole=e.target.files[0];
         },
         roleList:function(){
-          axios.get('/rolesList')
+          axios.get(window.location.origin +'/admin/rolesList')
                .then(response =>{
                  this.roles = response.data;
                  if (response.data==''){
@@ -218,7 +218,7 @@
                   cancelButtonText: this.$trans('messages.Cancel'),
                 }).then(select=>{
                   if (select){
-                    let  url='/roles/'+role_id;
+                    let  url=window.location.origin +'/admin/roles/'+role_id;
                     axios.delete(url)
                          .then(response=>{
                            swal({title:this.$trans('messages.Correct data'),

@@ -60,7 +60,7 @@ class Hostal extends Model
     }
 
     public function keywords(){
-      return $this->hasMany(Keyword::class)->withTimestamps();
+      return $this->belongsToMany(Keyword::class)->withTimestamps();
     }
 
     public function services(){

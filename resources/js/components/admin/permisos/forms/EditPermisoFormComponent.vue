@@ -121,7 +121,7 @@
     	          data.append('_method', 'patch');
                 data.append("name", permission.name);
                 data.append("description", permission.description);
-              url="/permissions/"+permission.id;
+              url=window.location.origin +"/admin/permissions/"+permission.id;
               msg_edited=this.$trans('messages.Permission')+' '+this.$trans('messages.Edited');
 
           axios.post(url,data,config)

@@ -2146,6 +2146,775 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=script&lang=js&":
+/*!**************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-ckeditor2 */ "./node_modules/vue-ckeditor2/dist/vue-ckeditor2.esm.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    VueCkeditor: vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  props: ['locale', 'hostal', 'operation'],
+  data: function data() {
+    return {
+      tags: [],
+      selectedTags: [],
+      msgAddTag: this.$trans('messages.Add a new Tag'),
+      keywords: [],
+      selectedKeys: [],
+      config: {
+        toolbar: [{
+          name: 'document',
+          items: ['Source', '-', 'Save', 'NewPage', 'DocProps', 'Preview', 'Print', '-', 'Templates']
+        }, {
+          name: 'clipboard',
+          items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
+        }, {
+          name: 'editing',
+          items: ['Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt']
+        }, {
+          name: 'forms',
+          items: ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField']
+        }, '/', {
+          name: 'basicstyles',
+          items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+        }, {
+          name: 'paragraph',
+          items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl']
+        }, {
+          name: 'links',
+          items: ['Link', 'Unlink', 'Anchor']
+        }, {
+          name: 'insert',
+          items: ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak']
+        }, '/', {
+          name: 'styles',
+          items: ['Styles', 'Format', 'Font', 'FontSize']
+        }, {
+          name: 'colors',
+          items: ['TextColor', 'BGColor']
+        }, {
+          name: 'tools',
+          items: ['Maximize', 'ShowBlocks', '-', 'About']
+        }],
+        height: 300
+      },
+      activeClass: 'active',
+      showClass: 'show',
+      phone: '',
+      value: '',
+      host: '',
+      email: 0,
+      src: 'images/lang/',
+      ventanaOperHostals: false,
+      address: '',
+      error: '',
+      imagenHostal: '',
+      token: window.CSRF_TOKEN
+    };
+  },
+  methods: {
+    onBlur: function onBlur(evt) {
+      console.log(evt);
+    },
+    onFocus: function onFocus(evt) {
+      console.log(evt);
+    },
+    onContentDom: function onContentDom(evt) {
+      console.log(evt);
+    },
+    onDialogDefinition: function onDialogDefinition(evt) {
+      console.log(evt);
+    },
+    onFileUploadRequest: function onFileUploadRequest(evt) {
+      console.log(evt);
+    },
+    onFileUploadResponse: function onFileUploadResponse(evt) {
+      console.log(evt);
+    },
+    image: function image(e) {
+      this.imagenHostal = e.target.files[0];
+    },
+    availableTags: function availableTags() {
+      var _this = this;
+
+      axios.get('/available-tags').then(function (response) {
+        _this.tags = response.data;
+      })["catch"](function (error) {
+        return _this.errors.push(error);
+      });
+    },
+    availableKeywords: function availableKeywords() {
+      var _this2 = this;
+
+      axios.get('/available-keys').then(function (response) {
+        _this2.keywords = response.data;
+      })["catch"](function (error) {
+        return _this2.errors.push(error);
+      });
+    },
+    createHostal: function createHostal() {
+      var _this3 = this;
+
+      var url = window.location.origin + "/admin/hostals";
+      var msg_succ = this.$trans('messages.Hostals') + ' ' + this.$trans('messages.Created.');
+      var mensaje = this.$trans('messages.Unidentified error');
+
+      if (this.host == '' || this.phone == '' || this.imagenHostal == '' || this.address == '' || this.email == '' || this.selectedTags == '' || this.selectedKeys == '') {
+        mensaje = this.$trans('messages.You cannot leave empty fields, please check');
+      }
+
+      var data = new FormData();
+      data.append("name", this.host);
+      data.append("phone", this.phone);
+      data.append("image", this.imagenHostal);
+      data.append("address", this.address);
+      data.append("email", this.email);
+      var tagsList = this.selectedTags;
+      var hostTags = "";
+
+      for (var i = 0; i < tagsList.length; i = i + 1) {
+        if (i == tagsList.length - 1) {
+          hostTags = '' + hostTags + tagsList[i].value;
+        } else {
+          hostTags = '' + hostTags + tagsList[i].value + ',';
+        }
+      }
+
+      var keysList = this.selectedKeys;
+      var hostKeys = "";
+
+      for (var i = 0; i < keysList.length; i = i + 1) {
+        if (i == keysList.length - 1) {
+          hostKeys = '' + hostKeys + keysList[i].value;
+        } else {
+          hostKeys = '' + hostKeys + keysList[i].value + ',';
+        }
+      }
+
+      data.append("tags", hostTags);
+      data.append("keywords", hostKeys);
+      axios.post(url, data).then(function (response) {
+        var hostalAdd = response.data;
+
+        if (hostalAdd['exception'] == 'Error') {
+          swal({
+            title: _this3.$trans('messages.Whoops! Something went wrong.'),
+            text: _this3.$trans('messages.' + hostalAdd['message']),
+            icon: 'warning',
+            closeOnClickOutside: false,
+            closeOnEsc: false
+          }).then(function (select) {
+            if (select) {
+              _this3.$emit('hostalnew', hostalAdd); //location.reload();
+
+            }
+          });
+        } else {
+          swal({
+            title: _this3.$trans('messages.Correct data'),
+            text: msg_succ,
+            icon: 'success',
+            closeOnClickOutside: false,
+            closeOnEsc: false
+          }).then(function (select) {
+            if (select) {
+              _this3.$emit('hostalnew', hostalAdd); //location.reload();
+
+            }
+          });
+        } //console.log(response);
+
+      })["catch"](function (error) {
+        if (error.response.data.message) {
+          swal('Error', '' + error.response.data.message, 'error');
+        }
+
+        var wrong = error.response.data.errors;
+
+        if (wrong.hasOwnProperty('name')) {
+          mensaje += '-' + wrong.name[0];
+        }
+
+        if (wrong.hasOwnProperty('phone')) {
+          mensaje += '-' + wrong.phone[0];
+        }
+
+        if (wrong.hasOwnProperty('address')) {
+          mensaje += '-' + wrong.address[0];
+        }
+
+        if (wrong.hasOwnProperty('image')) {
+          mensaje += '-' + wrong.image[0];
+        }
+
+        if (wrong.hasOwnProperty('email')) {
+          mensaje += '-' + wrong.email[0];
+        }
+
+        if (wrong.hasOwnProperty('tags')) {
+          mensaje += '-' + wrong.tags[0];
+        }
+
+        if (wrong.hasOwnProperty('keywords')) {
+          mensaje += '-' + wrong.keywords[0];
+        }
+
+        swal('Error', mensaje, 'error'); //console.log(error.response.data);
+      });
+    },
+    editedHostals: function editedHostals(hostal) {
+      var _this4 = this;
+
+      var url;
+      var data;
+      var msg_edited;
+      var config = {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      };
+      data = new FormData();
+      data.append('_method', 'patch');
+      data.append("name", hostal.name);
+      data.append("phone", hostal.phone);
+      data.append("image", this.imagenHostal);
+      data.append("address", hostal.address);
+      data.append("email", hostal.email);
+      var tagsList = this.selectedTags;
+      var hostTags = "";
+
+      for (var i = 0; i < tagsList.length; i = i + 1) {
+        if (i == tagsList.length - 1) {
+          hostTags = '' + hostTags + tagsList[i].value;
+        } else {
+          hostTags = '' + hostTags + tagsList[i].value + ',';
+        }
+      }
+
+      var keysList = this.selectedKeys;
+      var hostKeys = "";
+
+      for (var i = 0; i < keysList.length; i = i + 1) {
+        if (i == keysList.length - 1) {
+          hostKeys = '' + hostKeys + keysList[i].value;
+        } else {
+          hostKeys = '' + hostKeys + keysList[i].value + ',';
+        }
+      }
+
+      data.append("tags", hostTags);
+      data.append("keywords", hostKeys);
+      url = window.location.origin + "/admin/hostals/" + hostal.id;
+      msg_edited = this.$trans('messages.Hostals') + ' ' + this.$trans('messages.Edited');
+      axios.post(url, data, config).then(function (response) {
+        swal({
+          title: _this4.$trans('messages.Hostals'),
+          text: msg_edited,
+          icon: 'success',
+          closeOnClickOutside: false,
+          closeOnEsc: false
+        }).then(function (select) {
+          if (select) {
+            var hostalUpdate = response.data;
+
+            _this4.$emit('hostaloperupd', hostalUpdate);
+          }
+        }); //console.log(response);
+      })["catch"](function (error) {
+        if (error.response.data.message) {
+          swal('Error', '' + error.response.data.message, 'error');
+        }
+
+        var wrong = error.response.data.errors;
+
+        if (wrong.hasOwnProperty('name')) {
+          mensaje += '-' + wrong.name[0];
+        }
+
+        if (wrong.hasOwnProperty('phone')) {
+          mensaje += '-' + wrong.phone[0];
+        }
+
+        if (wrong.hasOwnProperty('address')) {
+          mensaje += '-' + wrong.address[0];
+        }
+
+        if (wrong.hasOwnProperty('image')) {
+          mensaje += '-' + wrong.image[0];
+        }
+
+        if (wrong.hasOwnProperty('email')) {
+          mensaje += '-' + wrong.email[0];
+        }
+
+        if (wrong.hasOwnProperty('tags')) {
+          mensaje += '-' + wrong.tags[0];
+        }
+
+        if (wrong.hasOwnProperty('keywords')) {
+          mensaje += '-' + wrong.keywords[0];
+        }
+
+        swal('Error', mensaje, 'error'); //console.log(error.response.data);
+      });
+    }
+  },
+  created: function created() {
+    for (var i = 0; i < this.hostal.tags.length; i++) {
+      this.selectedTags.push({
+        'key': '',
+        'value': this.hostal.tags[i].name
+      });
+    }
+
+    for (var i = 0; i < this.hostal.keywords.length; i++) {
+      this.selectedKeys.push({
+        'key': '',
+        'value': this.hostal.keywords[i].name
+      });
+    }
+
+    this.availableTags();
+    this.availableKeywords();
+  },
+  mounted: function mounted() {
+    if (this.locale) {
+      this.$lang.setLocale(this.locale);
+    } else {
+      this.$lang.setLocale('en');
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-ckeditor2 */ "./node_modules/vue-ckeditor2/dist/vue-ckeditor2.esm.js");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  components: {
+    VueCkeditor: vue_ckeditor2__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
+  data: function data() {
+    return {
+      config: {
+        toolbar: [{
+          name: 'document',
+          items: ['Source', '-', 'Save', 'NewPage', 'DocProps', 'Preview', 'Print', '-', 'Templates']
+        }, {
+          name: 'clipboard',
+          items: ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']
+        }, {
+          name: 'editing',
+          items: ['Find', 'Replace', '-', 'SelectAll', '-', 'SpellChecker', 'Scayt']
+        }, {
+          name: 'forms',
+          items: ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton', 'HiddenField']
+        }, '/', {
+          name: 'basicstyles',
+          items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
+        }, {
+          name: 'paragraph',
+          items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl']
+        }, {
+          name: 'links',
+          items: ['Link', 'Unlink', 'Anchor']
+        }, {
+          name: 'insert',
+          items: ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak']
+        }, '/', {
+          name: 'styles',
+          items: ['Styles', 'Format', 'Font', 'FontSize']
+        }, {
+          name: 'colors',
+          items: ['TextColor', 'BGColor']
+        }, {
+          name: 'tools',
+          items: ['Maximize', 'ShowBlocks', '-', 'About']
+        }],
+        height: 300
+      },
+      hostals: [],
+      hostal: [],
+      permission_state: [],
+      paginate: ['hostals'],
+      hreff: '/permission-preview/',
+      permissionActualizar: false,
+      idpermissionActualizar: -1,
+      value: '',
+      operation: '',
+      id: '',
+      mensage: '',
+      valueImg: '',
+      lang: true,
+      locale: this.$attrs.locale,
+      src: window.location.origin + '/storage/hostales/',
+      src_qr: 'storage/qrcodes/hostals/',
+      ventanaOperHostal: false,
+      ventanaEditPermiso: false,
+      token: window.CSRF_TOKEN
+    };
+  },
+  methods: {
+    onBlur: function onBlur(evt) {
+      console.log(evt);
+    },
+    onFocus: function onFocus(evt) {
+      console.log(evt);
+    },
+    onContentDom: function onContentDom(evt) {
+      console.log(evt);
+    },
+    onDialogDefinition: function onDialogDefinition(evt) {
+      console.log(evt);
+    },
+    onFileUploadRequest: function onFileUploadRequest(evt) {
+      console.log(evt);
+    },
+    onFileUploadResponse: function onFileUploadResponse(evt) {
+      console.log(evt);
+    },
+    filtershostals: function filtershostals(filters) {
+      this.hostals = filters;
+    },
+    imageEdit: function imageEdit(e) {
+      this.imagenpermission = e.target.files[0];
+    },
+    hostalList: function hostalList() {
+      var _this = this;
+
+      axios.get(window.location.origin + '/admin/hostalList').then(function (response) {
+        _this.hostals = response.data;
+
+        if (response.data == '') {
+          _this.mensage = _this.$trans('messages.None added yet');
+        }
+      })["catch"](function (error) {
+        return _this.errors.push(error);
+      });
+    },
+    addHostalIndex: function addHostalIndex(permissionAdd) {
+      this.operation = '';
+      this.hostalList();
+      this.mensage = "";
+      this.ventanaOperHostal = false;
+    },
+    updHostalIndex: function updHostalIndex(hostalUpd) {
+      this.operation = '';
+      var position = this.hostals.findIndex(function (hostal) {
+        return hostal.id === hostalUpd.id;
+      });
+      this.hostalList();
+      this.ventanaOperHostal = false;
+    },
+    deleteHostal: function deleteHostal(index, hostal) {
+      var _this2 = this;
+
+      var hostal_id = hostal;
+      swal({
+        title: this.$trans('messages.Delete') + ' ' + this.$trans('messages.Hostal'),
+        text: this.$trans('messages.Are you completely sure you want to delete ') + this.$trans('messages.Hostal') + '?',
+        icon: 'warning',
+        closeOnClickOutside: false,
+        closeOnEsc: false,
+        buttons: true,
+        dangerMode: true,
+        showCancelButton: true,
+        confirmButtonText: this.$trans('messages.Yes, delete'),
+        cancelButtonText: this.$trans('messages.Cancel')
+      }).then(function (select) {
+        if (select) {
+          var url = window.location.origin + '/admin/hostals/' + hostal_id;
+          axios["delete"](url).then(function (response) {
+            swal({
+              title: _this2.$trans('messages.Correct data'),
+              text: _this2.$trans('messages.Hostal') + ' ' + _this2.$trans('messages.Deleted'),
+              icon: 'success',
+              closeOnClickOutside: false,
+              closeOnEsc: false
+            }).then(function (select) {
+              if (select) {
+                _this2.hostalList();
+
+                if (_this2.hostals.length === 0) {
+                  _this2.mensage = _this2.$trans('messages.None added yet');
+                }
+              }
+            });
+          })["catch"](function (error) {
+            console.log(error.response.data.errors);
+            var wrong = error.response.data.errors;
+            swal('Error', mensaje, 'error');
+          });
+        }
+      });
+    },
+    openAddHostal: function openAddHostal() {
+      this.operation = 'add';
+      this.ventanaOperHostal = true;
+    },
+    openEditHostal: function openEditHostal(index, hostal) {
+      this.operation = 'update';
+      this.hostal = hostal;
+      this.ventanaOperHostal = true;
+    }
+  },
+  created: function created() {
+    this.hostalList();
+  },
+  mounted: function mounted() {
+    if (this.$attrs.locale) {
+      this.$lang.setLocale(this.$attrs.locale);
+    } else {
+      this.$lang.setLocale('en');
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/permisos/forms/AddPermisoFormComponent.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/permisos/forms/AddPermisoFormComponent.vue?vue&type=script&lang=js& ***!
@@ -2301,7 +3070,7 @@ __webpack_require__.r(__webpack_exports__);
     createPermiso: function createPermiso() {
       var _this = this;
 
-      var url = "/permissions";
+      var url = window.location.origin + "/admin/permissions";
       var msg_succ = this.$trans('messages.Permission') + ' ' + this.$trans('messages.Created.');
       var mensaje = this.$trans('messages.Unidentified error');
 
@@ -2505,7 +3274,7 @@ __webpack_require__.r(__webpack_exports__);
       data.append('_method', 'patch');
       data.append("name", permission.name);
       data.append("description", permission.description);
-      url = "/permissions/" + permission.id;
+      url = window.location.origin + "/admin/permissions/" + permission.id;
       msg_edited = this.$trans('messages.Permission') + ' ' + this.$trans('messages.Edited');
       axios.post(url, data, config).then(function (response) {
         swal({
@@ -2758,7 +3527,7 @@ __webpack_require__.r(__webpack_exports__);
     permissionList: function permissionList() {
       var _this = this;
 
-      axios.get('/permissionsList').then(function (response) {
+      axios.get(window.location.origin + '/admin/permissionsList').then(function (response) {
         _this.permissions = response.data;
 
         if (response.data == '') {
@@ -2796,7 +3565,7 @@ __webpack_require__.r(__webpack_exports__);
         cancelButtonText: this.$trans('messages.Cancel')
       }).then(function (select) {
         if (select) {
-          var url = '/permissions/' + permission_id;
+          var url = window.location.origin + '/admin/permissions/' + permission_id;
           axios["delete"](url).then(function (response) {
             swal({
               title: _this2.$trans('messages.Correct data'),
@@ -3433,7 +4202,7 @@ __webpack_require__.r(__webpack_exports__);
         }
 
         if (wrong.hasOwnProperty('keywords')) {
-          mensaje += '-' + wrong.tags[0];
+          mensaje += '-' + wrong.keywords[0];
         } else if (wrong.hasOwnProperty('login')) {
           mensaje += '-' + wrong.login[0];
         }
@@ -4546,7 +5315,7 @@ __webpack_require__.r(__webpack_exports__);
     createRole: function createRole() {
       var _this = this;
 
-      var url = "/roles";
+      var url = window.location.origin + "/admin/roles";
       var msg_succ = this.$trans('messages.Role') + ' ' + this.$trans('messages.Created.');
       var mensaje = this.$trans('messages.Unidentified error');
 
@@ -4598,7 +5367,7 @@ __webpack_require__.r(__webpack_exports__);
     getPermissions: function getPermissions() {
       var _this2 = this;
 
-      axios.get('/permissions-list').then(function (response) {
+      axios.get(window.location.origin + '/admin/permissions-list').then(function (response) {
         return _this2.permissions = response.data;
       })["catch"](function (error) {
         return _this2.errors.push(error);
@@ -4791,7 +5560,7 @@ __webpack_require__.r(__webpack_exports__);
       data.append("name", role.name);
       data.append("description", role.description);
       data.append("permissions", permissions_array);
-      url = "/roles/" + role.id;
+      url = window.location.origin + "/admin/roles/" + role.id;
       msg_edited = this.$trans('messages.Role') + ' ' + this.$trans('messages.Edited');
       axios.post(url, data, config).then(function (response) {
         swal({
@@ -4828,7 +5597,7 @@ __webpack_require__.r(__webpack_exports__);
     getPermissions: function getPermissions() {
       var _this2 = this;
 
-      axios.get('/permissions-list').then(function (response) {
+      axios.get(window.location.origin + '/admin/permissions-list').then(function (response) {
         _this2.permissions = response.data;
 
         for (var i = 0; i < _this2.permissions.length; i++) {
@@ -5079,7 +5848,7 @@ __webpack_require__.r(__webpack_exports__);
     roleList: function roleList() {
       var _this = this;
 
-      axios.get('/rolesList').then(function (response) {
+      axios.get(window.location.origin + '/admin/rolesList').then(function (response) {
         _this.roles = response.data;
 
         if (response.data == '') {
@@ -5117,7 +5886,7 @@ __webpack_require__.r(__webpack_exports__);
         cancelButtonText: this.$trans('messages.Cancel')
       }).then(function (select) {
         if (select) {
-          var url = '/roles/' + role_id;
+          var url = window.location.origin + '/admin/roles/' + role_id;
           axios["delete"](url).then(function (response) {
             swal({
               title: _this2.$trans('messages.Correct data'),
@@ -5753,7 +6522,7 @@ __webpack_require__.r(__webpack_exports__);
     serviceList: function serviceList() {
       var _this = this;
 
-      axios.get('/admin/serviceList').then(function (response) {
+      axios.get(window.location.origin + '/admin/serviceList').then(function (response) {
         _this.services = response.data;
         console.log('Services: ' + response.data);
 
@@ -6038,7 +6807,7 @@ __webpack_require__.r(__webpack_exports__);
     createPost: function createPost() {
       var _this = this;
 
-      var url = "/users";
+      var url = window.location.origin + "/admin/users";
       var msg_succ = this.$trans('messages.User') + ' ' + this.$trans('messages.Created.');
       var mensaje = this.$trans('messages.Unidentified error');
 
@@ -6113,7 +6882,7 @@ __webpack_require__.r(__webpack_exports__);
     roll: function roll(val) {
       var _this2 = this;
 
-      axios.get('/available-permissions/' + val).then(function (response) {
+      axios.get(window.location.origin + '/admin/available-permissions/' + val).then(function (response) {
         _this2.permissions = response.data;
       })["catch"](function (error) {
         return _this2.errors.push(error);
@@ -6124,7 +6893,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this3 = this;
 
-    axios.get('/roles-list').then(function (response) {
+    axios.get(window.location.origin + '/admin/roles-list').then(function (response) {
       return _this3.roles = response.data;
     })["catch"](function (error) {
       return _this3.errors.push(error);
@@ -6338,7 +7107,7 @@ __webpack_require__.r(__webpack_exports__);
       data.append("password_confirm", user.password_confirm);
       data.append("role", this.roll);
       data.append("permissions", permissions_array);
-      url = "/users/" + user.id;
+      url = window.location.origin + "/admin/users/" + user.id;
       msg_edited = this.$trans('messages.User') + ' ' + this.$trans('messages.Edited');
       axios.post(url, data, config).then(function (response) {
         swal({
@@ -6378,7 +7147,7 @@ __webpack_require__.r(__webpack_exports__);
 
       console.log('permiss-user-array:', this.user.permissions);
       console.log('permiss-old-array:', this.permissions);
-      axios.get('/available-permissions/' + role).then(function (response) {
+      axios.get(window.location.origin + '/admin/available-permissions/' + role).then(function (response) {
         _this2.permissions = response.data;
 
         for (var i = 0; i < _this2.permissions.length; i++) {
@@ -6408,7 +7177,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this3 = this;
 
-    axios.get('/roles-list').then(function (response) {
+    axios.get(window.location.origin + '/admin/roles-list').then(function (response) {
       return _this3.roles = response.data;
     })["catch"](function (error) {
       return _this3.errors.push(error);
@@ -6653,7 +7422,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     userList: function userList() {
       var _this = this;
 
-      axios.get('/usersList').then(function (response) {
+      axios.get(window.location.origin + '/admin/usersList').then(function (response) {
         _this.users = response.data;
 
         if (response.data == '') {
@@ -6692,7 +7461,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
         cancelButtonText: this.$trans('messages.Cancel')
       }).then(function (select) {
         if (select) {
-          var url = '/users/' + user_id;
+          var url = window.location.origin + '/admin/users/' + user_id;
           axios["delete"](url).then(function (response) {
             swal({
               title: _this2.$trans('messages.Correct data'),
@@ -13743,6 +14512,25 @@ __webpack_require__.r(__webpack_exports__);
 
 })));
 //# sourceMappingURL=bootstrap.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=style&index=0&lang=css&":
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../../../../node_modules/css-loader/lib/css-base.js */ "./node_modules/css-loader/lib/css-base.js")(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n.paginate-links{\n    width:100%;\n    list-style: none;\n    text-align: center;\n}\n.paginate-links li {\n    display: inline;\n    background-color:#1fa9ed;\n    color:white;\n    padding:0.5rem;\n    margin-left:0.3rem;\n    margin-right: 0.3rem;\n    cursor:pointer;\n    border-radius: 3px;\n}\n.paginate-result{\n    width: 100%;\n    text-align:center;\n    margin-bottom: 1rem;\n}\n", ""]);
+
+// exports
 
 
 /***/ }),
@@ -25552,14 +26340,15 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.20';
+  var VERSION = '4.17.21';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
 
   /** Error message constants. */
   var CORE_ERROR_TEXT = 'Unsupported core-js use. Try https://npms.io/search?q=ponyfill.',
-      FUNC_ERROR_TEXT = 'Expected a function';
+      FUNC_ERROR_TEXT = 'Expected a function',
+      INVALID_TEMPL_VAR_ERROR_TEXT = 'Invalid `variable` option passed into `_.template`';
 
   /** Used to stand-in for `undefined` hash values. */
   var HASH_UNDEFINED = '__lodash_hash_undefined__';
@@ -25692,10 +26481,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   var reRegExpChar = /[\\^$.*+?()[\]{}|]/g,
       reHasRegExpChar = RegExp(reRegExpChar.source);
 
-  /** Used to match leading and trailing whitespace. */
-  var reTrim = /^\s+|\s+$/g,
-      reTrimStart = /^\s+/,
-      reTrimEnd = /\s+$/;
+  /** Used to match leading whitespace. */
+  var reTrimStart = /^\s+/;
+
+  /** Used to match a single whitespace character. */
+  var reWhitespace = /\s/;
 
   /** Used to match wrap detail comments. */
   var reWrapComment = /\{(?:\n\/\* \[wrapped with .+\] \*\/)?\n?/,
@@ -25704,6 +26494,18 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
   /** Used to match words composed of alphanumeric characters. */
   var reAsciiWord = /[^\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\x7f]+/g;
+
+  /**
+   * Used to validate the `validate` option in `_.template` variable.
+   *
+   * Forbids characters which could potentially change the meaning of the function argument definition:
+   * - "()," (modification of function parameters)
+   * - "=" (default value)
+   * - "[]{}" (destructuring of function parameters)
+   * - "/" (beginning of a comment)
+   * - whitespace
+   */
+  var reForbiddenIdentifierChars = /[()=,{}\[\]\/\s]/;
 
   /** Used to match backslashes in property paths. */
   var reEscapeChar = /\\(\\)?/g;
@@ -26534,6 +27336,19 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
   }
 
   /**
+   * The base implementation of `_.trim`.
+   *
+   * @private
+   * @param {string} string The string to trim.
+   * @returns {string} Returns the trimmed string.
+   */
+  function baseTrim(string) {
+    return string
+      ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, '')
+      : string;
+  }
+
+  /**
    * The base implementation of `_.unary` without support for storing metadata.
    *
    * @private
@@ -26864,6 +27679,21 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     return hasUnicode(string)
       ? unicodeToArray(string)
       : asciiToArray(string);
+  }
+
+  /**
+   * Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
+   * character of `string`.
+   *
+   * @private
+   * @param {string} string The string to inspect.
+   * @returns {number} Returns the index of the last non-whitespace character.
+   */
+  function trimmedEndIndex(string) {
+    var index = string.length;
+
+    while (index-- && reWhitespace.test(string.charAt(index))) {}
+    return index;
   }
 
   /**
@@ -38034,7 +38864,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       if (typeof value != 'string') {
         return value === 0 ? value : +value;
       }
-      value = value.replace(reTrim, '');
+      value = baseTrim(value);
       var isBinary = reIsBinary.test(value);
       return (isBinary || reIsOctal.test(value))
         ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
@@ -40406,6 +41236,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
       if (!variable) {
         source = 'with (obj) {\n' + source + '\n}\n';
       }
+      // Throw an error if a forbidden character was found in `variable`, to prevent
+      // potential command injection attacks.
+      else if (reForbiddenIdentifierChars.test(variable)) {
+        throw new Error(INVALID_TEMPL_VAR_ERROR_TEXT);
+      }
+
       // Cleanup code by stripping empty strings.
       source = (isEvaluating ? source.replace(reEmptyStringLeading, '') : source)
         .replace(reEmptyStringMiddle, '$1')
@@ -40519,7 +41355,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     function trim(string, chars, guard) {
       string = toString(string);
       if (string && (guard || chars === undefined)) {
-        return string.replace(reTrim, '');
+        return baseTrim(string);
       }
       if (!string || !(chars = baseToString(chars))) {
         return string;
@@ -40554,7 +41390,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
     function trimEnd(string, chars, guard) {
       string = toString(string);
       if (string && (guard || chars === undefined)) {
-        return string.replace(reTrimEnd, '');
+        return string.slice(0, trimmedEndIndex(string) + 1);
       }
       if (!string || !(chars = baseToString(chars))) {
         return string;
@@ -67290,6 +68126,36 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=style&index=0&lang=css&":
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./indexHostalComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=style&index=0&lang=css&");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../../../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
 /***/ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/permisos/indexPermisoComponent.vue?vue&type=style&index=0&lang=css&":
 /*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/style-loader!./node_modules/css-loader??ref--6-1!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src??ref--6-2!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/permisos/indexPermisoComponent.vue?vue&type=style&index=0&lang=css& ***!
@@ -69450,6 +70316,934 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=template&id=aaf47308&":
+/*!******************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=template&id=aaf47308& ***!
+  \******************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "section",
+    {
+      staticClass: "mb-5",
+      attrs: { id: "createHostalModal", name: "createHostalModal" }
+    },
+    [
+      _c(
+        "form",
+        { attrs: { id: "form-create-user" } },
+        [
+          _c(
+            "transition",
+            {
+              staticClass: "modal fade pt-5",
+              attrs: { id: "createHostalModalModal" }
+            },
+            [
+              _c("div", { staticClass: "modal-mask" }, [
+                _c("div", { staticClass: "modal-wrapper" }, [
+                  _c("div", { staticClass: "modal-container" }, [
+                    _c(
+                      "div",
+                      { staticClass: "modal-header" },
+                      [
+                        _vm._t("default", [
+                          _vm.operation === "add"
+                            ? _c(
+                                "h1",
+                                { staticClass: "text-center text-dark" },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.$trans("messages.Create")) +
+                                      " " +
+                                      _vm._s(_vm.$trans("messages.Hostals"))
+                                  )
+                                ]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _vm.operation === "update"
+                            ? _c(
+                                "h1",
+                                { staticClass: "text-center text-dark" },
+                                [
+                                  _vm._v(
+                                    _vm._s(_vm.$trans("messages.Update")) +
+                                      " " +
+                                      _vm._s(_vm.$trans("messages.Hostals"))
+                                  )
+                                ]
+                              )
+                            : _vm._e(),
+                          _vm._v(" "),
+                          _c(
+                            "button",
+                            {
+                              staticClass: "modal-default-button btn btn-lg",
+                              attrs: { type: "button" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.$emit("close")
+                                }
+                              }
+                            },
+                            [
+                              _c("span", { attrs: { "aria-hidden": "true" } }, [
+                                _vm._v("×")
+                              ])
+                            ]
+                          )
+                        ])
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "modal-body" },
+                      [
+                        _vm._t("default", [
+                          _c("div", { staticClass: "container mt-5" }, [
+                            _c(
+                              "div",
+                              { staticClass: "row justify-content-center" },
+                              [
+                                _c("div", { staticClass: "col-12" }, [
+                                  _c("div", { staticClass: "form-group" }, [
+                                    _c("label", { attrs: { for: "host" } }, [
+                                      _vm._v(
+                                        _vm._s(_vm.$trans("messages.Name"))
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _vm.operation === "add"
+                                      ? _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.host,
+                                              expression: "host"
+                                            }
+                                          ],
+                                          staticClass:
+                                            "form-control font-italic mb-2",
+                                          attrs: { type: "host", name: "host" },
+                                          domProps: { value: _vm.host },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.host = $event.target.value
+                                            }
+                                          }
+                                        })
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    _vm.operation === "update"
+                                      ? _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.hostal.name,
+                                              expression: "hostal.name"
+                                            }
+                                          ],
+                                          staticClass:
+                                            "form-control font-italic mb-2",
+                                          attrs: { type: "host", name: "host" },
+                                          domProps: { value: _vm.hostal.name },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.hostal,
+                                                "name",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        })
+                                      : _vm._e()
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "form-group" }, [
+                                    _c("label", { attrs: { for: "tel" } }, [
+                                      _vm._v(
+                                        _vm._s(_vm.$trans("messages.Phone"))
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _vm.operation === "add"
+                                      ? _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.phone,
+                                              expression: "phone"
+                                            }
+                                          ],
+                                          staticClass:
+                                            "form-control font-italic mb-2",
+                                          attrs: {
+                                            type: "tel",
+                                            id: "tel",
+                                            name: "tel",
+                                            pattern: "\\x2b[0-9]+",
+                                            size: "15"
+                                          },
+                                          domProps: { value: _vm.phone },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.phone = $event.target.value
+                                            }
+                                          }
+                                        })
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    _vm.operation === "update"
+                                      ? _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.hostal.phone,
+                                              expression: "hostal.phone"
+                                            }
+                                          ],
+                                          staticClass:
+                                            "form-control font-italic mb-2",
+                                          attrs: {
+                                            type: "tel",
+                                            id: "tel",
+                                            name: "tel",
+                                            pattern: "\\x2b[0-9]+",
+                                            size: "15"
+                                          },
+                                          domProps: { value: _vm.hostal.phone },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.hostal,
+                                                "phone",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        })
+                                      : _vm._e()
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "form-group" }, [
+                                    _c("label", { attrs: { for: "address" } }, [
+                                      _vm._v(
+                                        _vm._s(_vm.$trans("messages.Adress"))
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _vm.operation === "add"
+                                      ? _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.address,
+                                              expression: "address"
+                                            }
+                                          ],
+                                          staticClass:
+                                            "form-control font-italic mb-2",
+                                          attrs: {
+                                            type: "text",
+                                            id: "address",
+                                            name: "address"
+                                          },
+                                          domProps: { value: _vm.address },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.address = $event.target.value
+                                            }
+                                          }
+                                        })
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    _vm.operation === "update"
+                                      ? _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.hostal.address,
+                                              expression: "hostal.address"
+                                            }
+                                          ],
+                                          staticClass:
+                                            "form-control font-italic mb-2",
+                                          attrs: {
+                                            type: "text",
+                                            id: "address",
+                                            name: "address"
+                                          },
+                                          domProps: {
+                                            value: _vm.hostal.address
+                                          },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.hostal,
+                                                "address",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        })
+                                      : _vm._e()
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "form-group" }, [
+                                    _c("label", { attrs: { for: "email" } }, [
+                                      _vm._v(
+                                        _vm._s(_vm.$trans("messages.Email"))
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _vm.operation === "add"
+                                      ? _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.email,
+                                              expression: "email"
+                                            }
+                                          ],
+                                          staticClass:
+                                            "form-control font-italic mb-2",
+                                          attrs: {
+                                            type: "email",
+                                            name: "email"
+                                          },
+                                          domProps: { value: _vm.email },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.email = $event.target.value
+                                            }
+                                          }
+                                        })
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    _vm.operation === "update"
+                                      ? _c("input", {
+                                          directives: [
+                                            {
+                                              name: "model",
+                                              rawName: "v-model",
+                                              value: _vm.hostal.email,
+                                              expression: "hostal.email"
+                                            }
+                                          ],
+                                          staticClass:
+                                            "form-control font-italic mb-2",
+                                          attrs: {
+                                            type: "email",
+                                            name: "email"
+                                          },
+                                          domProps: { value: _vm.hostal.email },
+                                          on: {
+                                            input: function($event) {
+                                              if ($event.target.composing) {
+                                                return
+                                              }
+                                              _vm.$set(
+                                                _vm.hostal,
+                                                "email",
+                                                $event.target.value
+                                              )
+                                            }
+                                          }
+                                        })
+                                      : _vm._e()
+                                  ]),
+                                  _vm._v(" "),
+                                  _c("div", { staticClass: "form-group" }, [
+                                    _c("label", { attrs: { for: "image" } }, [
+                                      _vm._v(
+                                        _vm._s(_vm.$trans("messages.Image"))
+                                      )
+                                    ]),
+                                    _vm._v(" "),
+                                    _c("input", {
+                                      staticClass:
+                                        "form-control-file font-italic mb-2",
+                                      attrs: { type: "file", name: "image" },
+                                      on: { change: _vm.image }
+                                    }),
+                                    _vm._v(" "),
+                                    _vm.operation === "update"
+                                      ? _c("div", { staticClass: "row" }, [
+                                          _c("img", {
+                                            attrs: {
+                                              src:
+                                                _vm.src +
+                                                _vm.hostal.img_ppal_url,
+                                              alt: _vm.hostal.img_ppal_url,
+                                              width: "100"
+                                            }
+                                          })
+                                        ])
+                                      : _vm._e()
+                                  ]),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group" },
+                                    [
+                                      _c("label", [
+                                        _vm._v(
+                                          _vm._s(_vm.$trans("messages.Tags")) +
+                                            " : "
+                                        ),
+                                        _c(
+                                          "span",
+                                          { staticClass: "text-danger" },
+                                          [_vm._v("*")]
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("br"),
+                                      _vm._v(" "),
+                                      _c("tags-input", {
+                                        attrs: {
+                                          "element-id": "tags",
+                                          "add-tags-on-comma": true,
+                                          "existing-tags": _vm.tags,
+                                          "id-field": "key",
+                                          "text-field": "value",
+                                          typeahead: true
+                                        },
+                                        model: {
+                                          value: _vm.selectedTags,
+                                          callback: function($$v) {
+                                            _vm.selectedTags = $$v
+                                          },
+                                          expression: "selectedTags"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "div",
+                                    { staticClass: "form-group" },
+                                    [
+                                      _c("label", { attrs: { for: "title" } }, [
+                                        _vm._v(
+                                          _vm._s(
+                                            _vm.$trans("messages.Keywords")
+                                          ) + ": "
+                                        ),
+                                        _c(
+                                          "span",
+                                          { staticClass: "text-danger" },
+                                          [
+                                            _vm._v(
+                                              _vm._s(
+                                                _vm.$trans(
+                                                  "messages.Separate with (,) please"
+                                                )
+                                              )
+                                            )
+                                          ]
+                                        )
+                                      ]),
+                                      _vm._v(" "),
+                                      _c("tags-input", {
+                                        attrs: {
+                                          "element-id": "keys",
+                                          "add-tags-on-comma": true,
+                                          placeholder: "Add a keyword",
+                                          "existing-tags": _vm.keywords,
+                                          "id-field": "key",
+                                          "text-field": "value",
+                                          typeahead: true
+                                        },
+                                        model: {
+                                          value: _vm.selectedKeys,
+                                          callback: function($$v) {
+                                            _vm.selectedKeys = $$v
+                                          },
+                                          expression: "selectedKeys"
+                                        }
+                                      })
+                                    ],
+                                    1
+                                  )
+                                ])
+                              ]
+                            )
+                          ])
+                        ])
+                      ],
+                      2
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "modal-footer" },
+                      [
+                        _vm._t("default", [
+                          _c(
+                            "div",
+                            { staticClass: "col justify-content-center" },
+                            [
+                              _c(
+                                "div",
+                                { staticClass: "form-group row mb-0" },
+                                [
+                                  _c(
+                                    "div",
+                                    { staticClass: "col-md-5 offset-md-4" },
+                                    [
+                                      _vm.operation === "add"
+                                        ? _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn rounded btn-primary reserva",
+                                              attrs: { type: "button" },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.createHostal()
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                _vm._s(
+                                                  _vm.$trans("messages.Create")
+                                                )
+                                              )
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      _vm.operation === "update"
+                                        ? _c(
+                                            "button",
+                                            {
+                                              staticClass:
+                                                "btn rounded btn-primary reserva",
+                                              attrs: { type: "button" },
+                                              on: {
+                                                click: function($event) {
+                                                  return _vm.editedHostals(
+                                                    _vm.hostal
+                                                  )
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                _vm._s(
+                                                  _vm.$trans("messages.Update")
+                                                )
+                                              )
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      _c(
+                                        "button",
+                                        {
+                                          staticClass:
+                                            "modal-default-button btn btn-danger",
+                                          attrs: { type: "button" },
+                                          on: {
+                                            click: function($event) {
+                                              return _vm.$emit("close")
+                                            }
+                                          }
+                                        },
+                                        [
+                                          _vm._v(
+                                            _vm._s(_vm.$trans("messages.Close"))
+                                          )
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              )
+                            ]
+                          )
+                        ])
+                      ],
+                      2
+                    )
+                  ])
+                ])
+              ])
+            ]
+          )
+        ],
+        1
+      )
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=template&id=e63b149c&":
+/*!*************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=template&id=e63b149c& ***!
+  \*************************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "row py-lg-2" }, [
+      _c("div", { staticClass: "col-md-6" }, [
+        _c("h1", { staticClass: "h3 mb-2 text-gray-800" }, [
+          _vm._v(_vm._s(_vm.$trans("messages.Hostals")))
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "col-md-6" }, [
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-primary btn-lg float-md-right",
+            attrs: { href: "#", permission: "button", "aria-pressed": "true" },
+            on: {
+              click: function($event) {
+                return _vm.openAddHostal()
+              }
+            }
+          },
+          [_vm._v(_vm._s(_vm.$trans("messages.Add")))]
+        )
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "card shadow mb-4" },
+      [
+        _vm.ventanaOperHostal
+          ? _c("manage-hostal-form-component", {
+              attrs: {
+                operation: _vm.operation,
+                hostal: _vm.hostal,
+                locale: _vm.locale
+              },
+              on: {
+                hostalnew: _vm.addHostalIndex,
+                hostaloperupd: _vm.updHostalIndex,
+                close: function($event) {
+                  _vm.ventanaOperHostal = false
+                }
+              }
+            })
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-header py-3" }, [
+          _c(
+            "div",
+            { staticClass: "row input-group" },
+            [
+              _c(
+                "h6",
+                { staticClass: "m-0 font-weight-bold text-primary col" },
+                [_vm._v(_vm._s(_vm.$trans("messages.List")))]
+              ),
+              _vm._v(" "),
+              _c("input-searcher-component", {
+                attrs: {
+                  url: "/admin/all-hostals",
+                  locale: _vm.locale,
+                  emit: "hostals"
+                },
+                on: {
+                  cancelsearch: _vm.hostalList,
+                  hostalsfilter: _vm.filtershostals
+                }
+              })
+            ],
+            1
+          )
+        ]),
+        _vm._v(" "),
+        _vm.mensage != ""
+          ? _c("div", { staticClass: "alert alert-success" }, [
+              _c("ul", [_c("li", [_vm._v(_vm._s(_vm.mensage))])])
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "card-body" }, [
+          _c(
+            "div",
+            { staticClass: "table-responsive" },
+            [
+              _c(
+                "paginate",
+                {
+                  key: _vm.hostals ? _vm.hostals.length : 0,
+                  ref: "paginator",
+                  staticClass: "pt-5 mt-3",
+                  attrs: { name: "hostals", list: _vm.hostals, per: 2 }
+                },
+                [
+                  _c(
+                    "table",
+                    {
+                      staticClass: "table table-bordered",
+                      attrs: {
+                        id: "dataTable",
+                        width: "100%",
+                        cellspacing: "0"
+                      }
+                    },
+                    [
+                      _c("thead", [
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Tools")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Hostals")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Phone")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Adress")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Image")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Email")))
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("tfoot", [
+                        _c("tr", [
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Tools")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Hostals")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Phone")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Adress")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Image")))
+                          ]),
+                          _vm._v(" "),
+                          _c("th", [
+                            _vm._v(_vm._s(_vm.$trans("messages.Email")))
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "tbody",
+                        _vm._l(_vm.paginated("hostals"), function(
+                          hostal,
+                          index
+                        ) {
+                          return _c(
+                            "tr",
+                            { key: hostal.id, attrs: { hostal: hostal } },
+                            [
+                              _c("td", [
+                                _c(
+                                  "a",
+                                  {
+                                    attrs: { href: "#" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.openEditHostal(index, hostal)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "fa fa-edit",
+                                      attrs: { title: "Edit/Editar" }
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    attrs: { href: "#" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.addHostalImages(
+                                          index,
+                                          hostal.id
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "fas fa-images",
+                                      attrs: {
+                                        title: "Add Images/Añadir Imagenes"
+                                      }
+                                    })
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    attrs: { href: "#" },
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.deleteHostal(
+                                          index,
+                                          hostal.id
+                                        )
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _c("i", {
+                                      staticClass: "fa fa-trash-alt",
+                                      attrs: { title: "Delete/Eliminar" }
+                                    })
+                                  ]
+                                )
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(hostal.name))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(hostal.phone))]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(hostal.address))]),
+                              _vm._v(" "),
+                              _c("td", [
+                                _c("img", {
+                                  attrs: {
+                                    src:
+                                      _vm.src +
+                                      hostal.slug +
+                                      "/" +
+                                      hostal.img_ppal_url,
+                                    width: "100"
+                                  }
+                                })
+                              ]),
+                              _vm._v(" "),
+                              _c("td", [_vm._v(_vm._s(hostal.email))])
+                            ]
+                          )
+                        }),
+                        0
+                      )
+                    ]
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "strong",
+                { staticClass: "text-primary" },
+                [
+                  _c("paginate-links", {
+                    attrs: { for: "hostals", "show-step-links": true }
+                  }),
+                  _vm._v(" "),
+                  _c("paginate-links", {
+                    attrs: {
+                      for: "hostals",
+                      "show-step-links": true,
+                      simple: {
+                        prev: _vm.$trans("messages.Previous"),
+                        next: _vm.$trans("messages.Next")
+                      }
+                    }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ])
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -74038,7 +75832,7 @@ var render = function() {
                                           ) +
                                             " " +
                                             _vm._s(
-                                              _vm.$trans("messages.Person")
+                                              _vm.$trans("messages.Persons")
                                             )
                                         )
                                       ]
@@ -74116,7 +75910,7 @@ var render = function() {
                                         _vm._v(
                                           "Max " +
                                             _vm._s(
-                                              _vm.$trans("messages.Person")
+                                              _vm.$trans("messages.Persons")
                                             )
                                         )
                                       ]
@@ -74202,7 +75996,7 @@ var render = function() {
                                         _vm._v(
                                           "Min " +
                                             _vm._s(
-                                              _vm.$trans("messages.Person")
+                                              _vm.$trans("messages.Persons")
                                             )
                                         )
                                       ]
@@ -93112,6 +94906,8 @@ Vue.component('add-permiso-form-component', __webpack_require__(/*! ./components
 Vue.component('edit-post-form-component', __webpack_require__(/*! ./components/admin/posts/forms/EditPostFormComponent.vue */ "./resources/js/components/admin/posts/forms/EditPostFormComponent.vue")["default"]);
 Vue.component('manage-service-form-component', __webpack_require__(/*! ./components/admin/services/forms/ServiceFormComponent.vue */ "./resources/js/components/admin/services/forms/ServiceFormComponent.vue")["default"]);
 Vue.component('index-service-component', __webpack_require__(/*! ./components/admin/services/indexServiceComponent.vue */ "./resources/js/components/admin/services/indexServiceComponent.vue")["default"]);
+Vue.component('manage-hostal-form-component', __webpack_require__(/*! ./components/admin/hostals/forms/HostalFormComponent.vue */ "./resources/js/components/admin/hostals/forms/HostalFormComponent.vue")["default"]);
+Vue.component('index-hostal-component', __webpack_require__(/*! ./components/admin/hostals/indexHostalComponent.vue */ "./resources/js/components/admin/hostals/indexHostalComponent.vue")["default"]);
 Vue.component('index-post-component', __webpack_require__(/*! ./components/admin/posts/indexPostComponent.vue */ "./resources/js/components/admin/posts/indexPostComponent.vue")["default"]);
 Vue.component('index-user-component', __webpack_require__(/*! ./components/admin/users/indexUserComponent.vue */ "./resources/js/components/admin/users/indexUserComponent.vue")["default"]);
 Vue.component('index-role-component', __webpack_require__(/*! ./components/admin/roles/indexRoleComponent.vue */ "./resources/js/components/admin/roles/indexRoleComponent.vue")["default"]);
@@ -93285,6 +95081,162 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/hostals/forms/HostalFormComponent.vue":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/components/admin/hostals/forms/HostalFormComponent.vue ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _HostalFormComponent_vue_vue_type_template_id_aaf47308___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./HostalFormComponent.vue?vue&type=template&id=aaf47308& */ "./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=template&id=aaf47308&");
+/* harmony import */ var _HostalFormComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./HostalFormComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _HostalFormComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _HostalFormComponent_vue_vue_type_template_id_aaf47308___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _HostalFormComponent_vue_vue_type_template_id_aaf47308___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/hostals/forms/HostalFormComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************!*\
+  !*** ./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_HostalFormComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./HostalFormComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_HostalFormComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=template&id=aaf47308&":
+/*!************************************************************************************************************!*\
+  !*** ./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=template&id=aaf47308& ***!
+  \************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HostalFormComponent_vue_vue_type_template_id_aaf47308___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../../node_modules/vue-loader/lib??vue-loader-options!./HostalFormComponent.vue?vue&type=template&id=aaf47308& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/forms/HostalFormComponent.vue?vue&type=template&id=aaf47308&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HostalFormComponent_vue_vue_type_template_id_aaf47308___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_HostalFormComponent_vue_vue_type_template_id_aaf47308___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/hostals/indexHostalComponent.vue":
+/*!************************************************************************!*\
+  !*** ./resources/js/components/admin/hostals/indexHostalComponent.vue ***!
+  \************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _indexHostalComponent_vue_vue_type_template_id_e63b149c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./indexHostalComponent.vue?vue&type=template&id=e63b149c& */ "./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=template&id=e63b149c&");
+/* harmony import */ var _indexHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./indexHostalComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _indexHostalComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./indexHostalComponent.vue?vue&type=style&index=0&lang=css& */ "./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_3__["default"])(
+  _indexHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _indexHostalComponent_vue_vue_type_template_id_e63b149c___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _indexHostalComponent_vue_vue_type_template_id_e63b149c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/admin/hostals/indexHostalComponent.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=script&lang=js&":
+/*!*************************************************************************************************!*\
+  !*** ./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_indexHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/babel-loader/lib??ref--4-0!../../../../../node_modules/vue-loader/lib??vue-loader-options!./indexHostalComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_indexHostalComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=style&index=0&lang=css&":
+/*!*********************************************************************************************************!*\
+  !*** ./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=style&index=0&lang=css& ***!
+  \*********************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_indexHostalComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/style-loader!../../../../../node_modules/css-loader??ref--6-1!../../../../../node_modules/vue-loader/lib/loaders/stylePostLoader.js!../../../../../node_modules/postcss-loader/src??ref--6-2!../../../../../node_modules/vue-loader/lib??vue-loader-options!./indexHostalComponent.vue?vue&type=style&index=0&lang=css& */ "./node_modules/style-loader/index.js!./node_modules/css-loader/index.js?!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/src/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=style&index=0&lang=css&");
+/* harmony import */ var _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_indexHostalComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_indexHostalComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_indexHostalComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_style_loader_index_js_node_modules_css_loader_index_js_ref_6_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_6_2_node_modules_vue_loader_lib_index_js_vue_loader_options_indexHostalComponent_vue_vue_type_style_index_0_lang_css___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+
+
+/***/ }),
+
+/***/ "./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=template&id=e63b149c&":
+/*!*******************************************************************************************************!*\
+  !*** ./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=template&id=e63b149c& ***!
+  \*******************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_indexHostalComponent_vue_vue_type_template_id_e63b149c___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../../node_modules/vue-loader/lib??vue-loader-options!./indexHostalComponent.vue?vue&type=template&id=e63b149c& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/admin/hostals/indexHostalComponent.vue?vue&type=template&id=e63b149c&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_indexHostalComponent_vue_vue_type_template_id_e63b149c___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_indexHostalComponent_vue_vue_type_template_id_e63b149c___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 
@@ -95546,13 +97498,14 @@ module.exports = {
     "Administration Bar": "Administration Bar",
     "Administrator": "Administrator",
     "Administrator users can perform any action.": "Administrator users can perform any action.",
-    "Adress": "Address",
+    "Adress": "Adress",
     "All": "All",
     "All Posts": "All Posts",
     "All of the people that are part of this team.": "All of the people that are part of this team.",
     "All rights reserved.": "All rights reserved.",
     "Already registered?": "Already registered?",
     "Amount": "Amount",
+    "An item with the same key is in data base.": "An item with the same key is in data base.",
     "Are you completely sure you want to delete ": "Are you completely sure you want to delete ",
     "Are you completely sure you want to delete the post": "You are completely sure you want to delete the post",
     "Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be permanently deleted.": "Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be permanently deleted.",
@@ -95642,6 +97595,7 @@ module.exports = {
     "Hello!": "Hello!",
     "High": "High",
     "Home": "Home",
+    "Hostal": "Hostal",
     "Hostals": "Hostals",
     "Hosters Atention": "Hosters Atention",
     "I need your name": "I need your name",
@@ -95718,6 +97672,7 @@ module.exports = {
     "Permission": "Permission",
     "Permissions": "Permissions",
     "Persons": "Persons",
+    "Phone": "Phone",
     "Photo": "Photo",
     "Please click the button below to verify your email address.": "Please click the button below to verify your email address.",
     "Please confirm access to your account by entering one of your emergency recovery codes.": "Please confirm access to your account by entering one of your emergency recovery codes.",
@@ -96090,6 +98045,7 @@ module.exports = {
     "All rights reserved.": "Todos los derechos reservados.",
     "Already registered?": "Ya se registr\xF3?",
     "Amount": "Precio",
+    "An item with the same key is in data base.": "Un registro con la misma llave se encuentra ya en base de datos.",
     "Are you completely sure you want to delete ": "Est\xE1 completamente seguro que desea borrar ",
     "Are you completely sure you want to delete the post": "Est\xE1 completamente seguro que desea borrar el post",
     "Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be permanently deleted.": "\xBFEst\xE1 seguro que desea eliminar este equipo? Una vez que se elimina un equipo, todos sus recursos y datos se eliminar\xE1n de forma permanente.",
@@ -96179,6 +98135,7 @@ module.exports = {
     "Hello!": "\xA1Hola!",
     "High": "Alto",
     "Home": "Inicio",
+    "Hostal": "Hostal",
     "Hostals": "Hostales",
     "Hosters Atention": "Atenci\xF3n de Anfitriones",
     "I need your name": "Necesito su nombre",
@@ -96255,6 +98212,7 @@ module.exports = {
     "Permission": "Permiso",
     "Permissions": "Permisos",
     "Persons": "Personas",
+    "Phone": "Tel\xE9fono",
     "Photo": "Foto",
     "Please click the button below to verify your email address.": "Por favor, haga clic en el bot\xF3n de abajo para verificar su direcci\xF3n de correo electr\xF3nico.",
     "Please confirm access to your account by entering one of your emergency recovery codes.": "Por favor confirme el acceso a su cuenta ingresando uno de sus c\xF3digos de recuperaci\xF3n de emergencia.",
@@ -96511,6 +98469,7 @@ module.exports = {
     "All rights reserved.": "Todos los derechos reservados.",
     "Already registered?": "Ya se registr\xF3?",
     "Amount": "Precio",
+    "An item with the same key is in data base.": "Un registro con la misma llave se encuentra ya en base de datos.",
     "Are you completely sure you want to delete ": "Est\xE1 completamente seguro que desea borrar ",
     "Are you completely sure you want to delete the post": "Est\xE1 completamente seguro que desea borrar el post",
     "Are you sure you want to delete this team? Once a team is deleted, all of its resources and data will be permanently deleted.": "\xBFEst\xE1 seguro que desea eliminar este equipo? Una vez que se elimina un equipo, todos sus recursos y datos se eliminar\xE1n de forma permanente.",
@@ -96600,6 +98559,7 @@ module.exports = {
     "Hello!": "\xA1Hola!",
     "High": "Alto",
     "Home": "Inicio",
+    "Hostal": "Hostal",
     "Hostals": "Hostales",
     "Hosters Atention": "Atenci\xF3n de Anfitriones",
     "I need your name": "Necesito su nombre",
@@ -96671,6 +98631,7 @@ module.exports = {
     "Permission": "Permiso",
     "Permissions": "Permisos",
     "Persons": "Personas",
+    "Phone": "Tel\xE9fono",
     "Photo": "Foto",
     "Please click the button below to verify your email address.": "Por favor, haga clic en el bot\xF3n de abajo para verificar su direcci\xF3n de correo electr\xF3nico.",
     "Please confirm access to your account by entering one of your emergency recovery codes.": "Por favor confirme el acceso a su cuenta ingresando uno de sus c\xF3digos de recuperaci\xF3n de emergencia.",

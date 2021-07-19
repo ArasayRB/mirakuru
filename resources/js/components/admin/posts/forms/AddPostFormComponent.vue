@@ -308,7 +308,7 @@ text-field="value"
                      mensaje+='-'+wrong.tags[0];
                    }
                    if (wrong.hasOwnProperty('keywords')) {
-                      mensaje+='-'+wrong.tags[0];
+                      mensaje+='-'+wrong.keywords[0];
                     }
                    else if (wrong.hasOwnProperty('login')){
                      mensaje+='-'+wrong.login[0];
