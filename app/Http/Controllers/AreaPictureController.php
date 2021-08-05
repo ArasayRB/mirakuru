@@ -3,16 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Models\AreaPicture;
+use App\Traits\ImageTrait;
+use App\Traits\HostalTrait;
+use App\Traits\FotoTrait;
 use Illuminate\Http\Request;
 
 class AreaPictureController extends Controller
 {
+  use ImageTrait, HostalTrait, FotoTrait;
 
     /**
      * Get a list of Pictures Areas
      */
-   public function getAreaPictureList(){
-     return AreaPicture::all();
+   public function getAreaPictureList($id_hostal){
+     $areas=AreaPicture::all();
+     $hostal=$this->getNameHostalById($id_hostal);
+     for($i=0;$i<count($areas);$i++){
+       $pictures=$this->picturesByAreaHostal($areas[$i]['id'],$id_hostal);
+       for ($y=0; $y < count($pictures); $y++) {
+         $pictures[$y]['update_bool']='false';
+       }
+       $areas[$i]['pictures']=$this->picturesByAreaHostal($areas[$i]['id'],$id_hostal);
+       $areas[$i]['pictures_count']=count($areas[$i]['pictures']);
+       $areas[$i]['hostal_name']=$hostal['slug'];
+     }
+     return $areas;
 
    }
 

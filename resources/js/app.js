@@ -74,6 +74,7 @@ Vue.component('msg-make-review-component', require('./components/forms/MsgMakeRe
 Vue.component('contacto-hostal-component', require('./components/forms/ContactoHostalComponent.vue').default);
 Vue.component('reservado-hostal-component', require('./components/forms/ReservadoHostalComponent.vue').default);
 Vue.component('newsletter-component', require('./components/forms/NewsletterComponent.vue').default);
+Vue.component('add-image-component', require('./components/forms/AddImageComponent.vue').default);
 Vue.component('login-form-component', require('./components/forms/auth/LoginFormComponent.vue').default);
 Vue.component('register-form-component', require('./components/forms/auth/RegisterFormComponent.vue').default);
 Vue.component('reset-email-form-component', require('./components/forms/auth/ResetEmailFormComponent.vue').default);
@@ -94,6 +95,7 @@ Vue.component('index-user-component', require('./components/admin/users/indexUse
 Vue.component('index-role-component', require('./components/admin/roles/indexRoleComponent.vue').default);
 Vue.component('index-permiso-component', require('./components/admin/permisos/indexPermisoComponent.vue').default);
 Vue.component('post-ppal-tab-component', require('./components/admin/posts/PostPpalTabComponent.vue').default);
+Vue.component('input-searcher-component', require('./components/admin/searcher/SearcherInputComponent.vue').default);
 Vue.component('relationed-tags-component', require('./components/admin/posts/RelationedTagsComponent.vue').default);
 
 /**

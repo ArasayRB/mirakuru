@@ -12,6 +12,8 @@
       <!-- Page Heading -->
 
       <!-- DataTales Example -->
+
+      <FilePond/>
       <index-hostal-component user="{{auth()->user()->name}}" user_id="{{auth()->user()->id}}" locale="{{ App::getLocale() }}">
 
       </index-hostal-component>

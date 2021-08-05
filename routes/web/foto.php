@@ -8,5 +8,5 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 
-Route::resource('/fotos', App\Http\Controllers\FotoController::class);
+Route::resource('/fotos', App\Http\Controllers\FotoController::class,['except'=>['create','edit','show']]);
 Route::get('/gallery/{hostal}',  [App\Http\Controllers\FotoController::class, 'gallery'])->name('gallery');

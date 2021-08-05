@@ -6,6 +6,12 @@ use App\Traits\AreaPictureTrait;
 trait FotoTrait {
  use AreaPictureTrait;
 
+/**
+ * Obtain Pictures By Hostal
+ *
+ *@param int $hostal
+ *@return object $pictures
+ */
   public function getPicturesByHostal($hostal){
   $pictures=Foto::where('hostal_id',$hostal)
                 ->get();
@@ -14,5 +20,18 @@ trait FotoTrait {
     $pictures[$i]->area_picture=$area->name;
   }
   return  $pictures;
+  }
+
+/**
+ * Obtain Pictures By Area and Hostal
+ *@param int $area,
+ *@param int $hostal
+ *@return object $pictures
+ */
+  public function picturesByAreaHostal(int $area,int $hostal){
+    $pictures=Foto::where('area_id',$area)
+                  ->where('hostal_id',$hostal)
+                  ->get();
+                  return $pictures;
   }
 }

@@ -60,6 +60,12 @@ trait HostalTrait {
                  return $hostals;
   }
 
+  /**
+   * Filter an hostal by Name or address
+   *@param  \Illuminate\Http\Request  $request
+   *@return \Illuminate\Http\Response
+   */
+
   public function getAllHostals(Request $request){
     $filter=$request->searcher;
     $hostals=Hostal::filterByNameAdress($filter)

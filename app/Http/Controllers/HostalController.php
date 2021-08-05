@@ -25,6 +25,7 @@ class HostalController extends Controller
        return $hostals;
      }
 
+     
     /**
      * Display a listing of the resource.
      *
@@ -215,13 +216,13 @@ class HostalController extends Controller
 
       //$this->authorize('delete',$hostal);
         $hostal=Hostal::find($hostal);
-        $this->delImage($hostal->img_ppal_url);
+        $this->delImageFile($hostal->img_ppal_url,'hostales/'.$hostal->slug);
         $hostal->delete();
         $hostal->untag();
         $hostal->keywords()->detach();
-        $file_path = public_path("storage/qrcodes/hostals/qrcode_'.$hostal->id.'_'.$hostal->slug.'.svg");
+        $file_path = public_path("storage/hostales/".$hostal->slug);
 
-       if(File::exists($file_path)) File::delete($file_path);
+       if(File::exists($file_path)) File::deleteDirectory($file_path);
         return response()->json('Hostal deleted');
     }
 }

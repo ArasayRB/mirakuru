@@ -10,6 +10,8 @@
 
   </div>
   <div class="card shadow mb-4">
+    <add-image-component v-if="ventanaAddImageHostal" @close="ventanaAddImageHostal = false" :hostal="hostal">
+    </add-image-component>
     <manage-hostal-form-component @hostalnew="addHostalIndex" @hostaloperupd="updHostalIndex" :operation="operation" :hostal="hostal" :locale="locale" v-if="ventanaOperHostal" @close="ventanaOperHostal = false">
 
     </manage-hostal-form-component>
@@ -17,7 +19,7 @@
       <div class="row input-group">
       <h6 class="m-0 font-weight-bold text-primary col">{{ $trans('messages.List') }}</h6>
       <!-- Topbar Search -->
-      <input-searcher-component :url="'/admin/all-hostals'" :locale="locale" :emit="'hostals'" @cancelsearch="hostalList" @hostalsfilter="filtershostals">
+      <input-searcher-component :url="'/all-hostals'" :locale="locale" :emit="'hostals'" @cancelsearch="hostalList" @hostalsfilter="filtershostals">
     </input-searcher-component>
 
     </div>
@@ -60,7 +62,7 @@
                     <td>
 
                           <a href="#" @click="openEditHostal(index,hostal)"><i class="fa fa-edit" title="Edit/Editar"></i></a>
-                        <a href="#" @click="addHostalImages(index,hostal.id)"><i class="fas fa-images" title="Add Images/Añadir Imagenes"></i></a>
+                        <a href="#" @click="addHostalImages(index,hostal)"><i class="fas fa-images" title="Manage Images/Administrar Imagenes"></i></a>
                         <a href="#" @click="deleteHostal(index,hostal.id)"><i class="fa fa-trash-alt" title="Delete/Eliminar"></i></a>
                    </td>
                     <td>{{hostal.name}}</td>
@@ -157,6 +159,7 @@
           src:window.location.origin +'/storage/hostales/',
           src_qr:'storage/qrcodes/hostals/',
           ventanaOperHostal:false,
+          ventanaAddImageHostal:false,
           ventanaEditPermiso:false,
           token   : window.CSRF_TOKEN,
 
@@ -187,6 +190,10 @@
         imageEdit:function(e){
 
           this.imagenpermission=e.target.files[0];
+        },
+        addHostalImages:function(index,hostal){
+          this.hostal=hostal;
+          this.ventanaAddImageHostal=true;
         },
         hostalList:function(){
           axios.get(window.location.origin +'/admin/hostalList')

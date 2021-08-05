@@ -9,5 +9,5 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 Route::group(['prefix'=>'admin'],function(){
 Route::resource('/area_pictures', App\Http\Controllers\AreaPictureController::class)->middleware('role:admin');
-Route::get('/areaPictureList', [App\Http\Controllers\AreaPictureController::class, 'getAreaPictureList']);
+Route::get('/areaPictureList/{hostal_id}', [App\Http\Controllers\AreaPictureController::class, 'getAreaPictureList']);
 });
