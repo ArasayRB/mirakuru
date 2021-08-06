@@ -10,4 +10,5 @@ use Illuminate\Support\Str;
 Route::group(['prefix'=>'admin'],function(){
 Route::resource('/services', App\Http\Controllers\ServiceController::class)->middleware('role:admin');
 Route::get('/serviceList', [App\Http\Controllers\ServiceController::class, 'getServiceList']);
+Route::get('/all-services', [App\Http\Controllers\ServiceController::class, 'getAllServices']);
 });

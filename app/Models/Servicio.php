@@ -23,6 +23,12 @@ class Servicio extends Model
         'person_max',
     ];
 
+    public function scopeFilterByAttribute($query,$filter){
+      if(!empty($filter)){
+        $query->where('name', 'LIKE', '%'.$filter.'%');
+      }
+    }
+
     public function hostales(){
       return $this->belongsToMany(Hostal::class,'hostal_servicio','servicio_id','hostal_id')->withPivot('cant_personas','active','active_date','inactive_date')->withTimestamps();
     }

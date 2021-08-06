@@ -8,6 +8,34 @@ use Illuminate\Http\Request;
 
 class ServiceController extends Controller
 {
+  public function __construct()
+  {
+      $this->middleware('auth');
+  }
+  /**
+  *Searcher that display filter service by name
+  *@param \Illuminate\Http\Request  $request
+  *@return \Illuminate\Http\Request  $request
+  */
+
+  public function getAllServices(Request $request){
+    $filter=$request->searcher;
+    $services=Servicio::filterByAttribute($filter)
+                    ->get();
+    $services_searched=[];
+    foreach($services as $service){
+      $findText=stristr($service->name,$filter);
+      if(!empty($findText)){
+        $prop='name';
+        $service->finded==$findText;
+        $small_word=substr($findText,0,strlen($filter));
+        $service->substr=$small_word;
+        $service->word_black=str_ireplace($filter,'<b>'.$small_word.'</b>',$service->name);
+        $services_searched[]=$service;
+      }
+    }
+    return $services_searched;
+  }
     /**
      * Display a listing of the resource.
      *
