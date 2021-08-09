@@ -53,6 +53,7 @@ return [
   "Clean"=>"Limpieza",
   "Childs"=>"Niños",
   "Check your email. Link password reset sent"=>"Revise su email. Link de reseteo de contraseña enviado",
+  "Choice the suscriptions to delete, please!"=>"Seleccione las suscripciones a eliminar, por favor!",
   "click here to request another"=> "haga clic aquí para solicitar otro",
   "Close"=> "Cerrar",
   "CLose Places"=> "Lugares Cerca",

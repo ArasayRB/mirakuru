@@ -50,6 +50,7 @@ return [
   "Cash"=>"Cash",
   "Cancel"=>"Cancel",
   "Category"=>"Category",
+  "Choice the suscriptions to delete, please!"=>"Choice the suscriptions to delete, please!",
   "Check your email. Link password reset sent"=>"Check your email. Link password reset sent",
   "Clean"=>"Clean",
   "Childs"=>"Childs",

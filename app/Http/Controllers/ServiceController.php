@@ -12,6 +12,7 @@ class ServiceController extends Controller
   {
       $this->middleware('auth');
   }
+
   /**
   *Searcher that display filter service by name
   *@param \Illuminate\Http\Request  $request

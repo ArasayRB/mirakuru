@@ -30,7 +30,7 @@ Route::get('/relationed-post/{id}', [App\Http\Controllers\WelcomeController::cla
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('language/{language}', [App\Http\Controllers\LanguageController::class, 'switchLang'])->name('language.select');
 Route::post('/suscripcion', [App\Http\Controllers\SuscripcionController::class, 'store']);
-Route::get('/unsubscribe/{suscriptor}/{hostal}', [App\Http\Controllers\SuscripcionController::class, 'delete'])->middleware(['guest'])->name('unsubscribe');
+Route::get('/unsubscribe/{suscriptor}/{hostal}', [App\Http\Controllers\SuscripcionController::class, 'unsuscribe'])->middleware(['guest'])->name('unsubscribe');
 Route::resource('/reserva', App\Http\Controllers\ReservaController::class);
 Route::get('/available-services/{hostal}', [App\Http\Controllers\ReservaController::class, 'getHostalServices']);
 Route::get('/available-rooms/{hostal}', [App\Http\Controllers\ReservaController::class, 'getHostalRooms']);

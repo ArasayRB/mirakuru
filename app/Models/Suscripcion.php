@@ -13,6 +13,12 @@ class Suscripcion extends Model
         'email',
     ];
 
+    public function scopeFilterByAttribute($query,$filter){
+      if(!empty($filter)){
+        $query->with('hostales')->where('email', 'LIKE', '%'.$filter.'%');
+      }
+    }
+
     public function hostales(){
       return $this->belongsToMany(Hostal::class,'hostal_suscripcion','suscripcion_id','hostal_id')->withTimestamps();
     }

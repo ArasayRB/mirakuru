@@ -103,7 +103,7 @@
           <div class="bg-white py-2 collapse-inner rounded">
             <h6 class="collapse-header">{{__('Tabs')}}:</h6>
             <a class="collapse-item" href="{{url('/admin/hostals')}}">{{__('Hostals')}}</a>
-            <a class="collapse-item" href="utilities-border.html">{{__('Suscription')}}</a>
+            <a class="collapse-item" href="{{url('/admin/suscriptions')}}">{{__('Suscription')}}</a>
             <a class="collapse-item" href="utilities-color.html">{{__('Testimonials')}}</a>
             <a class="collapse-item" href="utilities-border.html">{{__('Testimonials Calification')}}</a>
           </div>
